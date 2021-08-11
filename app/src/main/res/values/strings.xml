@@ -7,5 +7,6 @@
 
     <string name="new_transaction">Новая транзакция</string>
     <string name="new_category">Новая категория</string>
+    <string name="empty_transactions">Список транзакций пустой</string>
     <string name="note">Заметка</string>
 </resources>

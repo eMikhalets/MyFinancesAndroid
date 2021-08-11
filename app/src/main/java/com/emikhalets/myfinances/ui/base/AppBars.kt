@@ -1,8 +1,6 @@
 package com.emikhalets.myfinances.ui.base
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
@@ -17,27 +15,6 @@ import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.utils.Screens
 import com.emikhalets.myfinances.utils.navigateToSummary
 import com.emikhalets.myfinances.utils.navigateToTransactions
-
-@Composable
-fun AppScaffold(
-    navController: NavHostController,
-    showTopBar: Boolean,
-    showBottomBar: Boolean,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
-) {
-    Scaffold(
-        topBar = {},
-        bottomBar = {
-            if (showBottomBar) AppBottomBar(navController = navController)
-        },
-        backgroundColor = MaterialTheme.colors.surface
-    ) {
-        Box(modifier = Modifier.padding(it)) {
-            content()
-        }
-    }
-}
 
 @Composable
 fun AppBottomBar(

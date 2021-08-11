@@ -6,9 +6,12 @@
     <string name="title_categories">Categories</string>
 
     <string name="new_transaction">Новая транзакция</string>
+    <string name="value">Значение</string>
     <string name="new_income">Новый доход</string>
     <string name="new_expense">Новый расход</string>
     <string name="new_category">Новая категория</string>
+    <string name="category">Категория</string>
+    <string name="wallet">Кошелек</string>
     <string name="no_categories">Нет категорий</string>
     <string name="empty_transactions">Список транзакций пустой</string>
     <string name="note">Заметка</string>

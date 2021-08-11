@@ -22,58 +22,32 @@ fun TransactionsScreen(
     navController: NavHostController,
     viewModel: TransactionsVM = hiltViewModel()
 ) {
-    when (val state = viewModel.state) {
-        is TransactionsState.Transactions -> {
-            TransactionsList(
-                navController = navController,
-                list = state.list
-            )
-        }
-        is TransactionsState.Error -> {
-        }
-        TransactionsState.EmptyTransactions -> {
-            TransactionsEmpty()
-        }
-        TransactionsState.Loading -> {
-            LoaderScreen()
-        }
-        TransactionsState.Idle -> {
-            viewModel.getTransactions()
-            TransactionsIdle()
-        }
-    }
-}
-
-@Composable
-fun TransactionsIdle() {
     Column(Modifier.fillMaxSize()) {
-        Text(text = "no transactions")
-    }
-}
-
-@Composable
-fun TransactionsEmpty() {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Text(text = stringResource(R.string.empty_transactions))
-    }
-}
-
-@Composable
-fun TransactionsList(
-    navController: NavHostController,
-    list: List<Transaction>
-) {
-    Column(Modifier.fillMaxSize()) {
-        LazyColumn(
-            Modifier
-                .fillMaxSize()
-                .weight(1f)
-        ) {
-            items(list.size) {
+        when (val state = viewModel.state) {
+            is TransactionsState.Transactions -> {
+                TransactionsList(
+                    navController = navController,
+                    list = state.list,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                )
+            }
+            is TransactionsState.Error -> {
+            }
+            TransactionsState.EmptyTransactions -> {
+                TransactionsEmpty(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                )
+            }
+            TransactionsState.Loading -> {
+                LoaderScreen()
+            }
+            TransactionsState.Idle -> {
+                viewModel.getTransactions()
+                TransactionsIdle()
             }
         }
         AddTransaction(
@@ -82,6 +56,37 @@ fun TransactionsList(
                 .padding(8.dp)
                 .fillMaxWidth()
         )
+    }
+}
+
+@Composable
+fun TransactionsIdle() {
+    Column(Modifier.fillMaxSize()) {
+    }
+}
+
+@Composable
+fun TransactionsEmpty(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        Text(text = stringResource(R.string.empty_transactions))
+    }
+}
+
+@Composable
+fun TransactionsList(
+    navController: NavHostController,
+    list: List<Transaction>,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(modifier = modifier) {
+        items(list.size) {
+        }
     }
 }
 

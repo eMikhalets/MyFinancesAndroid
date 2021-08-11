@@ -9,4 +9,7 @@ interface CategoryDao {
 
     @Query("SELECT * FROM categories")
     suspend fun getAll(): List<Category>
+
+    @Query("SELECT * FROM categories WHERE type = :type ORDER BY name ASC")
+    suspend fun getAllByType(type: Int): List<Category>
 }

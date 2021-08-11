@@ -32,7 +32,7 @@ fun ChooseCategoryDialog(
         onDismissRequest = { onDismiss(false) },
         properties = DialogProperties(
             dismissOnBackPress = true,
-            dismissOnClickOutside = false
+            dismissOnClickOutside = true
         )
     ) {
         Column(
@@ -43,25 +43,33 @@ fun ChooseCategoryDialog(
                     shape = RoundedCornerShape(16.dp)
                 )
         ) {
-            LazyColumn(Modifier.padding(top = 8.dp, bottom = 8.dp)) {
-                items(categories) { category ->
-                    ChooseCategoryButton(
-                        label = category.name,
-                        icon = painterResource(category.icon),
-                        modifier = Modifier.clickable {
-                            onSelect(category)
-                            onDismiss(false)
-                        }
-                    )
-                    if (category == categories.last()) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Divider()
-                        Spacer(modifier = Modifier.height(8.dp))
+            if (categories.isEmpty()) {
+                ChooseCategoryButton(
+                    label = stringResource(R.string.new_category),
+                    icon = painterResource(R.drawable.ic_add),
+                    modifier = Modifier.clickable {}
+                )
+            } else {
+                LazyColumn(Modifier.padding(top = 8.dp, bottom = 8.dp)) {
+                    items(categories) { category ->
                         ChooseCategoryButton(
-                            label = stringResource(id = R.string.new_category),
-                            icon = painterResource(R.drawable.ic_add),
-                            modifier = Modifier.clickable {}
+                            label = category.name,
+                            icon = painterResource(category.icon),
+                            modifier = Modifier.clickable {
+                                onSelect(category)
+                                onDismiss(false)
+                            }
                         )
+                        if (category == categories.last()) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Divider()
+                            Spacer(modifier = Modifier.height(8.dp))
+                            ChooseCategoryButton(
+                                label = stringResource(R.string.new_category),
+                                icon = painterResource(R.drawable.ic_add),
+                                modifier = Modifier.clickable {}
+                            )
+                        }
                     }
                 }
             }

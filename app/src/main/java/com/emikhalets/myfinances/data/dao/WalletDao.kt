@@ -5,7 +5,7 @@ import androidx.room.Query
 import com.emikhalets.myfinances.data.entity.Wallet
 
 @Dao
-interface WalletDao {
+interface WalletDao : BaseDao<Wallet> {
 
     @Query("SELECT * FROM wallets")
     suspend fun getAll(): List<Wallet>

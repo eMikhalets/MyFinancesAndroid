@@ -23,7 +23,7 @@ class FirstLaunchVM @Inject constructor(
     fun getWallets() {
         viewModelScope.launch {
             state = state.setLoading()
-            delay(2000)
+            delay(1000)
             state = when (val result = repo.getWallets()) {
                 is Result.Error -> state.setCommonError(result.exception)
                 is Result.Success -> state.setLoadedWallets(result.data)

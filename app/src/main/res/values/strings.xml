@@ -6,6 +6,7 @@
     <string name="title_categories">Categories</string>
 
     <string name="new_transaction">Новая транзакция</string>
+    <string name="start_value">Начальная сумма</string>
     <string name="value">Значение</string>
     <string name="new_income">Новый доход</string>
     <string name="new_expense">Новый расход</string>

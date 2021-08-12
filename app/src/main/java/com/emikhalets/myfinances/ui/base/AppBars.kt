@@ -1,11 +1,12 @@
 package com.emikhalets.myfinances.ui.base
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.ListAlt
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -21,31 +22,32 @@ fun AppBottomBar(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    var currentScreen by remember { mutableStateOf(Screens.Transactions) }
+    val currentScreen = navController.currentDestination?.route
+
+
+    val height = if (currentScreen == Screens.FirstLaunch || currentScreen == Screens.NewWallet) {
+        56.dp
+    } else {
+        0.dp
+    }
 
     BottomNavigation(
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = MaterialTheme.colors.onPrimary,
         elevation = 0.dp,
-        modifier = modifier
+        modifier = modifier.height(height)
     ) {
         AppBottomBarItem(
             selected = currentScreen == Screens.Transactions,
             icon = Icons.Default.Circle,
             label = stringResource(R.string.title_transactions),
-            onClick = {
-                currentScreen = Screens.Transactions
-                navController.navigateToTransactions()
-            }
+            onClick = { navController.navigateToTransactions() }
         )
         AppBottomBarItem(
             selected = currentScreen == Screens.Summary,
             icon = Icons.Default.ListAlt,
             label = stringResource(R.string.title_summary),
-            onClick = {
-                currentScreen = Screens.Summary
-                navController.navigateToSummary()
-            }
+            onClick = { navController.navigateToSummary() }
         )
     }
 }

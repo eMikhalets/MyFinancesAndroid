@@ -1,44 +1,60 @@
 package com.emikhalets.myfinances.ui.screens.new_wallet
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.utils.navigateFromStartToNewWallet
-import com.emikhalets.myfinances.utils.navigateFromStartToTransactions
+import com.emikhalets.myfinances.ui.base.AppTextField
+import com.emikhalets.myfinances.utils.navigateToTransactionsAsStart
 
-//@Composable
-//fun FirstLaunchScreen(
-//    navController: NavHostController,
-//    viewModel: FirstLaunchVM = hiltViewModel()
-//) {
-//    val state = viewModel.state
-//    LaunchedEffect("123") {
-//        viewModel.getWallets()
-//    }
-//
-//    when {
-//        state.wallets == null -> {
-//            Column(
-//                verticalArrangement = Arrangement.Center,
-//                horizontalAlignment = Alignment.CenterHorizontally,
-//                modifier = Modifier.fillMaxSize()
-//            ) {
-//                Image(
-//                    painter = painterResource(R.drawable.logo),
-//                    contentDescription = ""
-//                )
-//            }
-//        }
-//        state.wallets.isEmpty() -> navController.navigateFromStartToNewWallet()
-//        state.wallets.isNotEmpty() -> navController.navigateFromStartToTransactions()
-//    }
-//}
+@Composable
+fun NewWalletScreen(
+    navController: NavHostController,
+    viewModel: NewWalletVM = hiltViewModel()
+) {
+    val state = viewModel.state
+    var name by remember { mutableStateOf("") }
+    var value by remember { mutableStateOf("") }
+
+    LaunchedEffect(state) {
+        if (state.saved) navController.navigateToTransactionsAsStart()
+    }
+
+    Column {
+        AppTextField(
+            label = stringResource(R.string.note),
+            value = name,
+            onValueChange = { name = it },
+            keyboardType = KeyboardType.Text,
+            emptyError = state.emptyNameError,
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        )
+        AppTextField(
+            label = stringResource(R.string.start_value),
+            value = value,
+            onValueChange = { value = it },
+            keyboardType = KeyboardType.Number,
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        )
+        Spacer(Modifier.height(16.dp))
+        TextButton(
+            onClick = { viewModel.saveWallet(name, value) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            Text(text = stringResource(R.string.save))
+        }
+    }
+}

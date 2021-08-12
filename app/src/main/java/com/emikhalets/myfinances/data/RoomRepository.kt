@@ -56,4 +56,13 @@ class RoomRepository @Inject constructor(
             Result.Error(ex)
         }
     }
+
+    suspend fun insertWallet(wallet: Wallet): Result<Long> {
+        return try {
+            Result.Success(walletDao.insert(wallet))
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            Result.Error(ex)
+        }
+    }
 }

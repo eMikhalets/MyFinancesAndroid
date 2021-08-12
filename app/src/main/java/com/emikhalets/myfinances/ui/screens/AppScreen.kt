@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.ui.base.AppBottomBar
 import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.AppNavGraph
+import com.emikhalets.myfinances.utils.Screens
 
 @Composable
 fun AppScreen(
@@ -20,7 +21,9 @@ fun AppScreen(
         Scaffold(
             topBar = {},
             bottomBar = {
-                AppBottomBar(navController = navController)
+                if (isShowBottomBar(navController)) {
+                    AppBottomBar(navController = navController)
+                }
             },
             backgroundColor = MaterialTheme.colors.surface
         ) {
@@ -29,4 +32,9 @@ fun AppScreen(
             }
         }
     }
+}
+
+private fun isShowBottomBar(navController: NavHostController): Boolean {
+    return navController.currentDestination?.route == Screens.FirstLaunch
+            || navController.currentDestination?.route == Screens.NewWallet
 }

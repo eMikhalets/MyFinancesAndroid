@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.emikhalets.myfinances.ui.screens.first_launch.FirstLaunchScreen
 import com.emikhalets.myfinances.ui.screens.new_transaction.NewTransactionScreen
+import com.emikhalets.myfinances.ui.screens.new_wallet.NewWalletScreen
 import com.emikhalets.myfinances.ui.screens.summary.SummaryScreen
 import com.emikhalets.myfinances.ui.screens.transactions.TransactionsScreen
 import com.emikhalets.myfinances.utils.enums.TransactionType
@@ -47,7 +48,7 @@ fun AppNavGraph(
             SummaryScreen(navController = navController)
         }
         composable(Screens.NewWallet) {
-//            SummaryScreen(navController = navController)
+            NewWalletScreen(navController = navController)
         }
         composable(Screens.NewTransaction) {
             navController.getSerializable<TransactionType>(Args.TRANSACTION_TYPE) {
@@ -60,18 +61,18 @@ fun AppNavGraph(
     }
 }
 
-fun NavHostController.navigateFromStartToNewWallet() {
-    navigate(Screens.NewWallet) {
-        popUpTo(graph.findStartDestination().id) {
-            saveState = true
+fun NavHostController.navigateToNewWalletAsStart() {
+    currentDestination?.route?.let {
+        navigate(Screens.NewWallet) {
+            popUpTo(it) { inclusive = true }
         }
     }
 }
 
-fun NavHostController.navigateFromStartToTransactions() {
-    navigate(Screens.Transactions) {
-        popUpTo(graph.findStartDestination().id) {
-            saveState = true
+fun NavHostController.navigateToTransactionsAsStart() {
+    currentDestination?.route?.let {
+        navigate(Screens.Transactions) {
+            popUpTo(it) { inclusive = true }
         }
     }
 }

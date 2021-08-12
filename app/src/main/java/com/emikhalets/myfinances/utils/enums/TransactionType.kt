@@ -5,18 +5,18 @@ import androidx.compose.ui.res.stringResource
 import com.emikhalets.myfinances.R
 
 enum class TransactionType(val value: Int) {
-    EXPENSE(0),
-    INCOME(1);
+    Expense(0),
+    Income(1);
 
     companion object {
         private val map = values().associateBy(TransactionType::value)
-        fun get(value: Int): TransactionType = map[value] ?: EXPENSE
+        fun get(value: Int): TransactionType = map[value] ?: Expense
 
         @Composable
         fun TransactionType.getLabel(): String {
             return when (this) {
-                EXPENSE -> stringResource(R.string.new_expense)
-                INCOME -> stringResource(R.string.new_income)
+                Expense -> stringResource(R.string.new_expense)
+                Income -> stringResource(R.string.new_income)
             }
         }
     }

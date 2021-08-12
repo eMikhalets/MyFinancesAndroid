@@ -16,18 +16,21 @@ class TransactionsVM @Inject constructor(
     private val repo: RoomRepository
 ) : ViewModel() {
 
-    var state by mutableStateOf<TransactionsState>(TransactionsState.Idle)
+    var state by mutableStateOf(TransactionsState())
         private set
 
     fun getTransactions() {
         viewModelScope.launch {
-            state = TransactionsState.Loading
-            state = when (val result = repo.getTransactions()) {
-                is Result.Error -> TransactionsState.Error(result.exception)
-                is Result.Success -> {
-                    if (result.data.isEmpty()) TransactionsState.EmptyTransactions
-                    else TransactionsState.Transactions(result.data)
-                }
+            state = state.setLoading()
+            // Loading expense transactions
+            state = when (val result = repo.getExpenseTransactions()) {
+                is Result.Error -> state.setCommonError(result.exception)
+                is Result.Success -> state.setLoadedExpense(result.data)
+            }
+            // Loading income transactions
+            state = when (val result = repo.getIncomeTransactions()) {
+                is Result.Error -> state.setCommonError(result.exception)
+                is Result.Success -> state.setLoadedIncome(result.data)
             }
         }
     }

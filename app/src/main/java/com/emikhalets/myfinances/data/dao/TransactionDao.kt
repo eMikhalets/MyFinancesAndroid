@@ -9,4 +9,7 @@ interface TransactionDao : BaseDao<Transaction> {
 
     @Query("SELECT * FROM transactions")
     suspend fun getAll(): List<Transaction>
+
+    @Query("SELECT * FROM transactions WHERE type = :type")
+    suspend fun getByType(type: Int): List<Transaction>
 }

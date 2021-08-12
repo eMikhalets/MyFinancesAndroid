@@ -27,7 +27,8 @@ fun AppToolbar(
     selectedWallet: (Wallet) -> Unit
 ) {
     TopAppBar(
-        backgroundColor = MaterialTheme.colors.surface
+        backgroundColor = MaterialTheme.colors.surface,
+        elevation = 0.dp
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

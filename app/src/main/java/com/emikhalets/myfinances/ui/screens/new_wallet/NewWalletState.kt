@@ -1,7 +1,5 @@
 package com.emikhalets.myfinances.ui.screens.new_wallet
 
-import com.emikhalets.myfinances.data.entity.Wallet
-
 data class NewWalletState(
     val name: String,
     val value: Double,

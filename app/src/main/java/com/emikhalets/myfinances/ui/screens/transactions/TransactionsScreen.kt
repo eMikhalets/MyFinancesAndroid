@@ -2,9 +2,10 @@ package com.emikhalets.myfinances.ui.screens.transactions
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -13,43 +14,32 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Transaction
-import com.emikhalets.myfinances.ui.base.LoaderScreen
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.navigateToNewTransaction
+import com.google.accompanist.pager.*
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun TransactionsScreen(
     navController: NavHostController,
     viewModel: TransactionsVM = hiltViewModel()
 ) {
+    val state = viewModel.state
+    val pagerState = rememberPagerState(pageCount = 2)
+
+    LaunchedEffect("init_key") {
+        viewModel.getTransactions()
+    }
+
     Column(Modifier.fillMaxSize()) {
-        when (val state = viewModel.state) {
-            is TransactionsState.Transactions -> {
-                TransactionsList(
-                    navController = navController,
-                    list = state.list,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1f)
-                )
-            }
-            is TransactionsState.Error -> {
-            }
-            TransactionsState.EmptyTransactions -> {
-                TransactionsEmpty(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1f)
-                )
-            }
-            TransactionsState.Loading -> {
-                LoaderScreen()
-            }
-            TransactionsState.Idle -> {
-                viewModel.getTransactions()
-                TransactionsIdle()
-            }
-        }
+        TransactionsPager(
+            navController = navController,
+            pagerState = pagerState,
+            pages = listOf("Expense", "Income"),
+            expense = state.expenseList,
+            income = state.incomeList
+        )
         AddTransaction(
             navController = navController,
             modifier = Modifier
@@ -59,22 +49,52 @@ fun TransactionsScreen(
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TransactionsIdle() {
-    Column(Modifier.fillMaxSize()) {
-    }
-}
-
-@Composable
-fun TransactionsEmpty(
-    modifier: Modifier = Modifier
+fun ColumnScope.TransactionsPager(
+    navController: NavHostController,
+    pagerState: PagerState,
+    pages: List<String>,
+    expense: List<Transaction>,
+    income: List<Transaction>
 ) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+    val scope = rememberCoroutineScope()
+    TabRow(
+        selectedTabIndex = pagerState.currentPage,
+        indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+            )
+        }
     ) {
-        Text(text = stringResource(R.string.empty_transactions))
+        pages.forEachIndexed { index, name ->
+            Tab(
+                selected = pagerState.currentPage == index,
+                text = {
+                    Text(text = name)
+                },
+                onClick = { scope.launch { pagerState.scrollToPage(index) } }
+            )
+        }
+    }
+    HorizontalPager(
+        state = pagerState,
+        modifier = Modifier
+            .fillMaxSize()
+            .weight(1f)
+    ) { page ->
+        when (page) {
+            0 -> TransactionsList(
+                navController = navController,
+                list = expense,
+                modifier = Modifier.fillMaxSize()
+            )
+            1 -> TransactionsList(
+                navController = navController,
+                list = income,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
     }
 }
 
@@ -84,8 +104,18 @@ fun TransactionsList(
     list: List<Transaction>,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier) {
-        items(list.size) {
+    if (list.isEmpty()) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier.fillMaxSize()
+        ) {
+            Text(text = stringResource(R.string.empty_transactions))
+        }
+    } else {
+        LazyColumn(modifier.fillMaxSize()) {
+            items(list.size) {
+            }
         }
     }
 }
@@ -100,13 +130,13 @@ fun AddTransaction(
         modifier = modifier
     ) {
         Button(
-            onClick = { navController.navigateToNewTransaction(TransactionType.EXPENSE) }
+            onClick = { navController.navigateToNewTransaction(TransactionType.Expense) }
         ) {
             Text(text = "Expense")
         }
         Spacer(modifier = Modifier.width(80.dp))
         Button(
-            onClick = { navController.navigateToNewTransaction(TransactionType.INCOME) }
+            onClick = { navController.navigateToNewTransaction(TransactionType.Income) }
         ) {
             Text(text = "Income")
         }

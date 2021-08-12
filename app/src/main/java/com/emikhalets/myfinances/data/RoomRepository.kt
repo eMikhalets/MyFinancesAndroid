@@ -6,6 +6,7 @@ import com.emikhalets.myfinances.data.dao.WalletDao
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Transaction
 import com.emikhalets.myfinances.data.entity.Wallet
+import com.emikhalets.myfinances.utils.enums.TransactionType
 import javax.inject.Inject
 
 class RoomRepository @Inject constructor(
@@ -27,9 +28,18 @@ class RoomRepository @Inject constructor(
 
     // ========== Transactions Dao ==========
 
-    suspend fun getTransactions(): Result<List<Transaction>> {
+    suspend fun getIncomeTransactions(): Result<List<Transaction>> {
         return try {
-            Result.Success(transactionDao.getAll())
+            Result.Success(transactionDao.getByType(TransactionType.Income.value))
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            Result.Error(ex)
+        }
+    }
+
+    suspend fun getExpenseTransactions(): Result<List<Transaction>> {
+        return try {
+            Result.Success(transactionDao.getByType(TransactionType.Expense.value))
         } catch (ex: Exception) {
             ex.printStackTrace()
             Result.Error(ex)

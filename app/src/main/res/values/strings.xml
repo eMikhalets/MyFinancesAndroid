@@ -15,4 +15,6 @@
     <string name="no_categories">Нет категорий</string>
     <string name="empty_transactions">Список транзакций пустой</string>
     <string name="note">Заметка</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отменить</string>
 </resources>

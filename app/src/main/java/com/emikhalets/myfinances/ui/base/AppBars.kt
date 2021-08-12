@@ -21,7 +21,7 @@ fun AppBottomBar(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    var currentScreen by remember { mutableStateOf(Screens.TRANSACTIONS) }
+    var currentScreen by remember { mutableStateOf(Screens.Transactions) }
 
     BottomNavigation(
         backgroundColor = MaterialTheme.colors.primary,
@@ -30,20 +30,20 @@ fun AppBottomBar(
         modifier = modifier
     ) {
         AppBottomBarItem(
-            selected = currentScreen == Screens.TRANSACTIONS,
+            selected = currentScreen == Screens.Transactions,
             icon = Icons.Default.Circle,
             label = stringResource(R.string.title_transactions),
             onClick = {
-                currentScreen = Screens.TRANSACTIONS
+                currentScreen = Screens.Transactions
                 navController.navigateToTransactions()
             }
         )
         AppBottomBarItem(
-            selected = currentScreen == Screens.SUMMARY,
+            selected = currentScreen == Screens.Summary,
             icon = Icons.Default.ListAlt,
             label = stringResource(R.string.title_summary),
             onClick = {
-                currentScreen = Screens.SUMMARY
+                currentScreen = Screens.Summary
                 navController.navigateToSummary()
             }
         )

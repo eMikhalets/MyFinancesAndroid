@@ -4,20 +4,24 @@ import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.emikhalets.myfinances.ui.screens.first_launch.FirstLaunchScreen
 import com.emikhalets.myfinances.ui.screens.new_transaction.NewTransactionScreen
 import com.emikhalets.myfinances.ui.screens.summary.SummaryScreen
 import com.emikhalets.myfinances.ui.screens.transactions.TransactionsScreen
 import com.emikhalets.myfinances.utils.enums.TransactionType
 
 object Screens {
-    const val TRANSACTIONS = "transactions"
-    const val SUMMARY = "summary"
-    const val NEW_TRANSACTION = "new_transaction"
+    const val FirstLaunch = "first_launch"
+    const val Transactions = "transactions"
+    const val Summary = "summary"
+    const val NewTransaction = "new_transaction"
     const val NewCategory = "new_category"
+    const val NewWallet = "new_wallet"
     const val Categories = "categories"
 }
 
@@ -31,15 +35,21 @@ fun AppNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screens.TRANSACTIONS
+        startDestination = Screens.FirstLaunch
     ) {
-        composable(Screens.TRANSACTIONS) {
+        composable(Screens.FirstLaunch) {
+            FirstLaunchScreen(navController = navController)
+        }
+        composable(Screens.Transactions) {
             TransactionsScreen(navController = navController)
         }
-        composable(Screens.SUMMARY) {
+        composable(Screens.Summary) {
             SummaryScreen(navController = navController)
         }
-        composable(Screens.NEW_TRANSACTION) {
+        composable(Screens.NewWallet) {
+//            SummaryScreen(navController = navController)
+        }
+        composable(Screens.NewTransaction) {
             navController.getSerializable<TransactionType>(Args.TRANSACTION_TYPE) {
                 NewTransactionScreen(
                     navController = navController,
@@ -50,20 +60,40 @@ fun AppNavGraph(
     }
 }
 
+fun NavHostController.navigateFromStartToNewWallet() {
+    navigate(Screens.NewWallet) {
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
+    }
+}
+
+fun NavHostController.navigateFromStartToTransactions() {
+    navigate(Screens.Transactions) {
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
+    }
+}
+
 fun NavHostController.navigateToTransactions() {
-    if (this.currentDestination?.route != Screens.TRANSACTIONS) {
-        navigate(Screens.TRANSACTIONS)
+    if (this.currentDestination?.route != Screens.Transactions) {
+        navigate(Screens.Transactions)
     }
 }
 
 fun NavHostController.navigateToSummary() {
-    if (this.currentDestination?.route != Screens.SUMMARY) {
-        navigate(Screens.SUMMARY)
+    if (this.currentDestination?.route != Screens.Summary) {
+        navigate(Screens.Summary)
     }
 }
 
 fun NavHostController.navigateToNewTransaction(type: TransactionType) {
-    navigate(Screens.NEW_TRANSACTION, bundleOf(Args.TRANSACTION_TYPE to type))
+    navigate(Screens.NewTransaction, bundleOf(Args.TRANSACTION_TYPE to type))
+}
+
+fun NavHostController.navigateBack() {
+    popBackStack()
 }
 
 private fun NavController.navigate(

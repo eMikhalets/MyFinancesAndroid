@@ -5,7 +5,7 @@ import androidx.room.Query
 import com.emikhalets.myfinances.data.entity.Transaction
 
 @Dao
-interface TransactionDao {
+interface TransactionDao : BaseDao<Transaction> {
 
     @Query("SELECT * FROM transactions")
     suspend fun getAll(): List<Transaction>

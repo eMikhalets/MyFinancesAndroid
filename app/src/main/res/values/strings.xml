@@ -5,6 +5,8 @@
     <string name="title_summary">Сводка</string>
     <string name="title_categories">Categories</string>
 
+    <string name="var_amount">%.2f ₽</string>
+
     <string name="new_transaction">Новая транзакция</string>
     <string name="start_value">Начальная сумма</string>
     <string name="value">Значение</string>

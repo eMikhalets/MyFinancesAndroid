@@ -4,37 +4,59 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.ui.base.AppBottomBar
+import com.emikhalets.myfinances.ui.base.AppToolbar
 import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.AppNavGraph
-import com.emikhalets.myfinances.utils.Screens
 
 @Composable
 fun AppScreen(
-    navController: NavHostController
-
+    navController: NavHostController,
+    sharedViewModel: SharedVM = hiltViewModel()
 ) {
+    val state = sharedViewModel.state
+    var showToolbar by remember { mutableStateOf(false) }
+    var showBottomNav by remember { mutableStateOf(false) }
+    var selectedWallet by remember { mutableStateOf(Wallet()) }
+
+    LaunchedEffect("innit_launch") {
+        sharedViewModel.getWallets()
+    }
+    LaunchedEffect(state) {
+        if (state.wallets.isNotEmpty()) selectedWallet = state.wallets.first()
+    }
+
     MyFinancesTheme {
         Scaffold(
-            topBar = {},
+            topBar = {
+                if (showToolbar) {
+                    AppToolbar(
+                        navController = navController,
+                        wallet = selectedWallet,
+                        selectedWallet = { selectedWallet = it }
+                    )
+                }
+            },
             bottomBar = {
-                if (isShowBottomBar(navController)) {
+                if (showBottomNav) {
                     AppBottomBar(navController = navController)
                 }
             },
             backgroundColor = MaterialTheme.colors.surface
         ) {
             Box(modifier = Modifier.padding(it)) {
-                AppNavGraph(navController = navController)
+                AppNavGraph(
+                    navController = navController,
+                    selectedWallet = selectedWallet,
+                    showToolbar = { bool -> showToolbar = bool },
+                    showBottomNav = { bool -> showBottomNav = bool }
+                )
             }
         }
     }
-}
-
-private fun isShowBottomBar(navController: NavHostController): Boolean {
-    return navController.currentDestination?.route == Screens.FirstLaunch
-            || navController.currentDestination?.route == Screens.NewWallet
 }

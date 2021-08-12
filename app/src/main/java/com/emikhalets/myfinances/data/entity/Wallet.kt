@@ -13,6 +13,13 @@ data class Wallet(
 ) {
 
     @Ignore
+    constructor() : this(
+        walletId = 0,
+        name = "",
+        amount = 0.0
+    )
+
+    @Ignore
     constructor(
         name: String,
         amount: Double

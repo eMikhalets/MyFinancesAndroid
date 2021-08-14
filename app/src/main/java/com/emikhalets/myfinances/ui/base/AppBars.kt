@@ -1,91 +1,116 @@
 package com.emikhalets.myfinances.ui.base
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
+import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Circle
-import androidx.compose.material.icons.filled.ListAlt
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.data.entity.Wallet
-import com.emikhalets.myfinances.utils.Screens
-import com.emikhalets.myfinances.utils.navigateToSummary
-import com.emikhalets.myfinances.utils.navigateToTransactions
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.emikhalets.myfinances.utils.navigation.BottomNav
+import com.emikhalets.myfinances.utils.navigation.navigateBack
 
 @Composable
-fun AppToolbar(
+fun ScreenScaffold(
     navController: NavHostController,
-    wallet: Wallet,
-    selectedWallet: (Wallet) -> Unit
+    title: String,
+    backIcon: Boolean = false,
+    content: @Composable () -> Unit
 ) {
-    TopAppBar(
-        backgroundColor = MaterialTheme.colors.surface,
-        elevation = 0.dp
+    Scaffold(
+        topBar = {
+            AppToolbar(
+                navController = navController,
+                title = title,
+                backIcon = backIcon
+            )
+        }
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = wallet.name)
-            Text(text = stringResource(R.string.var_amount, wallet.amount))
+        Box(Modifier.padding(it)) {
+            content()
         }
     }
 }
 
 @Composable
-fun AppBottomBar(
+fun AppToolbar(
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    title: String,
+    backIcon: Boolean = false,
+    actions: @Composable RowScope.() -> Unit = {}
 ) {
-    val currentScreen = navController.currentDestination?.route
+    TopAppBar(
+        title = { Text(title) },
+        navigationIcon = {
+            if (backIcon) Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "",
+                modifier = Modifier.clickable { navController.navigateBack() }
+            )
+        },
+        actions = actions,
+        backgroundColor = MaterialTheme.colors.primarySurface,
+        contentColor = contentColorFor(backgroundColor),
+        elevation = 0.dp
+    )
+}
 
-    BottomNavigation(
-        backgroundColor = MaterialTheme.colors.primary,
-        contentColor = MaterialTheme.colors.onPrimary,
-        elevation = 0.dp,
-        modifier = modifier
-    ) {
-        AppBottomBarItem(
-            selected = currentScreen == Screens.Transactions,
-            icon = Icons.Default.Circle,
-            label = stringResource(R.string.title_transactions),
-            onClick = { navController.navigateToTransactions() }
-        )
-        AppBottomBarItem(
-            selected = currentScreen == Screens.Summary,
-            icon = Icons.Default.ListAlt,
-            label = stringResource(R.string.title_summary),
-            onClick = { navController.navigateToSummary() }
-        )
+@Composable
+fun AppBottomBar(
+    navController: NavHostController
+) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+    val items = listOf(
+        BottomNav.Transactions,
+        BottomNav.Summary,
+        BottomNav.Lists
+    )
+
+    BottomNavigation {
+        items.forEach { item ->
+            AppBottomBarItem(
+                icon = item.icon,
+                label = item.label,
+                selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
+                onClick = {
+                    navController.navigate(item.route) {
+                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
+        }
     }
 }
 
 @Composable
 private fun RowScope.AppBottomBarItem(
-    selected: Boolean,
     icon: ImageVector,
-    label: String,
+    label: Int,
+    selected: Boolean,
     onClick: () -> Unit
 ) {
-//    val iconColor = if (selected) MaterialTheme.colors.onPrimary
-//    else MaterialTheme.colors.error
     BottomNavigationItem(
         icon = {
             Icon(
                 imageVector = icon,
-                tint = MaterialTheme.colors.onPrimary,
                 contentDescription = ""
             )
         },
-        label = { Text(label) },
+        label = { Text(stringResource(label)) },
         selected = selected,
         onClick = onClick
     )

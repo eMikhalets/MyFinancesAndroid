@@ -24,7 +24,7 @@ import com.emikhalets.myfinances.ui.screens.dialogs.ChooseCategoryDialog
 import com.emikhalets.myfinances.utils.enums.KeyboardKey
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.enums.TransactionType.Companion.getLabel
-import com.emikhalets.myfinances.utils.navigateBack
+import com.emikhalets.myfinances.utils.navigation.navigateBack
 
 @Composable
 fun NewTransactionScreen(
@@ -52,7 +52,7 @@ fun NewTransactionScreen(
         Row(Modifier.fillMaxWidth()) {
             NewTransactionButton(
                 label = stringResource(R.string.wallet),
-                name = selectedCategory?.name ?: stringResource(R.string.no_categories),
+                name = selectedCategory?.name ?: stringResource(R.string.empty_categories),
                 icon = R.drawable.ic_wallet,
                 color = MaterialTheme.colors.primary.copy(alpha = 0.8f),
                 error = state.walletError,
@@ -62,7 +62,7 @@ fun NewTransactionScreen(
             )
             NewTransactionButton(
                 label = stringResource(R.string.category),
-                name = selectedCategory?.name ?: stringResource(R.string.no_categories),
+                name = selectedCategory?.name ?: stringResource(R.string.empty_categories),
                 icon = R.drawable.ic_coins,
                 color = MaterialTheme.colors.primary.copy(alpha = 0.5f),
                 error = state.categoryError,

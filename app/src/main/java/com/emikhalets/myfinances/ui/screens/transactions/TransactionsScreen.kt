@@ -14,8 +14,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Transaction
+import com.emikhalets.myfinances.ui.base.ScreenScaffold
 import com.emikhalets.myfinances.utils.enums.TransactionType
-import com.emikhalets.myfinances.utils.navigateToNewTransaction
+import com.emikhalets.myfinances.utils.navigation.navigateToNewTransaction
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
@@ -32,20 +33,25 @@ fun TransactionsScreen(
         viewModel.getTransactions()
     }
 
-    Column(Modifier.fillMaxSize()) {
-        TransactionsPager(
-            navController = navController,
-            pagerState = pagerState,
-            pages = listOf("Expense", "Income"),
-            expense = state.expenseList,
-            income = state.incomeList
-        )
-        AddTransaction(
-            navController = navController,
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        )
+    ScreenScaffold(
+        navController = navController,
+        title = stringResource(R.string.title_transactions)
+    ) {
+        Column(Modifier.fillMaxSize()) {
+            TransactionsPager(
+                navController = navController,
+                pagerState = pagerState,
+                pages = listOf("Expense", "Income"),
+                expense = state.expenseList,
+                income = state.incomeList
+            )
+            AddTransaction(
+                navController = navController,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+            )
+        }
     }
 }
 

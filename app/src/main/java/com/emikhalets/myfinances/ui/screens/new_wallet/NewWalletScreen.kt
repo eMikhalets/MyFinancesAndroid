@@ -30,7 +30,7 @@ fun NewWalletScreen(
 
     Column {
         AppTextField(
-            placeholder = stringResource(R.string.name),
+            label = stringResource(R.string.name),
             value = name,
             onValueChange = { name = it },
             type = KeyboardType.Text,
@@ -38,7 +38,7 @@ fun NewWalletScreen(
             errorEmpty = state.emptyNameError
         )
         AppTextField(
-            placeholder = stringResource(R.string.start_value),
+            label = stringResource(R.string.start_value),
             value = value,
             onValueChange = { value = it },
             type = KeyboardType.Number

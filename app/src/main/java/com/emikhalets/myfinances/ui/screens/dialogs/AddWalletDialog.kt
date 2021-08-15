@@ -36,7 +36,7 @@ fun AddWalletDialog(
                 name = it
             },
             leadingIcon = Icons.Default.Edit,
-            placeholder = stringResource(R.string.name),
+            label = stringResource(R.string.name),
             errorEmpty = nameError
         )
         AppTextField(
@@ -50,7 +50,7 @@ fun AddWalletDialog(
                 }
             },
             leadingIcon = Icons.Default.Edit,
-            placeholder = stringResource(R.string.value_number),
+            label = stringResource(R.string.value_number),
             errorInvalid = valueError,
             type = KeyboardType.Number,
             visualTransformation = CurrencyTransformation()

@@ -22,7 +22,7 @@ import com.emikhalets.myfinances.R
 @Composable
 fun AppTextField(
     value: String,
-    placeholder: String,
+    label: String,
     onValueChange: (String) -> Unit,
     leadingIcon: ImageVector? = null,
     trailingIcon: ImageVector? = null,
@@ -35,7 +35,7 @@ fun AppTextField(
     errorEmpty: Boolean = false,
     errorInvalid: Boolean = false
 ) {
-    val borderColor = if (errorEmpty || errorInvalid) Color.Red else Color.Gray
+    val error = errorEmpty || errorInvalid
     val errorMessage: String = when {
         errorEmpty -> stringResource(R.string.error_required_field)
         errorInvalid -> stringResource(R.string.error_invalid_value)
@@ -46,31 +46,34 @@ fun AppTextField(
         TextField(
             value = value,
             onValueChange = onValueChange,
-            placeholder = { Text(placeholder) },
-            leadingIcon = {
-                leadingIcon?.let {
-                    Icon(imageVector = leadingIcon, contentDescription = "", tint = borderColor)
-                }
+            label = {
+                Text(
+                    text = label,
+                    color = MaterialTheme.colors.onPrimary
+                )
             },
-            trailingIcon = {
-                trailingIcon?.let {
-                    Icon(imageVector = trailingIcon, contentDescription = "", tint = borderColor)
-                }
-            },
+            leadingIcon = if (leadingIcon != null) {
+                { Icon(imageVector = leadingIcon, contentDescription = "") }
+            } else null,
+            trailingIcon = if (trailingIcon != null) {
+                { Icon(imageVector = trailingIcon, contentDescription = "") }
+            } else null,
             textStyle = MaterialTheme.typography.body1,
-            shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = MaterialTheme.colors.surface,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                leadingIconColor = Color.Gray,
-                errorTrailingIconColor = Color.Gray
+                backgroundColor = MaterialTheme.colors.background,
+                focusedIndicatorColor = MaterialTheme.colors.primary,
+                unfocusedIndicatorColor = MaterialTheme.colors.secondary,
+                errorIndicatorColor = MaterialTheme.colors.error,
+                leadingIconColor = MaterialTheme.colors.secondary,
+                trailingIconColor = MaterialTheme.colors.secondary,
+                errorLabelColor = MaterialTheme.colors.error,
+                errorTrailingIconColor = MaterialTheme.colors.secondary
             ),
             enabled = enabled,
             readOnly = readOnly,
             singleLine = singleLine,
             maxLines = Int.MAX_VALUE,
+            isError = error,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = type,
                 capitalization = capitalization
@@ -79,7 +82,6 @@ fun AppTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp, start = 8.dp, end = 8.dp)
-                .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(8.dp))
         )
         if (errorEmpty || errorInvalid) {
             Text(

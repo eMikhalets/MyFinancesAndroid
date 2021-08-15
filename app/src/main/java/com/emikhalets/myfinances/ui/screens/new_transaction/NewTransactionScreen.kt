@@ -1,18 +1,19 @@
 package com.emikhalets.myfinances.ui.screens.new_transaction
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -20,8 +21,11 @@ import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.ui.base.AppTextField
+import com.emikhalets.myfinances.ui.base.ScreenScaffold
+import com.emikhalets.myfinances.ui.screens.dialogs.AddCategoryDialog
+import com.emikhalets.myfinances.ui.screens.dialogs.AddWalletDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.ChooseCategoryDialog
-import com.emikhalets.myfinances.utils.enums.KeyboardKey
+import com.emikhalets.myfinances.ui.screens.dialogs.ChooseWalletDialog
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.enums.TransactionType.Companion.getLabel
 import com.emikhalets.myfinances.utils.navigation.navigateBack
@@ -35,108 +39,140 @@ fun NewTransactionScreen(
     val state = viewModel.state
     var note by remember { mutableStateOf("") }
     var value by remember { mutableStateOf("") }
-    var selectedWallet by remember { mutableStateOf<Wallet?>(null) }
-    var selectedCategory by remember { mutableStateOf<Category?>(null) }
-    var addCategoryDialog by remember { mutableStateOf(false) }
+    var wallet by remember { mutableStateOf<Wallet?>(null) }
+    var category by remember { mutableStateOf<Category?>(null) }
+    var showChoosingCategory by remember { mutableStateOf(false) }
+    var showChoosingWallet by remember { mutableStateOf(false) }
+    var showAddingCategory by remember { mutableStateOf(false) }
+    var showAddingWallet by remember { mutableStateOf(false) }
 
-    Column {
-        Text(
-            text = transactionType.getLabel(),
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colors.onPrimary,
-            modifier = Modifier
-                .background(color = MaterialTheme.colors.primary)
-                .fillMaxWidth()
-                .padding(top = 8.dp, bottom = 8.dp)
-        )
-        Row(Modifier.fillMaxWidth()) {
-            NewTransactionButton(
-                label = stringResource(R.string.wallet),
-                name = selectedCategory?.name ?: stringResource(R.string.empty_categories),
-                icon = R.drawable.ic_wallet,
-                color = MaterialTheme.colors.primary.copy(alpha = 0.8f),
-                error = state.walletError,
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable {}
-            )
-            NewTransactionButton(
-                label = stringResource(R.string.category),
-                name = selectedCategory?.name ?: stringResource(R.string.empty_categories),
-                icon = R.drawable.ic_coins,
-                color = MaterialTheme.colors.primary.copy(alpha = 0.5f),
-                error = state.categoryError,
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable { addCategoryDialog = true }
-            )
-        }
-        AppTextField(
-            placeholder = stringResource(R.string.note),
-            value = note,
-            onValueChange = { note = it },
-            type = KeyboardType.Text
-        )
-        AppTextField(
-            placeholder = stringResource(R.string.value),
-            value = value,
-            onValueChange = { value = it },
-            type = KeyboardType.Number
-        )
-        Spacer(Modifier.height(16.dp))
-        Row(Modifier.fillMaxWidth()) {
-            TextButton(
-                onClick = { navController.navigateBack() },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(8.dp)
-            ) {
-                Text(text = stringResource(R.string.cancel))
-            }
-            TextButton(
-                onClick = {
-                    viewModel.saveTransaction(
-                        selectedWallet?.walletId,
-                        selectedCategory?.categoryId,
-                        note,
-                        value,
-                        transactionType
-                    )
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(8.dp)
-            ) {
-                Text(text = stringResource(R.string.save))
-            }
-        }
+    LaunchedEffect("init_key") {
+        viewModel.getCategories(transactionType)
+        viewModel.getWallets()
     }
-    if (addCategoryDialog) {
-        ChooseCategoryDialog(
-            categories = state.categories,
-            onSelect = { selectedCategory = it },
-            onDismiss = { addCategoryDialog = it }
-        )
+
+    ScreenScaffold(
+        navController = navController,
+        title = transactionType.getLabel()
+    ) {
+        Column {
+            Row(Modifier.fillMaxWidth()) {
+                ButtonChooser(
+                    label = stringResource(R.string.wallet),
+                    name = wallet?.name ?: stringResource(R.string.empty_wallets),
+                    icon = R.drawable.ic_wallet,
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { showChoosingWallet = true }
+                )
+                ButtonChooser(
+                    label = stringResource(R.string.category),
+                    name = category?.name ?: stringResource(R.string.empty_categories),
+                    icon = R.drawable.ic_coins,
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { showChoosingCategory = true }
+                )
+            }
+            AppTextField(
+                value = note,
+                onValueChange = { note = it },
+                label = stringResource(R.string.note)
+            )
+            AppTextField(
+                label = stringResource(R.string.value),
+                value = value,
+                onValueChange = { value = it },
+                type = KeyboardType.Number
+            )
+            Spacer(Modifier.height(16.dp))
+            Row(Modifier.fillMaxWidth()) {
+                TextButton(
+                    onClick = { navController.navigateBack() },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(8.dp)
+                ) {
+                    Text(text = stringResource(R.string.cancel))
+                }
+                TextButton(
+                    onClick = {
+                        viewModel.saveTransaction(
+                            wallet?.walletId,
+                            category?.categoryId,
+                            note,
+                            value,
+                            transactionType
+                        )
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(8.dp)
+                ) {
+                    Text(text = stringResource(R.string.save))
+                }
+            }
+        }
+        if (showChoosingWallet) {
+            ChooseWalletDialog(
+                wallets = state.wallets,
+                onSelect = {
+                    wallet = it
+                    showChoosingWallet = false
+                },
+                onDismiss = { showChoosingWallet = false },
+                onAddClick = {
+                    showChoosingWallet = false
+                    showAddingWallet = true
+                }
+            )
+        }
+        if (showAddingWallet) {
+            AddWalletDialog(
+                onSave = { name, value ->
+                    showAddingWallet = false
+                    viewModel.saveWallet(name, value)
+                },
+                onDismiss = { showAddingWallet = false }
+            )
+        }
+        if (showChoosingCategory) {
+            ChooseCategoryDialog(
+                categories = state.categories,
+                onSelect = {
+                    category = it
+                    showChoosingCategory = false
+                },
+                onDismiss = { showChoosingCategory = false },
+                onAddClick = {
+                    showChoosingCategory = false
+                    showAddingCategory = true
+                }
+            )
+        }
+        if (showAddingCategory) {
+            AddCategoryDialog(
+                onSave = {
+                    showAddingCategory = false
+                    viewModel.saveCategory(transactionType, it)
+                },
+                onDismiss = { showAddingCategory = false }
+            )
+        }
     }
 }
 
 @Composable
-fun NewTransactionButton(
+fun ButtonChooser(
     label: String,
     name: String,
     icon: Int,
-    color: Color,
-    error: Boolean,
     modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .border(
-                width = 2.dp,
-                color = if (error) Color.Red else Color.Transparent
-            )
-            .background(color = color)
+            .background(MaterialTheme.colors.primary)
             .padding(8.dp)
     ) {
         Icon(
@@ -148,7 +184,7 @@ fun NewTransactionButton(
         Column {
             Text(
                 text = label,
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colors.onPrimary
             )
             Text(
@@ -157,86 +193,5 @@ fun NewTransactionButton(
                 color = MaterialTheme.colors.onPrimary
             )
         }
-    }
-}
-
-@Composable
-fun NewTransactionKeyboard(
-    onClickKey: (Int) -> Unit
-) {
-    Column(Modifier.padding(4.dp)) {
-        Row {
-            KeyboardButton(
-                value = KeyboardKey.Num1,
-                onClickKey = {}
-            )
-            KeyboardButton(
-                value = KeyboardKey.Num2,
-                onClickKey = {}
-            )
-            KeyboardButton(
-                value = KeyboardKey.Num3,
-                onClickKey = {}
-            )
-        }
-        Row {
-            KeyboardButton(
-                value = KeyboardKey.Num4,
-                onClickKey = {}
-            )
-            KeyboardButton(
-                value = KeyboardKey.Num5,
-                onClickKey = {}
-            )
-            KeyboardButton(
-                value = KeyboardKey.Num6,
-                onClickKey = {}
-            )
-        }
-        Row {
-            KeyboardButton(
-                value = KeyboardKey.Num7,
-                onClickKey = {}
-            )
-            KeyboardButton(
-                value = KeyboardKey.Num8,
-                onClickKey = {}
-            )
-            KeyboardButton(
-                value = KeyboardKey.Num9,
-                onClickKey = {}
-            )
-        }
-        Row {
-            KeyboardButton(
-                value = KeyboardKey.Num0,
-                onClickKey = {}
-            )
-            KeyboardButton(
-                value = KeyboardKey.Dot,
-                onClickKey = {}
-            )
-            KeyboardButton(
-                value = KeyboardKey.Delete,
-                onClickKey = {}
-            )
-        }
-    }
-}
-
-@Composable
-fun KeyboardButton(
-    value: KeyboardKey,
-    onClickKey: (KeyboardKey) -> Unit
-) {
-    Button(
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.primary,
-            contentColor = MaterialTheme.colors.onPrimary
-        ),
-        modifier = Modifier.padding(4.dp),
-        onClick = { onClickKey(value) }
-    ) {
-        Text(value.value)
     }
 }

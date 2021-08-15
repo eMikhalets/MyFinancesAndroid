@@ -51,7 +51,12 @@ fun AppToolbar(
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
-        title = { Text(title) },
+        title = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.h5
+            )
+        },
         navigationIcon = {
             if (backIcon) Icon(
                 imageVector = Icons.Default.ArrowBack,

@@ -32,7 +32,7 @@ fun AddCategoryDialog(
                 nameError = false
             },
             leadingIcon = Icons.Default.Edit,
-            placeholder = stringResource(R.string.name),
+            label = stringResource(R.string.name),
             errorEmpty = nameError
         )
         Spacer(Modifier.height(16.dp))

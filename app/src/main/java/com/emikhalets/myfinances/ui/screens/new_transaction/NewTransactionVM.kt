@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.myfinances.data.Result
 import com.emikhalets.myfinances.data.RoomRepository
+import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Transaction
+import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -24,10 +26,28 @@ class NewTransactionVM @Inject constructor(
 
     fun getCategories(type: TransactionType) {
         viewModelScope.launch {
-            state = state.setLoading()
             state = when (val result = repo.getCategories(type.value)) {
                 is Result.Error -> state.setCommonError(result.exception)
                 is Result.Success -> state.setLoadedCategories(result.data)
+            }
+        }
+    }
+
+    fun getWallets() {
+        viewModelScope.launch {
+            state = when (val result = repo.getWallets()) {
+                is Result.Error -> state.setCommonError(result.exception)
+                is Result.Success -> state.setLoadedWallets(result.data)
+            }
+        }
+    }
+
+    fun saveCategory(type: TransactionType, name: String) {
+        viewModelScope.launch {
+            val category = Category(name, type.value, 1)
+            state = when (val result = repo.insertCategory(category)) {
+                is Result.Error -> state.setCommonError(result.exception)
+                is Result.Success -> state.setSavedCategory()
             }
         }
     }
@@ -41,13 +61,13 @@ class NewTransactionVM @Inject constructor(
     ) {
         // Check wallet
         if (wallet == null) {
-            state = state.setWalletError()
+//            state = state.setWalletError()
             return
         }
 
         // Check category
         if (category == null) {
-            state = state.setCategoryError()
+//            state = state.setCategoryError()
             return
         }
 
@@ -57,12 +77,11 @@ class NewTransactionVM @Inject constructor(
             valueDouble = value.toDouble()
         } catch (ex: NumberFormatException) {
             ex.printStackTrace()
-            state = state.copy(valueError = true)
+//            state = state.copy(valueError = true)
             return
         }
 
         viewModelScope.launch {
-            state = state.setLoading()
             val transaction = Transaction(
                 categoryId = category,
                 walletId = wallet,
@@ -74,6 +93,16 @@ class NewTransactionVM @Inject constructor(
             state = when (val result = repo.insertTransaction(transaction)) {
                 is Result.Error -> state.setCommonError(result.exception)
                 is Result.Success -> state.setSavedTransaction()
+            }
+        }
+    }
+
+    fun saveWallet(name: String, value: Double) {
+        viewModelScope.launch {
+            val wallet = Wallet(name, value)
+            state = when (val result = repo.insertWallet(wallet)) {
+                is Result.Error -> state.setCommonError(result.exception)
+                is Result.Success -> state.setSavedWallet()
             }
         }
     }

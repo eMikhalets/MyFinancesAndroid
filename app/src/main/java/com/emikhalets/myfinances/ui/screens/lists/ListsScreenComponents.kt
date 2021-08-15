@@ -31,10 +31,10 @@ fun WalletsList(
     Column {
         AppTextWithIcon(
             text = stringResource(R.string.new_wallet),
-            icon = Icons.Default.Add,
+            iconVector = Icons.Default.Add,
             onClick = { onAddClick() }
         )
-        Divider(color = MaterialTheme.colors.primary)
+        Divider(color = MaterialTheme.colors.secondary)
         if (list.isEmpty()) AppTextFillScreen(
             text = stringResource(R.string.empty_wallets)
         )
@@ -83,10 +83,10 @@ fun CategoriesList(
     Column {
         AppTextWithIcon(
             text = stringResource(R.string.new_category),
-            icon = Icons.Default.Add,
+            iconVector = Icons.Default.Add,
             onClick = { onAddClick() }
         )
-        Divider(color = MaterialTheme.colors.primary)
+        Divider(color = MaterialTheme.colors.secondary)
         if (list.isEmpty()) AppTextFillScreen(
             text = stringResource(R.string.empty_categories)
         )

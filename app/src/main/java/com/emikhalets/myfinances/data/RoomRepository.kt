@@ -26,6 +26,15 @@ class RoomRepository @Inject constructor(
         }
     }
 
+    suspend fun insertCategory(category: Category): Result<Long> {
+        return try {
+            Result.Success(categoryDao.insert(category))
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            Result.Error(ex)
+        }
+    }
+
     // ========== Transactions Dao ==========
 
     suspend fun getIncomeTransactions(): Result<List<Transaction>> {

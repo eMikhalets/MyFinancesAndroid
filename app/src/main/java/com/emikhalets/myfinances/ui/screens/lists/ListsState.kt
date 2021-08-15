@@ -7,7 +7,11 @@ data class ListsState(
     val categoriesExpense: List<Category>,
     val categoriesIncome: List<Category>,
     val wallets: List<Wallet>,
+    val categoryExpenseSaved: Boolean,
+    val categoryIncomeSaved: Boolean,
+    val walletSaved: Boolean,
     val loading: Boolean,
+    val errorCategorySaved: Boolean,
     val error: Exception?
 ) {
 
@@ -15,32 +19,47 @@ data class ListsState(
         categoriesExpense = emptyList(),
         categoriesIncome = emptyList(),
         wallets = emptyList(),
+        categoryExpenseSaved = false,
+        categoryIncomeSaved = false,
+        walletSaved = false,
         loading = false,
+        errorCategorySaved = false,
         error = null
     )
 
     fun setLoadedCategoriesExpense(list: List<Category>): ListsState {
-        return this.copy(categoriesExpense = list)
+        return this.copy(
+            categoriesExpense = list,
+            categoryExpenseSaved = false
+        )
     }
 
     fun setLoadedCategoriesIncome(list: List<Category>): ListsState {
-        return this.copy(categoriesIncome = list)
+        return this.copy(
+            categoriesIncome = list,
+            categoryIncomeSaved = false
+        )
     }
 
     fun setLoadedWallets(list: List<Wallet>): ListsState {
-        return this.copy(wallets = list)
+        return this.copy(
+            wallets = list,
+            walletSaved = false
+        )
     }
 
-    fun setCommonError(exception: Exception): ListsState {
-        return this.copy(
-            error = exception,
-            loading = false
-        )
+    fun setCategorySaved(): ListsState {
+        return this.copy(categoryExpenseSaved = true)
+    }
+
+    fun setErrorCommon(exception: Exception): ListsState {
+        return this.copy(error = exception)
     }
 
     fun setLoading(): ListsState {
         return this.copy(
             loading = true,
+            errorCategorySaved = false,
             error = null
         )
     }

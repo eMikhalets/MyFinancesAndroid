@@ -29,7 +29,7 @@ fun ListsScreen(
         stringResource(R.string.category_expense),
         stringResource(R.string.category_income)
     )
-    var addCategoryDialog by remember { mutableStateOf(false) }
+    var showAddingCategory by remember { mutableStateOf(false) }
     var selectedCategoryType by remember { mutableStateOf(TransactionType.Expense) }
 
     LaunchedEffect("init_key") {
@@ -65,7 +65,7 @@ fun ListsScreen(
                         list = state.categoriesExpense,
                         onAddClick = {
                             selectedCategoryType = TransactionType.Expense
-                            addCategoryDialog = true
+                            showAddingCategory = true
                         },
                         modifier = Modifier.fillMaxSize()
                     )
@@ -74,19 +74,20 @@ fun ListsScreen(
                         list = state.categoriesIncome,
                         onAddClick = {
                             selectedCategoryType = TransactionType.Income
-                            addCategoryDialog = true
+                            showAddingCategory = true
                         },
                         modifier = Modifier.fillMaxSize()
                     )
                 }
             }
         }
-        if (addCategoryDialog) {
+        if (showAddingCategory) {
             AddCategoryDialog(
                 onSave = {
-                    addCategoryDialog = false
+                    showAddingCategory = false
                     viewModel.saveCategory(selectedCategoryType, it)
-                }
+                },
+                onDismiss = { showAddingCategory = false }
             )
         }
     }

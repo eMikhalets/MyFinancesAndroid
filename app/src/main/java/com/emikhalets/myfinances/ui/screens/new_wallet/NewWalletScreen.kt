@@ -30,24 +30,18 @@ fun NewWalletScreen(
 
     Column {
         AppTextField(
-            label = stringResource(R.string.name),
+            placeholder = stringResource(R.string.name),
             value = name,
             onValueChange = { name = it },
-            keyboardType = KeyboardType.Text,
-            keyboardCapitalization = KeyboardCapitalization.Sentences,
-            emptyError = state.emptyNameError,
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
+            type = KeyboardType.Text,
+            capitalization = KeyboardCapitalization.Sentences,
+            errorEmpty = state.emptyNameError
         )
         AppTextField(
-            label = stringResource(R.string.start_value),
+            placeholder = stringResource(R.string.start_value),
             value = value,
             onValueChange = { value = it },
-            keyboardType = KeyboardType.Number,
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
+            type = KeyboardType.Number
         )
         Spacer(Modifier.height(16.dp))
         TextButton(

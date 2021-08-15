@@ -72,22 +72,16 @@ fun NewTransactionScreen(
             )
         }
         AppTextField(
-            label = stringResource(R.string.note),
+            placeholder = stringResource(R.string.note),
             value = note,
             onValueChange = { note = it },
-            keyboardType = KeyboardType.Text,
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
+            type = KeyboardType.Text
         )
         AppTextField(
-            label = stringResource(R.string.value),
+            placeholder = stringResource(R.string.value),
             value = value,
             onValueChange = { value = it },
-            keyboardType = KeyboardType.Number,
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
+            type = KeyboardType.Number
         )
         Spacer(Modifier.height(16.dp))
         Row(Modifier.fillMaxWidth()) {

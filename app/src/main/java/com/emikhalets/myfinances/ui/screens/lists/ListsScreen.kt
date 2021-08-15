@@ -11,6 +11,7 @@ import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.ui.base.AppPager
 import com.emikhalets.myfinances.ui.base.ScreenScaffold
 import com.emikhalets.myfinances.ui.screens.dialogs.AddCategoryDialog
+import com.emikhalets.myfinances.ui.screens.dialogs.AddWalletDialog
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
@@ -30,6 +31,7 @@ fun ListsScreen(
         stringResource(R.string.category_income)
     )
     var showAddingCategory by remember { mutableStateOf(false) }
+    var showAddingWallet by remember { mutableStateOf(false) }
     var selectedCategoryType by remember { mutableStateOf(TransactionType.Expense) }
 
     LaunchedEffect("init_key") {
@@ -40,6 +42,7 @@ fun ListsScreen(
 
     LaunchedEffect(state) {
         if (state.categoryExpenseSaved) viewModel.getCategoriesExpense()
+        if (state.needUpdateWallets) viewModel.getWallets()
     }
 
     ScreenScaffold(
@@ -58,7 +61,7 @@ fun ListsScreen(
                     0 -> WalletsList(
                         navController = navController,
                         list = state.wallets,
-                        onAddClick = {}
+                        onAddClick = { showAddingWallet = true }
                     )
                     1 -> CategoriesList(
                         navController = navController,
@@ -80,6 +83,15 @@ fun ListsScreen(
                     )
                 }
             }
+        }
+        if (showAddingWallet) {
+            AddWalletDialog(
+                onSave = { name, value ->
+                    showAddingWallet = false
+                    viewModel.saveWallet(name, value)
+                },
+                onDismiss = { showAddingWallet = false }
+            )
         }
         if (showAddingCategory) {
             AddCategoryDialog(

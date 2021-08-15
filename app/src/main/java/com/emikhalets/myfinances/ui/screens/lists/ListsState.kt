@@ -9,8 +9,7 @@ data class ListsState(
     val wallets: List<Wallet>,
     val categoryExpenseSaved: Boolean,
     val categoryIncomeSaved: Boolean,
-    val walletSaved: Boolean,
-    val loading: Boolean,
+    val needUpdateWallets: Boolean,
     val errorCategorySaved: Boolean,
     val error: Exception?
 ) {
@@ -21,8 +20,7 @@ data class ListsState(
         wallets = emptyList(),
         categoryExpenseSaved = false,
         categoryIncomeSaved = false,
-        walletSaved = false,
-        loading = false,
+        needUpdateWallets = false,
         errorCategorySaved = false,
         error = null
     )
@@ -44,8 +42,12 @@ data class ListsState(
     fun setLoadedWallets(list: List<Wallet>): ListsState {
         return this.copy(
             wallets = list,
-            walletSaved = false
+            needUpdateWallets = false
         )
+    }
+
+    fun setWalletSaved(): ListsState {
+        return this.copy(needUpdateWallets = true)
     }
 
     fun setCategorySaved(): ListsState {
@@ -54,18 +56,6 @@ data class ListsState(
 
     fun setErrorCommon(exception: Exception): ListsState {
         return this.copy(error = exception)
-    }
-
-    fun setLoading(): ListsState {
-        return this.copy(
-            loading = true,
-            errorCategorySaved = false,
-            error = null
-        )
-    }
-
-    fun setStopLoading(): ListsState {
-        return this.copy(loading = false)
     }
 
     fun errorMessage(): String = error?.message.toString()

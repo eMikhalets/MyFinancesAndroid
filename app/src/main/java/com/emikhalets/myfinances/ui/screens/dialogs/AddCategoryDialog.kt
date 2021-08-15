@@ -22,7 +22,7 @@ fun AddCategoryDialog(
     var nameError by remember { mutableStateOf(false) }
 
     AppDialogCustom(
-        label = stringResource(R.string.name),
+        label = stringResource(R.string.new_category),
         onDismiss = { onDismiss() }
     ) {
         AppTextField(

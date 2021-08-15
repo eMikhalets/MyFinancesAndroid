@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.emikhalets.myfinances.R
@@ -27,9 +28,10 @@ fun AppTextField(
     trailingIcon: ImageVector? = null,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    singleLine: Boolean = false,
+    singleLine: Boolean = true,
     type: KeyboardType = KeyboardType.Text,
     capitalization: KeyboardCapitalization = KeyboardCapitalization.Sentences,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     errorEmpty: Boolean = false,
     errorInvalid: Boolean = false
 ) {
@@ -73,9 +75,10 @@ fun AppTextField(
                 keyboardType = type,
                 capitalization = capitalization
             ),
+            visualTransformation = visualTransformation,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(top = 8.dp, start = 8.dp, end = 8.dp)
                 .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(8.dp))
         )
         if (errorEmpty || errorInvalid) {

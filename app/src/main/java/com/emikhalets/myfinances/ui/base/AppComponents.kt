@@ -94,7 +94,7 @@ fun AppDialogCustom(
             Column(Modifier.padding(0.dp)) {
                 if (label.isNotEmpty()) {
                     Text(
-                        text = stringResource(R.string.new_category),
+                        text = label,
                         style = MaterialTheme.typography.subtitle1,
                         color = MaterialTheme.colors.onSurface,
                         textAlign = TextAlign.Center,

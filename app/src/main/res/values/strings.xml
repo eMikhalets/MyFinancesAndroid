@@ -24,6 +24,7 @@
     <string name="name">Название</string>
     <string name="start_value">Начальная сумма</string>
     <string name="value">Значение</string>
+    <string name="value_number">0.0 ₽</string>
     <string name="category">Категория</string>
     <string name="wallet">Кошелек</string>
     <string name="note">Заметка</string>

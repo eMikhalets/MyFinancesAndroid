@@ -7,6 +7,6 @@ import com.emikhalets.myfinances.data.entity.Wallet
 @Dao
 interface WalletDao : BaseDao<Wallet> {
 
-    @Query("SELECT * FROM wallets")
+    @Query("SELECT * FROM wallets ORDER BY name ASC")
     suspend fun getAll(): List<Wallet>
 }

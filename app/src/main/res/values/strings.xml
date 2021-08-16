@@ -15,6 +15,9 @@
     <string name="empty_transactions">Нет транзакций</string>
     <string name="empty_wallets">Нет кошельков</string>
 
+    <string name="choose_wallet">Выберите кошелек</string>
+    <string name="choose_category">Выберите категорию</string>
+
     <string name="new_transaction">Добавить транзакцию</string>
     <string name="new_expense">Добавить расход</string>
     <string name="new_income">Добавить доход</string>

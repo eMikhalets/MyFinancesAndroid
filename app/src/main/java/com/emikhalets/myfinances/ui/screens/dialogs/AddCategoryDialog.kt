@@ -2,8 +2,6 @@ package com.emikhalets.myfinances.ui.screens.dialogs
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,7 +29,7 @@ fun AddCategoryDialog(
                 name = it
                 nameError = false
             },
-            leadingIcon = Icons.Default.Edit,
+            leadingIcon = R.drawable.ic_edit,
             label = stringResource(R.string.name),
             errorEmpty = nameError
         )

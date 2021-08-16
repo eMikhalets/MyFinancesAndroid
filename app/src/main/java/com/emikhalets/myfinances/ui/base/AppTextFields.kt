@@ -1,16 +1,15 @@
 package com.emikhalets.myfinances.ui.base
 
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -24,8 +23,9 @@ fun AppTextField(
     value: String,
     label: String,
     onValueChange: (String) -> Unit,
-    leadingIcon: ImageVector? = null,
-    trailingIcon: ImageVector? = null,
+    onClick: () -> Unit = {},
+    leadingIcon: Int? = null,
+    trailingIcon: Int? = null,
     enabled: Boolean = true,
     readOnly: Boolean = false,
     singleLine: Boolean = true,
@@ -53,21 +53,26 @@ fun AppTextField(
                 )
             },
             leadingIcon = if (leadingIcon != null) {
-                { Icon(imageVector = leadingIcon, contentDescription = "") }
+                { Icon(painter = painterResource(leadingIcon), contentDescription = "") }
             } else null,
             trailingIcon = if (trailingIcon != null) {
-                { Icon(imageVector = trailingIcon, contentDescription = "") }
+                { Icon(painter = painterResource(trailingIcon), contentDescription = "") }
             } else null,
             textStyle = MaterialTheme.typography.body1,
             colors = TextFieldDefaults.textFieldColors(
+                textColor = MaterialTheme.colors.onPrimary,
+                disabledTextColor = MaterialTheme.colors.onPrimary,
                 backgroundColor = MaterialTheme.colors.background,
                 focusedIndicatorColor = MaterialTheme.colors.primary,
                 unfocusedIndicatorColor = MaterialTheme.colors.secondary,
                 errorIndicatorColor = MaterialTheme.colors.error,
-                leadingIconColor = MaterialTheme.colors.secondary,
-                trailingIconColor = MaterialTheme.colors.secondary,
+                disabledIndicatorColor = MaterialTheme.colors.secondary,
+                leadingIconColor = MaterialTheme.colors.onPrimary,
+                disabledLeadingIconColor = MaterialTheme.colors.onPrimary,
+                trailingIconColor = MaterialTheme.colors.onPrimary,
+                disabledTrailingIconColor = MaterialTheme.colors.onPrimary,
                 errorLabelColor = MaterialTheme.colors.error,
-                errorTrailingIconColor = MaterialTheme.colors.secondary
+                errorTrailingIconColor = MaterialTheme.colors.onPrimary
             ),
             enabled = enabled,
             readOnly = readOnly,
@@ -81,7 +86,8 @@ fun AppTextField(
             visualTransformation = visualTransformation,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp, start = 8.dp, end = 8.dp)
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .clickable { onClick() }
         )
         if (errorEmpty || errorInvalid) {
             Text(

@@ -33,6 +33,7 @@ fun NewWalletScreen(
             label = stringResource(R.string.name),
             value = name,
             onValueChange = { name = it },
+            leadingIcon = R.drawable.ic_edit,
             type = KeyboardType.Text,
             capitalization = KeyboardCapitalization.Sentences,
             errorEmpty = state.emptyNameError
@@ -40,6 +41,7 @@ fun NewWalletScreen(
         AppTextField(
             label = stringResource(R.string.start_value),
             value = value,
+            leadingIcon = R.drawable.ic_attach_money,
             onValueChange = { value = it },
             type = KeyboardType.Number
         )

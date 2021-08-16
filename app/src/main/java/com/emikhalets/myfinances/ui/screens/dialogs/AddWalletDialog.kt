@@ -2,8 +2,6 @@ package com.emikhalets.myfinances.ui.screens.dialogs
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,7 +33,7 @@ fun AddWalletDialog(
                 nameError = false
                 name = it
             },
-            leadingIcon = Icons.Default.Edit,
+            leadingIcon = R.drawable.ic_edit,
             label = stringResource(R.string.name),
             errorEmpty = nameError
         )
@@ -49,7 +47,7 @@ fun AddWalletDialog(
                     ex.printStackTrace()
                 }
             },
-            leadingIcon = Icons.Default.Edit,
+            leadingIcon = R.drawable.ic_edit,
             label = stringResource(R.string.value_number),
             errorInvalid = valueError,
             type = KeyboardType.Number,

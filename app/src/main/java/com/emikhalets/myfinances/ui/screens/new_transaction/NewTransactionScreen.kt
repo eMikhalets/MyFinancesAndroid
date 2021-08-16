@@ -1,6 +1,5 @@
 package com.emikhalets.myfinances.ui.screens.new_transaction
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -67,10 +66,7 @@ fun NewTransactionScreen(
                 leadingIcon = R.drawable.ic_wallet,
                 trailingIcon = R.drawable.ic_keyboard_arrow_down,
                 enabled = false,
-                onClick = {
-                    Log.d("TAG", "NewTransactionScreen")
-                    showChoosingWallet = true
-                }
+                onClick = { showChoosingWallet = true }
             )
             AppTextField(
                 value = category?.name ?: stringResource(R.string.choose_category),

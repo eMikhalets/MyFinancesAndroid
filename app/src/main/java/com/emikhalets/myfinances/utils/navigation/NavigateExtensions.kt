@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import com.emikhalets.myfinances.utils.enums.TransactionType
@@ -12,10 +13,11 @@ object NavArgs {
     const val TRANSACTION_TYPE = "arg_transaction_type"
 }
 
-fun NavHostController.navigateToTransactionsAsStart() {
-    currentDestination?.route?.let {
-        navigate(Screens.Transactions) {
-            popUpTo(it) { inclusive = true }
+fun NavHostController.navigateAsStart(route: String) {
+    if (currentDestination?.route != route) {
+        navigate(route) {
+            popUpTo(graph.findStartDestination().id) { saveState = true }
+            restoreState = true
         }
     }
 }

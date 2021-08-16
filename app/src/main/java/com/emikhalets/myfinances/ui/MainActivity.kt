@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.ui.base.AppBottomBar
 import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.navigation.AppNavGraph
+import com.emikhalets.myfinances.utils.navigation.BottomNav
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,10 +25,22 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             val navController = rememberNavController()
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentDestination = navBackStackEntry?.destination
 
             MyFinancesTheme {
                 Scaffold(
-                    bottomBar = { AppBottomBar(navController = navController) },
+                    bottomBar = {
+                        AppBottomBar(
+                            navController = navController,
+                            currentDestination = currentDestination,
+                            items = listOf(
+                                BottomNav.Transactions,
+                                BottomNav.Summary,
+                                BottomNav.Lists
+                            )
+                        )
+                    },
                     backgroundColor = MaterialTheme.colors.surface
                 ) {
                     Box(modifier = Modifier.padding(it)) {

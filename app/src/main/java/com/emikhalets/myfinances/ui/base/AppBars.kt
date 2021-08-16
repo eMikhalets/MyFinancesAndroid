@@ -9,16 +9,15 @@ import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.emikhalets.myfinances.utils.navigation.BottomNav
+import com.emikhalets.myfinances.utils.navigation.navigateAsStart
 import com.emikhalets.myfinances.utils.navigation.navigateBack
 
 @Composable
@@ -73,29 +72,17 @@ fun AppToolbar(
 
 @Composable
 fun AppBottomBar(
-    navController: NavHostController
+    navController: NavHostController,
+    currentDestination: NavDestination?,
+    items: List<BottomNav>
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-    val items = listOf(
-        BottomNav.Transactions,
-        BottomNav.Summary,
-        BottomNav.Lists
-    )
-
     BottomNavigation {
         items.forEach { item ->
             AppBottomBarItem(
                 icon = item.icon,
                 label = item.label,
                 selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
-                onClick = {
-                    navController.navigate(item.route) {
-                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
+                onClick = { navController.navigateAsStart(item.route) }
             )
         }
     }

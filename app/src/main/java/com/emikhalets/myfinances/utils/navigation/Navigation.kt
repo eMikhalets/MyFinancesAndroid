@@ -6,7 +6,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.emikhalets.myfinances.ui.screens.lists.ListsScreen
 import com.emikhalets.myfinances.ui.screens.new_transaction.NewTransactionScreen
-import com.emikhalets.myfinances.ui.screens.new_wallet.NewWalletScreen
 import com.emikhalets.myfinances.ui.screens.summary.SummaryScreen
 import com.emikhalets.myfinances.ui.screens.transactions.TransactionsScreen
 import com.emikhalets.myfinances.utils.enums.TransactionType
@@ -19,9 +18,6 @@ fun AppNavGraph(
         navController = navController,
         startDestination = Screens.Transactions
     ) {
-        composable(Screens.NewWallet) {
-            NewWalletScreen(navController = navController)
-        }
         composable(Screens.Transactions) {
             TransactionsScreen(navController = navController)
         }

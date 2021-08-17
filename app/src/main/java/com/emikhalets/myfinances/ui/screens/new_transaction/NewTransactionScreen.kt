@@ -19,7 +19,7 @@ import com.emikhalets.myfinances.ui.screens.dialogs.AddWalletDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.ChooseCategoryDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.ChooseWalletDialog
 import com.emikhalets.myfinances.utils.CurrencyTransformation
-import com.emikhalets.myfinances.utils.animations.AnimateFadeInOut
+import com.emikhalets.myfinances.utils.AnimateFadeInOut
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.enums.TransactionType.Companion.getLabel
 import com.emikhalets.myfinances.utils.formatValue

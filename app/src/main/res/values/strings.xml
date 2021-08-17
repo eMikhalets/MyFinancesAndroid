@@ -34,6 +34,7 @@
     <string name="note">Заметка</string>
     <string name="save">Сохранить</string>
     <string name="cancel">Отменить</string>
+    <string name="details">Подробнее</string>
 
     <string name="error">Ошибка</string>
     <string name="error_required_field">Необходимо заполнить</string>

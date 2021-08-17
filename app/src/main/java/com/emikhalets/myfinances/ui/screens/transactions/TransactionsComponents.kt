@@ -83,7 +83,8 @@ fun TransactionsListItem(
                 Text(
                     text = transaction.note,
                     style = MaterialTheme.typography.body1,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(start = 52.dp, end = 32.dp)
                 )
                 Spacer(Modifier.height(8.dp))
@@ -119,3 +120,10 @@ fun AddTransaction(
         }
     }
 }
+
+//@Composable
+//fun AddTransactionButton(
+//    val
+//) {
+//
+//}

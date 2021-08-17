@@ -10,6 +10,7 @@ import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.ui.base.AppDialogCustom
 import com.emikhalets.myfinances.ui.base.AppTextButton
 import com.emikhalets.myfinances.ui.base.AppTextField
+import com.emikhalets.myfinances.utils.enums.AppIcon
 
 @Composable
 fun AddCategoryDialog(
@@ -29,7 +30,7 @@ fun AddCategoryDialog(
                 name = it
                 nameError = false
             },
-            leadingIcon = R.drawable.ic_edit,
+            leadingIcon = AppIcon.Pencil.icon,
             label = stringResource(R.string.name),
             errorEmpty = nameError
         )

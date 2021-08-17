@@ -12,6 +12,7 @@ import com.emikhalets.myfinances.ui.base.AppDialogCustom
 import com.emikhalets.myfinances.ui.base.AppTextButton
 import com.emikhalets.myfinances.ui.base.AppTextField
 import com.emikhalets.myfinances.utils.CurrencyTransformation
+import com.emikhalets.myfinances.utils.enums.AppIcon
 import com.emikhalets.myfinances.utils.formatValue
 
 @Composable
@@ -34,7 +35,7 @@ fun AddWalletDialog(
                 nameError = false
                 name = it
             },
-            leadingIcon = R.drawable.ic_edit,
+            leadingIcon = AppIcon.Pencil.icon,
             label = stringResource(R.string.name),
             errorEmpty = nameError
         )
@@ -44,7 +45,7 @@ fun AddWalletDialog(
                 value = it.formatValue()
                 valueError = false
             },
-            leadingIcon = R.drawable.ic_edit,
+            leadingIcon = AppIcon.Money.icon,
             label = stringResource(R.string.value),
             errorInvalid = valueError,
             type = KeyboardType.Number,
@@ -68,9 +69,4 @@ fun AddWalletDialog(
             }
         )
     }
-}
-
-private fun formatValue(value: Double): String {
-    return if (value == 0.0) ""
-    else "$value"
 }

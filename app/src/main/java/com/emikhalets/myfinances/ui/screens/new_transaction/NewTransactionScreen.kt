@@ -18,8 +18,9 @@ import com.emikhalets.myfinances.ui.screens.dialogs.AddCategoryDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.AddWalletDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.ChooseCategoryDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.ChooseWalletDialog
-import com.emikhalets.myfinances.utils.CurrencyTransformation
 import com.emikhalets.myfinances.utils.AnimateFadeInOut
+import com.emikhalets.myfinances.utils.CurrencyTransformation
+import com.emikhalets.myfinances.utils.enums.AppIcon
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.enums.TransactionType.Companion.getLabel
 import com.emikhalets.myfinances.utils.formatValue
@@ -68,7 +69,7 @@ fun NewTransactionScreen(
                 onValueChange = {},
                 label = stringResource(R.string.wallet),
                 leadingIcon = R.drawable.ic_wallet,
-                trailingIcon = R.drawable.ic_keyboard_arrow_down,
+                trailingIcon = AppIcon.ArrowDown.icon,
                 enabled = false,
                 onClick = {
                     showChoosingWallet = true
@@ -81,7 +82,7 @@ fun NewTransactionScreen(
                 onValueChange = {},
                 label = stringResource(R.string.category),
                 leadingIcon = R.drawable.ic_coins,
-                trailingIcon = R.drawable.ic_keyboard_arrow_down,
+                trailingIcon = AppIcon.ArrowDown.icon,
                 enabled = false,
                 onClick = {
                     showChoosingCategory = true
@@ -93,7 +94,7 @@ fun NewTransactionScreen(
                 value = note,
                 onValueChange = { note = it },
                 label = stringResource(R.string.note),
-                leadingIcon = R.drawable.ic_edit
+                leadingIcon = AppIcon.Pencil.icon
             )
             AppTextField(
                 label = stringResource(R.string.value),
@@ -102,7 +103,7 @@ fun NewTransactionScreen(
                     value = it.formatValue()
                     valueError = false
                 },
-                leadingIcon = R.drawable.ic_attach_money,
+                leadingIcon = AppIcon.Money.icon,
                 type = KeyboardType.Number,
                 visualTransformation = CurrencyTransformation(),
                 errorInvalid = valueError

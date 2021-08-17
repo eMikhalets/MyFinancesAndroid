@@ -14,11 +14,12 @@ import androidx.compose.ui.unit.dp
 fun AppTextButton(
     text: String,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     padding: PaddingValues = PaddingValues(0.dp)
 ) {
     TextButton(
         onClick = { onClick() },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(padding)
     ) {

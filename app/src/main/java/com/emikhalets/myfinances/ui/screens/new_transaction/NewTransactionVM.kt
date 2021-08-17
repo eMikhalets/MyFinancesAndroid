@@ -53,39 +53,17 @@ class NewTransactionVM @Inject constructor(
     }
 
     fun saveTransaction(
-        wallet: Long?,
-        category: Long?,
+        wallet: Long,
+        category: Long,
         note: String,
-        value: String,
+        value: Double,
         type: TransactionType
     ) {
-        // Check wallet
-        if (wallet == null) {
-//            state = state.setWalletError()
-            return
-        }
-
-        // Check category
-        if (category == null) {
-//            state = state.setCategoryError()
-            return
-        }
-
-        // Check value
-        val valueDouble: Double
-        try {
-            valueDouble = value.toDouble()
-        } catch (ex: NumberFormatException) {
-            ex.printStackTrace()
-//            state = state.copy(valueError = true)
-            return
-        }
-
         viewModelScope.launch {
             val transaction = Transaction(
                 categoryId = category,
                 walletId = wallet,
-                amount = valueDouble,
+                amount = value,
                 type = type.value,
                 note = note,
                 timestamp = Date().time

@@ -33,12 +33,14 @@ fun AppTextField(
     capitalization: KeyboardCapitalization = KeyboardCapitalization.Sentences,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     errorEmpty: Boolean = false,
-    errorInvalid: Boolean = false
+    errorInvalid: Boolean = false,
+    errorSelecting: Boolean = false
 ) {
-    val error = errorEmpty || errorInvalid
+    val error = errorEmpty || errorInvalid || errorSelecting
     val errorMessage: String = when {
         errorEmpty -> stringResource(R.string.error_required_field)
         errorInvalid -> stringResource(R.string.error_invalid_value)
+        errorSelecting -> stringResource(R.string.error_selecting)
         else -> stringResource(R.string.error)
     }
 
@@ -89,7 +91,7 @@ fun AppTextField(
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp)
                 .clickable { onClick() }
         )
-        if (errorEmpty || errorInvalid) {
+        if (errorEmpty || errorInvalid || errorSelecting) {
             Text(
                 text = errorMessage,
                 color = Color.Red,

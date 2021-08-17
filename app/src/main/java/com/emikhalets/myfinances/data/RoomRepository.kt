@@ -26,9 +26,9 @@ class RoomRepository @Inject constructor(
         }
     }
 
-    suspend fun insertCategory(category: Category): Result<Long> {
+    suspend fun insertCategory(category: Category): Result<Boolean> {
         return try {
-            Result.Success(categoryDao.insert(category))
+            Result.Success(categoryDao.insertIfNotExist(category))
         } catch (ex: Exception) {
             ex.printStackTrace()
             Result.Error(ex)
@@ -76,9 +76,9 @@ class RoomRepository @Inject constructor(
         }
     }
 
-    suspend fun insertWallet(wallet: Wallet): Result<Long> {
+    suspend fun insertWallet(wallet: Wallet): Result<Boolean> {
         return try {
-            Result.Success(walletDao.insert(wallet))
+            Result.Success(walletDao.insertIfNotExist(wallet))
         } catch (ex: Exception) {
             ex.printStackTrace()
             Result.Error(ex)

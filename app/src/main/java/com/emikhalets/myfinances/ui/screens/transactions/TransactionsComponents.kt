@@ -77,26 +77,6 @@ fun TransactionsListItem(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun Preview() {
-    MyFinancesTheme {
-        TransactionsListItem(
-            transaction = Transaction(
-                categoryId = 0,
-                walletId = 0,
-                amount = 0.0,
-                type = 0,
-                note = "Note",
-                categoryName = "Category",
-                categoryIcon = 0,
-                timestamp = 0
-            ),
-            onClick = {}
-        )
-    }
-}
-
 @Composable
 fun AddTransaction(
     navController: NavHostController,

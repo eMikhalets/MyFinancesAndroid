@@ -27,3 +27,11 @@ fun String.formatValue(): String {
     }
     return result
 }
+
+fun Double.toValue(): String {
+    return try {
+        "$this ₽"
+    } catch (ex: NumberFormatException) {
+        "- ₽"
+    }
+}

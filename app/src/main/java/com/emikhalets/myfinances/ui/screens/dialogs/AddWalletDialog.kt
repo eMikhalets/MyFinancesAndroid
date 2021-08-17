@@ -12,6 +12,7 @@ import com.emikhalets.myfinances.ui.base.AppDialogCustom
 import com.emikhalets.myfinances.ui.base.AppTextButton
 import com.emikhalets.myfinances.ui.base.AppTextField
 import com.emikhalets.myfinances.utils.CurrencyTransformation
+import com.emikhalets.myfinances.utils.formatValue
 
 @Composable
 fun AddWalletDialog(
@@ -19,7 +20,7 @@ fun AddWalletDialog(
     onDismiss: () -> Unit
 ) {
     var name by remember { mutableStateOf("") }
-    var value by remember { mutableStateOf(0.0) }
+    var value by remember { mutableStateOf("") }
     var nameError by remember { mutableStateOf(false) }
     var valueError by remember { mutableStateOf(false) }
 
@@ -38,17 +39,13 @@ fun AddWalletDialog(
             errorEmpty = nameError
         )
         AppTextField(
-            value = formatValue(value),
+            value = value,
             onValueChange = {
-                try {
-                    value = it.toDouble()
-                    valueError = false
-                } catch (ex: NumberFormatException) {
-                    ex.printStackTrace()
-                }
+                value = it.formatValue()
+                valueError = false
             },
             leadingIcon = R.drawable.ic_edit,
-            label = stringResource(R.string.value_number),
+            label = stringResource(R.string.value),
             errorInvalid = valueError,
             type = KeyboardType.Number,
             visualTransformation = CurrencyTransformation()
@@ -57,9 +54,16 @@ fun AddWalletDialog(
         AppTextButton(
             text = stringResource(R.string.save),
             onClick = {
+                val amount = try {
+                    value.toDouble()
+                } catch (ex: NumberFormatException) {
+                    ex.printStackTrace()
+                    valueError = true
+                    0.0
+                }
                 when {
                     name.isEmpty() -> nameError = true
-                    else -> onSave(name, value)
+                    else -> onSave(name, amount)
                 }
             }
         )

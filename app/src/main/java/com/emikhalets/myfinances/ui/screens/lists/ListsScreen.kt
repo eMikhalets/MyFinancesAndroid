@@ -54,8 +54,7 @@ fun ListsScreen(
                 navController = navController,
                 scope = scope,
                 pagerState = pagerState,
-                tabs = tabs,
-                modifier = Modifier.fillMaxSize()
+                tabs = tabs
             ) { page ->
                 when (page) {
                     0 -> WalletsList(

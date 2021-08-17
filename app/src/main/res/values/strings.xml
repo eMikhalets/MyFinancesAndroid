@@ -9,6 +9,8 @@
 
     <string name="category_expense">Категории расходы</string>
     <string name="category_income">Категории доходы</string>
+    <string name="expenses">Расходы</string>
+    <string name="incomes">Доходы</string>
     <string name="wallets">Кошельки</string>
 
     <string name="empty_categories">Нет категорий</string>
@@ -27,7 +29,6 @@
     <string name="name">Название</string>
     <string name="start_value">Начальная сумма</string>
     <string name="value">Значение</string>
-    <string name="value_number">0.0 ₽</string>
     <string name="category">Категория</string>
     <string name="wallet">Кошелек</string>
     <string name="note">Заметка</string>

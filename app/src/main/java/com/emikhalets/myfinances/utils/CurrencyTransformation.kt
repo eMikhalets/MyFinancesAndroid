@@ -28,7 +28,7 @@ fun currencyFilter(text: AnnotatedString): TransformedText {
             }
         }
     }
-    out += " ₽"
+    if (text.text.isNotEmpty()) out += " ₽"
 
     val currencyOffsetTranslator = object : OffsetMapping {
         override fun originalToTransformed(offset: Int): Int {

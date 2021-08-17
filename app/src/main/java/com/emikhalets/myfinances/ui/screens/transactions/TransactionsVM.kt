@@ -21,7 +21,6 @@ class TransactionsVM @Inject constructor(
 
     fun getTransactions() {
         viewModelScope.launch {
-            state = state.setLoading()
             // Loading expense transactions
             state = when (val result = repo.getExpenseTransactions()) {
                 is Result.Error -> state.setCommonError(result.exception)

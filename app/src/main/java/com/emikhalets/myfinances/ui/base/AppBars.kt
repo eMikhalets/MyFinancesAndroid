@@ -18,7 +18,6 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.utils.navigation.BottomNav
 import com.emikhalets.myfinances.utils.navigation.navigateAsStart
-import com.emikhalets.myfinances.utils.navigation.navigateBack
 
 @Composable
 fun ScreenScaffold(
@@ -60,7 +59,7 @@ fun AppToolbar(
             if (backIcon) Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "",
-                modifier = Modifier.clickable { navController.navigateBack() }
+                modifier = Modifier.clickable { navController.popBackStack() }
             )
         },
         actions = actions,

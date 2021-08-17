@@ -1,6 +1,5 @@
 package com.emikhalets.myfinances.ui.screens.new_transaction
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -24,7 +23,6 @@ import com.emikhalets.myfinances.utils.animations.AnimateFadeInOut
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.enums.TransactionType.Companion.getLabel
 import com.emikhalets.myfinances.utils.formatValue
-import com.emikhalets.myfinances.utils.navigation.navigateBack
 
 @Composable
 fun NewTransactionScreen(
@@ -53,12 +51,11 @@ fun NewTransactionScreen(
         viewModel.getWallets()
     }
     LaunchedEffect(state) {
-        if (state.categories.isNotEmpty() && category == null) {
-            category = state.categories.first()
-        }
-        if (state.wallets.isNotEmpty() && wallet == null) {
-            wallet = state.wallets.first()
-        }
+        if (state.categories.isNotEmpty() && category == null) category = state.categories.first()
+        if (state.wallets.isNotEmpty() && wallet == null) wallet = state.wallets.first()
+        if (state.savedTransaction) navController.popBackStack()
+        if (state.savedWallet) viewModel.getWallets()
+        if (state.savedCategory) viewModel.getCategories(transactionType)
     }
 
     ScreenScaffold(
@@ -102,9 +99,7 @@ fun NewTransactionScreen(
                 label = stringResource(R.string.value),
                 value = value,
                 onValueChange = {
-                    Log.d("TAG", "it = $it")
                     value = it.formatValue()
-                    Log.d("TAG", "value = $value")
                     valueError = false
                 },
                 leadingIcon = R.drawable.ic_attach_money,
@@ -116,7 +111,7 @@ fun NewTransactionScreen(
             Row(Modifier.fillMaxWidth()) {
                 AppTextButton(
                     text = stringResource(R.string.cancel),
-                    onClick = { navController.navigateBack() },
+                    onClick = { navController.popBackStack() },
                     modifier = Modifier.weight(1f)
                 )
                 AppTextButton(
@@ -134,8 +129,8 @@ fun NewTransactionScreen(
                             category == null -> categoryError = true
                             valueError -> valueError = true
                             else -> viewModel.saveTransaction(
-                                wallet!!.walletId,
-                                category!!.categoryId,
+                                wallet!!,
+                                category!!,
                                 note,
                                 amount,
                                 transactionType
@@ -146,7 +141,7 @@ fun NewTransactionScreen(
                 )
             }
         }
-        AnimateFadeInOut(visible = showChoosingWallet, duration = 200) {
+        AnimateFadeInOut(visible = showChoosingWallet, duration = 300) {
             ChooseWalletDialog(
                 wallets = state.wallets,
                 onSelect = {
@@ -160,7 +155,7 @@ fun NewTransactionScreen(
                 }
             )
         }
-        AnimateFadeInOut(visible = showAddingWallet, duration = 200) {
+        AnimateFadeInOut(visible = showAddingWallet, duration = 300) {
             AddWalletDialog(
                 onSave = { name, value ->
                     showAddingWallet = false
@@ -169,7 +164,7 @@ fun NewTransactionScreen(
                 onDismiss = { showAddingWallet = false }
             )
         }
-        AnimateFadeInOut(visible = showChoosingCategory, duration = 200) {
+        AnimateFadeInOut(visible = showChoosingCategory, duration = 300) {
             ChooseCategoryDialog(
                 categories = state.categories,
                 onSelect = {
@@ -183,7 +178,7 @@ fun NewTransactionScreen(
                 }
             )
         }
-        AnimateFadeInOut(visible = showAddingCategory, duration = 200) {
+        AnimateFadeInOut(visible = showAddingCategory, duration = 300) {
             AddCategoryDialog(
                 onSave = {
                     showAddingCategory = false

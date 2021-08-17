@@ -38,10 +38,6 @@ fun NavHostController.navigateToNewTransaction(type: TransactionType) {
     navigate(Screens.NewTransaction, bundleOf(NavArgs.TRANSACTION_TYPE to type))
 }
 
-fun NavHostController.navigateBack() {
-    popBackStack()
-}
-
 private fun NavController.navigate(
     route: String,
     params: Bundle?,

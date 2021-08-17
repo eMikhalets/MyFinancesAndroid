@@ -53,19 +53,21 @@ class NewTransactionVM @Inject constructor(
     }
 
     fun saveTransaction(
-        wallet: Long,
-        category: Long,
+        wallet: Wallet,
+        category: Category,
         note: String,
         value: Double,
         type: TransactionType
     ) {
         viewModelScope.launch {
             val transaction = Transaction(
-                categoryId = category,
-                walletId = wallet,
+                categoryId = category.categoryId,
+                walletId = wallet.walletId,
                 amount = value,
                 type = type.value,
                 note = note,
+                categoryName = category.name,
+                categoryIcon = category.icon,
                 timestamp = Date().time
             )
             state = when (val result = repo.insertTransaction(transaction)) {

@@ -52,7 +52,7 @@ fun AppPager(
     }
     HorizontalPager(
         state = pagerState,
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         content = { page -> content(page) }
     )
 }

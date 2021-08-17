@@ -13,6 +13,8 @@ data class Transaction(
     @ColumnInfo(name = "amount") var amount: Double,
     @ColumnInfo(name = "type") var type: Int,
     @ColumnInfo(name = "note") var note: String,
+    @ColumnInfo(name = "category_name") var categoryName: String,
+    @ColumnInfo(name = "category_icon") var categoryIcon: Int,
     @ColumnInfo(name = "timestamp") var timestamp: Long
 ) {
     @Ignore
@@ -22,6 +24,8 @@ data class Transaction(
         amount: Double,
         type: Int,
         note: String,
+        categoryName: String,
+        categoryIcon: Int,
         timestamp: Long
     ) : this(
         transactionId = 0,
@@ -30,6 +34,8 @@ data class Transaction(
         amount = amount,
         type = type,
         note = note,
+        categoryName = categoryName,
+        categoryIcon = categoryIcon,
         timestamp = timestamp
     )
 }

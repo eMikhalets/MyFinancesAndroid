@@ -10,9 +10,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
@@ -52,7 +54,11 @@ fun AppToolbar(
         title = {
             Text(
                 text = title,
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.body1.copy(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                color = MaterialTheme.colors.onPrimary
             )
         },
         navigationIcon = {
@@ -77,32 +83,17 @@ fun AppBottomBar(
 ) {
     BottomNavigation {
         items.forEach { item ->
-            AppBottomBarItem(
-                icon = item.icon,
-                label = item.label,
+            BottomNavigationItem(
+                icon = {
+                    Icon(
+                        painter = painterResource(item.icon),
+                        contentDescription = ""
+                    )
+                },
+                label = { Text(stringResource(item.label)) },
                 selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
                 onClick = { navController.navigateAsStart(item.route) }
             )
         }
     }
-}
-
-@Composable
-private fun RowScope.AppBottomBarItem(
-    icon: ImageVector,
-    label: Int,
-    selected: Boolean,
-    onClick: () -> Unit
-) {
-    BottomNavigationItem(
-        icon = {
-            Icon(
-                imageVector = icon,
-                contentDescription = ""
-            )
-        },
-        label = { Text(stringResource(label)) },
-        selected = selected,
-        onClick = onClick
-    )
 }

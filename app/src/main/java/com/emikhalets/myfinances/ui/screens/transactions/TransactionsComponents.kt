@@ -1,8 +1,13 @@
 package com.emikhalets.myfinances.ui.screens.transactions
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,8 +23,6 @@ import com.emikhalets.myfinances.ui.base.AppTextButton
 import com.emikhalets.myfinances.ui.base.AppTextFillScreen
 import com.emikhalets.myfinances.ui.base.AppVerticalList
 import com.emikhalets.myfinances.utils.AnimateExpandCollapse
-import com.emikhalets.myfinances.utils.enums.TransactionType
-import com.emikhalets.myfinances.utils.navigation.navigateToNewTransaction
 import com.emikhalets.myfinances.utils.toValue
 
 @Composable
@@ -99,31 +102,40 @@ fun TransactionsListItem(
 }
 
 @Composable
-fun AddTransaction(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
+fun AddTransactionButton(
+    icon: Int,
+    onClick: () -> Unit
 ) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        modifier = modifier
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .size(60.dp)
+            .background(MaterialTheme.colors.primary, CircleShape)
+            .clickable { onClick() }
     ) {
-        Button(
-            onClick = { navController.navigateToNewTransaction(TransactionType.Expense) }
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(4.dp)
+                .background(MaterialTheme.colors.onPrimary, CircleShape)
         ) {
-            Text(text = "Expense")
-        }
-        Spacer(modifier = Modifier.width(80.dp))
-        Button(
-            onClick = { navController.navigateToNewTransaction(TransactionType.Income) }
-        ) {
-            Text(text = "Income")
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(1.dp)
+                    .background(MaterialTheme.colors.primary, CircleShape)
+            ) {
+                Icon(
+                    painter = painterResource(icon),
+                    contentDescription = "",
+                    tint = MaterialTheme.colors.onPrimary,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(12.dp)
+                )
+            }
         }
     }
 }
-
-//@Composable
-//fun AddTransactionButton(
-//    val
-//) {
-//
-//}

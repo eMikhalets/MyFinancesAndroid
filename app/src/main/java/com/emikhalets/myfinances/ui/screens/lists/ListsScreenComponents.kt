@@ -21,6 +21,7 @@ import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.ui.base.AppTextFillScreen
 import com.emikhalets.myfinances.ui.base.AppTextWithIcon
 import com.emikhalets.myfinances.ui.base.AppVerticalList
+import com.emikhalets.myfinances.utils.enums.AppIcon
 
 @Composable
 fun WalletsList(
@@ -31,7 +32,7 @@ fun WalletsList(
     Column {
         AppTextWithIcon(
             text = stringResource(R.string.new_wallet),
-            iconVector = Icons.Default.Add,
+            icon = AppIcon.Plus.icon,
             onClick = { onAddClick() }
         )
         Divider(color = MaterialTheme.colors.secondary)
@@ -83,7 +84,7 @@ fun CategoriesList(
     Column {
         AppTextWithIcon(
             text = stringResource(R.string.new_category),
-            iconVector = Icons.Default.Add,
+            icon = AppIcon.Plus.icon,
             onClick = { onAddClick() }
         )
         Divider(color = MaterialTheme.colors.secondary)
@@ -112,7 +113,7 @@ fun CategoryListItem(
             .padding(8.dp)
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_coins),
+            painter = painterResource(AppIcon.get(category.icon).icon),
             contentDescription = "",
             modifier = Modifier.size(40.dp)
         )

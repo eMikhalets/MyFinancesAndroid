@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -65,7 +66,7 @@ fun AppTextFillScreen(
 @Composable
 fun AppTextWithIcon(
     text: String,
-    iconVector: ImageVector,
+    icon: Int,
     onClick: () -> Unit = {},
     iconSize: Dp = 24.dp,
     padding: PaddingValues = PaddingValues(16.dp),
@@ -81,7 +82,7 @@ fun AppTextWithIcon(
             .fillMaxWidth()
     ) {
         Icon(
-            imageVector = iconVector,
+            painter = painterResource(icon),
             contentDescription = "",
             modifier = Modifier.size(iconSize)
         )

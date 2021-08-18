@@ -42,9 +42,9 @@ class NewTransactionVM @Inject constructor(
         }
     }
 
-    fun saveCategory(type: TransactionType, name: String) {
+    fun saveCategory(type: TransactionType, name: String, icon: Int) {
         viewModelScope.launch {
-            val category = Category(name, type.value, 1)
+            val category = Category(name, type.value, icon)
             state = when (val result = repo.insertCategory(category)) {
                 is Result.Error -> state.setCommonError(result.exception)
                 is Result.Success -> state.setSavedCategory()

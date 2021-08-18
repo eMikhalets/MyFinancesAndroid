@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -57,14 +58,14 @@ fun TransactionsListItem(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(8.dp)
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_coins),
                 contentDescription = "",
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier.size(32.dp)
             )
-            Spacer(Modifier.width(16.dp))
+            Spacer(Modifier.width(24.dp))
             Text(
                 text = transaction.categoryName,
                 style = MaterialTheme.typography.body1
@@ -79,10 +80,7 @@ fun TransactionsListItem(
             )
         }
         AnimateExpandCollapse(visible = showNote, duration = 300) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
+            Column(Modifier.fillMaxWidth()) {
                 Text(
                     text = transaction.note,
                     style = MaterialTheme.typography.body1,
@@ -90,7 +88,6 @@ fun TransactionsListItem(
                         .fillMaxWidth()
                         .padding(start = 52.dp, end = 32.dp)
                 )
-                Spacer(Modifier.height(8.dp))
                 AppTextButton(
                     text = stringResource(R.string.details),
                     onClick = { onClick(transaction.transactionId) }
@@ -111,6 +108,7 @@ fun AddTransactionButton(
         modifier = Modifier
             .size(60.dp)
             .background(MaterialTheme.colors.primary, CircleShape)
+            .clip(CircleShape)
             .clickable { onClick() }
     ) {
         Box(

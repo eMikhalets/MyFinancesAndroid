@@ -18,6 +18,7 @@ import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.ui.base.AppDialogCustom
 import com.emikhalets.myfinances.ui.base.AppTextWithIcon
+import com.emikhalets.myfinances.utils.enums.AppIcon
 
 @Composable
 fun ChooseWalletDialog(
@@ -29,7 +30,7 @@ fun ChooseWalletDialog(
     AppDialogCustom(onDismiss = { onDismiss() }) {
         if (wallets.isEmpty()) AppTextWithIcon(
             text = stringResource(R.string.new_wallet),
-            iconVector = Icons.Default.Add,
+            icon = AppIcon.Plus.icon,
             onClick = { onAddClick() }
         )
         else {
@@ -46,7 +47,7 @@ fun ChooseWalletDialog(
                         Spacer(modifier = Modifier.height(8.dp))
                         AppTextWithIcon(
                             text = stringResource(R.string.new_wallet),
-                            iconVector = Icons.Default.Add,
+                            icon = AppIcon.Plus.icon,
                             onClick = { onAddClick() }
                         )
                     }
@@ -66,7 +67,7 @@ fun ChooseCategoryDialog(
     AppDialogCustom(onDismiss = { onDismiss() }) {
         if (categories.isEmpty()) AppTextWithIcon(
             text = stringResource(R.string.new_category),
-            iconVector = Icons.Default.Add,
+            icon = AppIcon.Plus.icon,
             onClick = { onAddClick() }
         )
         else {
@@ -74,7 +75,7 @@ fun ChooseCategoryDialog(
                 items(categories) { category ->
                     AppTextWithIcon(
                         text = category.name,
-                        iconPainter = painterResource(R.drawable.ic_coins),
+                        iconPainter = painterResource(AppIcon.get(category.icon).icon),
                         onClick = { onSelect(category) }
                     )
                     if (category == categories.last()) {
@@ -83,7 +84,7 @@ fun ChooseCategoryDialog(
                         Spacer(modifier = Modifier.height(8.dp))
                         AppTextWithIcon(
                             text = stringResource(R.string.new_category),
-                            iconVector = Icons.Default.Add,
+                            icon = AppIcon.Plus.icon,
                             onClick = { onAddClick() }
                         )
                     }

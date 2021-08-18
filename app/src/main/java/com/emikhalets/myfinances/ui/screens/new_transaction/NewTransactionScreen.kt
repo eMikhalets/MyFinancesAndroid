@@ -81,7 +81,7 @@ fun NewTransactionScreen(
                 value = category?.name ?: stringResource(R.string.choose_category),
                 onValueChange = {},
                 label = stringResource(R.string.category),
-                leadingIcon = R.drawable.ic_coins,
+                leadingIcon = AppIcon.get(category?.icon ?: 3).icon,
                 trailingIcon = AppIcon.ArrowDown.icon,
                 enabled = false,
                 onClick = {
@@ -181,9 +181,9 @@ fun NewTransactionScreen(
         }
         AnimateFadeInOut(visible = showAddingCategory, duration = 300) {
             AddCategoryDialog(
-                onSave = {
+                onSave = { name, icon ->
                     showAddingCategory = false
-                    viewModel.saveCategory(transactionType, it)
+                    viewModel.saveCategory(transactionType, name, icon)
                 },
                 onDismiss = { showAddingCategory = false }
             )

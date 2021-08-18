@@ -7,11 +7,11 @@ import com.emikhalets.myfinances.data.entity.Category
 @Dao
 interface CategoryDao : BaseDao<Category> {
 
-    @Query("SELECT category_id FROM categories WHERE name = :name")
-    suspend fun isExist(name: String): Long
+    @Query("SELECT EXISTS (SELECT * FROM categories WHERE name = :name)")
+    suspend fun isExist(name: String): Boolean
 
     suspend fun insertIfNotExist(category: Category): Boolean {
-        return if (isExist(category.name) > 0) {
+        return if (!isExist(category.name)) {
             insert(category)
             true
         } else {

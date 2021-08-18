@@ -12,4 +12,23 @@ enum class AppIcon(val id: Int, val icon: Int) {
     Home(6, R.drawable.ic_home),
     PieChart(7, R.drawable.ic_pie_chart),
     PriceList(8, R.drawable.ic_price_list),
+    DotsHollow(9, R.drawable.ic_dots_hollow),
+    Cutlery(10, R.drawable.ic_cutlery),
+    Gift(11, R.drawable.ic_gift),
+    Gym(12, R.drawable.ic_gym),
+    Healthcare(13, R.drawable.ic_healthcare),
+    Loan(14, R.drawable.ic_loan),
+    Mortarboard(15, R.drawable.ic_mortarboard),
+    Tent(16, R.drawable.ic_tent),
+    Train(17, R.drawable.ic_train),
+    Tshirt(18, R.drawable.ic_tshirt),
+    User(19, R.drawable.ic_user),
+    Wifi(20, R.drawable.ic_wifi),
+    Salary(21, R.drawable.ic_salary),
+    SaveMoney(22, R.drawable.ic_save_money);
+
+    companion object {
+        private val map = values().associateBy(AppIcon::id)
+        fun get(id: Int): AppIcon = map[id] ?: Money
+    }
 }

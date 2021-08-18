@@ -7,11 +7,11 @@ import com.emikhalets.myfinances.data.entity.Wallet
 @Dao
 interface WalletDao : BaseDao<Wallet> {
 
-    @Query("SELECT wallet_id FROM wallets WHERE name = :name")
-    suspend fun isExist(name: String): Long
+    @Query("SELECT EXISTS (SELECT * FROM wallets WHERE name = :name)")
+    suspend fun isExist(name: String): Boolean
 
     suspend fun insertIfNotExist(wallet: Wallet): Boolean {
-        return if (isExist(wallet.name) > 0) {
+        return if (!isExist(wallet.name)) {
             insert(wallet)
             true
         } else {

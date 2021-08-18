@@ -12,6 +12,7 @@ import com.emikhalets.myfinances.ui.base.AppPager
 import com.emikhalets.myfinances.ui.base.ScreenScaffold
 import com.emikhalets.myfinances.ui.screens.dialogs.AddCategoryDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.AddWalletDialog
+import com.emikhalets.myfinances.utils.AnimateFadeInOut
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
@@ -39,10 +40,10 @@ fun ListsScreen(
         viewModel.getCategoriesExpense()
         viewModel.getCategoriesIncome()
     }
-
     LaunchedEffect(state) {
-        if (state.categoryExpenseSaved) viewModel.getCategoriesExpense()
-        if (state.needUpdateWallets) viewModel.getWallets()
+        if (state.savedCategoryExpense) viewModel.getCategoriesExpense()
+        if (state.savedCategoryIncome) viewModel.getCategoriesIncome()
+        if (state.savedWallet) viewModel.getWallets()
     }
 
     ScreenScaffold(
@@ -83,7 +84,7 @@ fun ListsScreen(
                 }
             }
         }
-        if (showAddingWallet) {
+        AnimateFadeInOut(visible = showAddingWallet, duration = 300) {
             AddWalletDialog(
                 onSave = { name, value ->
                     showAddingWallet = false
@@ -92,11 +93,11 @@ fun ListsScreen(
                 onDismiss = { showAddingWallet = false }
             )
         }
-        if (showAddingCategory) {
+        AnimateFadeInOut(visible = showAddingCategory, duration = 300) {
             AddCategoryDialog(
-                onSave = {
+                onSave = { name, icon ->
                     showAddingCategory = false
-                    viewModel.saveCategory(selectedCategoryType, it)
+                    viewModel.saveCategory(selectedCategoryType, name, icon)
                 },
                 onDismiss = { showAddingCategory = false }
             )

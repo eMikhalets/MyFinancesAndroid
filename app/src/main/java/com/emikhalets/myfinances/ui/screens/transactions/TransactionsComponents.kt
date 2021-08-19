@@ -24,6 +24,8 @@ import com.emikhalets.myfinances.ui.base.AppTextButton
 import com.emikhalets.myfinances.ui.base.AppTextFillScreen
 import com.emikhalets.myfinances.ui.base.AppVerticalList
 import com.emikhalets.myfinances.utils.AnimateExpandCollapse
+import com.emikhalets.myfinances.utils.navigation.navigateToTransactionDetails
+import com.emikhalets.myfinances.utils.toDate
 import com.emikhalets.myfinances.utils.toValue
 
 @Composable
@@ -37,7 +39,7 @@ fun TransactionsList(
     else AppVerticalList(list) { transaction ->
         TransactionsListItem(
             transaction = transaction,
-            onClick = {}
+            onClick = { navController.navigateToTransactionDetails(it) }
         )
     }
 }
@@ -66,10 +68,19 @@ fun TransactionsListItem(
                 modifier = Modifier.size(32.dp)
             )
             Spacer(Modifier.width(24.dp))
-            Text(
-                text = transaction.categoryName,
-                style = MaterialTheme.typography.body1
-            )
+            Column {
+                Text(
+                    text = transaction.categoryName,
+                    style = MaterialTheme.typography.body1
+                )
+                Text(
+                    text = transaction.timestamp.toDate(),
+                    style = MaterialTheme.typography.body1.copy(
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colors.secondary
+                    )
+                )
+            }
             Text(
                 text = transaction.amount.toValue(),
                 textAlign = TextAlign.End,
@@ -90,6 +101,7 @@ fun TransactionsListItem(
                 )
                 AppTextButton(
                     text = stringResource(R.string.details),
+                    padding = PaddingValues(top = 4.dp, bottom = 4.dp),
                     onClick = { onClick(transaction.transactionId) }
                 )
             }

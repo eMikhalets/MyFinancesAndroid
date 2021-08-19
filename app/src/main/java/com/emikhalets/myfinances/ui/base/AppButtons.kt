@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -15,18 +16,19 @@ fun AppTextButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    padding: PaddingValues = PaddingValues(0.dp)
+    textColor: Color = MaterialTheme.colors.primary,
+    padding: PaddingValues = PaddingValues(8.dp)
 ) {
     TextButton(
         onClick = { onClick() },
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(padding)
+        modifier = modifier.fillMaxWidth()
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.button,
-            modifier = Modifier.padding(8.dp)
+            style = MaterialTheme.typography.button.copy(
+                color = textColor
+            ),
+            modifier = Modifier.padding(padding)
         )
     }
 }

@@ -10,7 +10,9 @@
     <string name="category_expense">Категории расходы</string>
     <string name="category_income">Категории доходы</string>
     <string name="expenses">Расходы</string>
+    <string name="expense">Расход</string>
     <string name="incomes">Доходы</string>
+    <string name="income">Доход</string>
     <string name="wallets">Кошельки</string>
 
     <string name="empty_categories">Нет категорий</string>
@@ -35,6 +37,7 @@
     <string name="save">Сохранить</string>
     <string name="cancel">Отменить</string>
     <string name="details">Подробнее</string>
+    <string name="transaction_details">Детали транзакции</string>
 
     <string name="error">Ошибка</string>
     <string name="error_required_field">Необходимо заполнить</string>

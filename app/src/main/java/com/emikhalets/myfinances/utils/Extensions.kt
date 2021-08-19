@@ -1,5 +1,8 @@
 package com.emikhalets.myfinances.utils
 
+import java.text.SimpleDateFormat
+import java.util.*
+
 /**
  * Форматирует строку ти денежному типу. Не дает ввести более 2 элементов после точки.
  * Форматирует запятую в точку
@@ -34,4 +37,11 @@ fun Double.toValue(): String {
     } catch (ex: NumberFormatException) {
         "- ₽"
     }
+}
+
+fun Long?.toDate(): String {
+    if (this == null) return "no date"
+    val date = Date(this)
+    val formatter = SimpleDateFormat("dd MMMM y", Locale.getDefault())
+    return formatter.format(date)
 }

@@ -9,6 +9,7 @@ object Screens {
     const val Summary = "summary"
     const val Lists = "lists"
     const val NewTransaction = "new_transaction"
+    const val TransactionDetails = "transaction_details"
 }
 
 sealed class BottomNav(val route: String, val icon: Int, @StringRes val label: Int) {

@@ -17,6 +17,20 @@ data class Transaction(
     @ColumnInfo(name = "category_icon") var categoryIcon: Int,
     @ColumnInfo(name = "timestamp") var timestamp: Long
 ) {
+
+    @Ignore
+    constructor() : this(
+        transactionId = 0,
+        categoryId = 0,
+        walletId = 0,
+        amount = 0.0,
+        type = 0,
+        note = "",
+        categoryName = "",
+        categoryIcon = 0,
+        timestamp = 0
+    )
+
     @Ignore
     constructor(
         categoryId: Long,

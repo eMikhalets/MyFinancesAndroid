@@ -2,6 +2,7 @@ package com.emikhalets.myfinances.ui.base
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -32,6 +33,7 @@ fun AppTextField(
     type: KeyboardType = KeyboardType.Text,
     capitalization: KeyboardCapitalization = KeyboardCapitalization.Sentences,
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    padding: PaddingValues = PaddingValues(top = 16.dp, start = 16.dp, end = 16.dp),
     errorEmpty: Boolean = false,
     errorInvalid: Boolean = false,
     errorSelecting: Boolean = false
@@ -44,7 +46,7 @@ fun AppTextField(
         else -> stringResource(R.string.error)
     }
 
-    Box {
+    Box(Modifier.padding(padding)) {
         TextField(
             value = value,
             onValueChange = onValueChange,
@@ -88,7 +90,6 @@ fun AppTextField(
             visualTransformation = visualTransformation,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
                 .clickable { onClick() }
         )
         if (errorEmpty || errorInvalid || errorSelecting) {

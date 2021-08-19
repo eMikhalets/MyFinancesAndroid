@@ -11,6 +11,7 @@ import com.emikhalets.myfinances.utils.enums.TransactionType
 
 object NavArgs {
     const val TRANSACTION_TYPE = "arg_transaction_type"
+    const val TRANSACTION_ID = "arg_transaction_id"
 }
 
 fun NavHostController.navigateAsStart(route: String) {
@@ -22,20 +23,12 @@ fun NavHostController.navigateAsStart(route: String) {
     }
 }
 
-fun NavHostController.navigateToTransactions() {
-    if (this.currentDestination?.route != Screens.Transactions) {
-        navigate(Screens.Transactions)
-    }
-}
-
-fun NavHostController.navigateToSummary() {
-    if (this.currentDestination?.route != Screens.Summary) {
-        navigate(Screens.Summary)
-    }
-}
-
 fun NavHostController.navigateToNewTransaction(type: TransactionType) {
     navigate(Screens.NewTransaction, bundleOf(NavArgs.TRANSACTION_TYPE to type))
+}
+
+fun NavHostController.navigateToTransactionDetails(id: Long) {
+    navigate(Screens.TransactionDetails, bundleOf(NavArgs.TRANSACTION_ID to id))
 }
 
 private fun NavController.navigate(
@@ -47,6 +40,8 @@ private fun NavController.navigate(
     navigate(route, builder)
 }
 
+//======================================================================================
+
 @Composable
 fun <T> NavController.getSerializable(
     key: String,
@@ -54,5 +49,15 @@ fun <T> NavController.getSerializable(
 ) {
     this.previousBackStackEntry?.arguments?.getSerializable(key)?.let {
         content(it as T)
+    }
+}
+
+@Composable
+fun NavController.getLong(
+    key: String,
+    content: @Composable (Long) -> Unit
+) {
+    this.previousBackStackEntry?.arguments?.getLong(key)?.let {
+        content(it)
     }
 }

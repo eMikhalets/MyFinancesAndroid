@@ -55,6 +55,7 @@ data class ListsState(
         return when (type) {
             TransactionType.Expense -> this.copy(savedCategoryExpense = true)
             TransactionType.Income -> this.copy(savedCategoryIncome = true)
+            TransactionType.None -> this
         }
     }
 

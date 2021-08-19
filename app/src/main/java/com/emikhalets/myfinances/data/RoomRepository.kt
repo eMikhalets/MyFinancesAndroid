@@ -37,6 +37,15 @@ class RoomRepository @Inject constructor(
 
     // ========== Transactions Dao ==========
 
+    suspend fun getTransaction(id: Long): Result<Transaction> {
+        return try {
+            Result.Success(transactionDao.getItemById(id))
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            Result.Error(ex)
+        }
+    }
+
     suspend fun getIncomeTransactions(): Result<List<Transaction>> {
         return try {
             Result.Success(transactionDao.getByType(TransactionType.Income.value))
@@ -59,6 +68,15 @@ class RoomRepository @Inject constructor(
         return try {
             val result = transactionDao.insert(transaction)
             Result.Success(result)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            Result.Error(ex)
+        }
+    }
+
+    suspend fun updateTransaction(transaction: Transaction): Result<Int> {
+        return try {
+            Result.Success(transactionDao.update(transaction))
         } catch (ex: Exception) {
             ex.printStackTrace()
             Result.Error(ex)

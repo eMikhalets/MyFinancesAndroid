@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import com.emikhalets.myfinances.ui.screens.lists.ListsScreen
 import com.emikhalets.myfinances.ui.screens.new_transaction.NewTransactionScreen
 import com.emikhalets.myfinances.ui.screens.summary.SummaryScreen
+import com.emikhalets.myfinances.ui.screens.transaction_details.TransactionDetailsScreen
 import com.emikhalets.myfinances.ui.screens.transactions.TransactionsScreen
 import com.emikhalets.myfinances.utils.enums.TransactionType
 
@@ -32,6 +33,14 @@ fun AppNavGraph(
                 NewTransactionScreen(
                     navController = navController,
                     transactionType = it
+                )
+            }
+        }
+        composable(Screens.TransactionDetails) {
+            navController.getLong(NavArgs.TRANSACTION_ID) {
+                TransactionDetailsScreen(
+                    navController = navController,
+                    transactionId = it
                 )
             }
         }

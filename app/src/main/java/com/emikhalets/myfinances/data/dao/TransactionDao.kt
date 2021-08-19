@@ -12,4 +12,7 @@ interface TransactionDao : BaseDao<Transaction> {
 
     @Query("SELECT * FROM transactions WHERE type = :type ORDER BY timestamp DESC")
     suspend fun getByType(type: Int): List<Transaction>
+
+    @Query("SELECT * FROM transactions WHERE transaction_id = :id")
+    suspend fun getItemById(id: Long): Transaction
 }

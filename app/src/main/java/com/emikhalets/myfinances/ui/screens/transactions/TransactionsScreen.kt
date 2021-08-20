@@ -1,30 +1,26 @@
 package com.emikhalets.myfinances.ui.screens.transactions
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
+import com.emikhalets.myfinances.data.entity.Transaction
 import com.emikhalets.myfinances.ui.base.AppPager
 import com.emikhalets.myfinances.ui.base.ScreenScaffold
-import com.emikhalets.myfinances.utils.enums.MyIcons
-import com.emikhalets.myfinances.utils.enums.TransactionType
-import com.emikhalets.myfinances.utils.navigation.navigateToNewTransaction
+import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.toast
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun TransactionsScreen(
     navController: NavHostController,
@@ -33,9 +29,6 @@ fun TransactionsScreen(
     val state = viewModel.state
     val context = LocalContext.current
 
-    val scope = rememberCoroutineScope()
-    val pagerState = rememberPagerState(pageCount = 2)
-
     LaunchedEffect("init") {
         viewModel.getExpenseTransactions()
         viewModel.getIncomeTransactions()
@@ -43,6 +36,23 @@ fun TransactionsScreen(
     LaunchedEffect(state) {
         if (state.error != null) toast(context, state.errorMessage())
     }
+
+    TransactionsScreen(
+        navController = navController,
+        expenseList = state.expenseList,
+        incomeList = state.incomeList
+    )
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun TransactionsScreen(
+    navController: NavHostController,
+    expenseList: List<Transaction>,
+    incomeList: List<Transaction>
+) {
+    val scope = rememberCoroutineScope()
+    val pagerState = rememberPagerState(pageCount = 2)
 
     ScreenScaffold(
         navController = navController,
@@ -61,38 +71,27 @@ fun TransactionsScreen(
                 when (page) {
                     0 -> TransactionsList(
                         navController = navController,
-                        list = state.expenseList
+                        list = expenseList
                     )
                     1 -> TransactionsList(
                         navController = navController,
-                        list = state.incomeList
+                        list = incomeList
                     )
                 }
             }
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                MaterialTheme.colors.surface
-                            )
-                        )
-                    )
-                    .padding(16.dp)
-                    .fillMaxWidth()
-            ) {
-                AddTransactionButton(
-                    icon = MyIcons.Minus.icon,
-                    onClick = { navController.navigateToNewTransaction(TransactionType.Expense) }
-                )
-                Spacer(modifier = Modifier.width(50.dp))
-                AddTransactionButton(
-                    icon = MyIcons.Plus.icon,
-                    onClick = { navController.navigateToNewTransaction(TransactionType.Income) }
-                )
-            }
+            AddButtonsLayout(navController)
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Preview() {
+    MyFinancesTheme {
+        TransactionsScreen(
+            navController = rememberNavController(),
+            expenseList = emptyList(),
+            incomeList = emptyList()
+        )
     }
 }

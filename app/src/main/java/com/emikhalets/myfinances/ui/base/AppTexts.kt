@@ -101,6 +101,19 @@ fun TextCenter(
 }
 
 @Composable
+fun TextSecondary(
+    text: String,
+    modifier: Modifier = Modifier
+) {
+    AppText(
+        text = text,
+        fontSize = 12.sp,
+        color = MaterialTheme.colors.secondary,
+        modifier = modifier
+    )
+}
+
+@Composable
 fun AppText(
     text: String,
     modifier: Modifier = Modifier,

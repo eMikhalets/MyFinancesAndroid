@@ -64,7 +64,6 @@ fun ListsScreen(
             ) { page ->
                 when (page) {
                     0 -> WalletsList(
-                        navController = navController,
                         list = state.wallets,
                         onAddClick = { showAddingWallet = true }
                     )

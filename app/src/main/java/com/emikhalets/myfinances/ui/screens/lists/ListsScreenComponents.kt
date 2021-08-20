@@ -6,11 +6,10 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -18,17 +17,26 @@ import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Wallet
-import com.emikhalets.myfinances.ui.base.AppTextFillScreen
-import com.emikhalets.myfinances.ui.base.AppTextWithIcon
-import com.emikhalets.myfinances.ui.base.AppVerticalList
+import com.emikhalets.myfinances.ui.base.*
 import com.emikhalets.myfinances.utils.enums.AppIcon
+import com.emikhalets.myfinances.utils.getCurrentWalletId
+import com.emikhalets.myfinances.utils.setCurrentWalletId
 
 @Composable
 fun WalletsList(
-    navController: NavHostController,
     list: List<Wallet>,
     onAddClick: () -> Unit
 ) {
+    val context = LocalContext.current
+    var current by remember { mutableStateOf(context.getCurrentWalletId()) }
+
+    LaunchedEffect("init") {
+        if (list.any { it.walletId == current }) {
+            current = 0
+            context.setCurrentWalletId(0)
+        }
+    }
+
     Column {
         AppTextWithIcon(
             text = stringResource(R.string.new_wallet),
@@ -42,7 +50,11 @@ fun WalletsList(
         else AppVerticalList(list) { wallet ->
             WalletListItem(
                 wallet = wallet,
-                onClick = {}
+                current = current,
+                onClick = {
+                    context.setCurrentWalletId(wallet.walletId)
+                    current = wallet.walletId
+                }
             )
         }
     }
@@ -51,6 +63,7 @@ fun WalletsList(
 @Composable
 fun WalletListItem(
     wallet: Wallet,
+    current: Long,
     onClick: (Long) -> Unit
 ) {
     Row(
@@ -60,17 +73,22 @@ fun WalletListItem(
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_wallet),
-            contentDescription = "",
-            modifier = Modifier.size(40.dp)
+        AppIcon(
+            icon = AppIcon.Wallet.icon,
+            size = 40.dp
         )
         Spacer(Modifier.width(16.dp))
-        Column(Modifier.fillMaxWidth()) {
-            Text(text = wallet.name)
-            Spacer(Modifier.width(8.dp))
-            Text(text = wallet.amount.toString())
+        Column {
+            AppText(text = wallet.name)
+            if (wallet.walletId == current) {
+                Spacer(Modifier.width(8.dp))
+                AppText(
+                    text = stringResource(R.string.by_default),
+                    color = MaterialTheme.colors.secondary
+                )
+            }
         }
+        TextValue(value = wallet.amount)
     }
 }
 

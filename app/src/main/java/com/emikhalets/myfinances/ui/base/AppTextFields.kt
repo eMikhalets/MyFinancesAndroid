@@ -47,7 +47,7 @@ fun NameTextField(
         value = name,
         errorEmpty = error,
         onValueChange = onNameChange,
-        label = stringResource(R.string.note),
+        label = stringResource(R.string.name),
         leadingIcon = AppIcon.Pencil.icon
     )
 }

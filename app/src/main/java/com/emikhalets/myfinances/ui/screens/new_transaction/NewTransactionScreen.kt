@@ -19,13 +19,10 @@ import com.emikhalets.myfinances.ui.screens.dialogs.AddCategoryDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.AddWalletDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.ChooseCategoryDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.ChooseWalletDialog
-import com.emikhalets.myfinances.utils.AnimateFadeInOut
-import com.emikhalets.myfinances.utils.CurrencyTransformation
+import com.emikhalets.myfinances.utils.*
 import com.emikhalets.myfinances.utils.enums.AppIcon
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.enums.TransactionType.Companion.getLabel
-import com.emikhalets.myfinances.utils.formatValue
-import com.emikhalets.myfinances.utils.toast
 
 @Composable
 fun NewTransactionScreen(
@@ -56,7 +53,9 @@ fun NewTransactionScreen(
     }
     LaunchedEffect(state) {
         if (state.categories.isNotEmpty() && category == null) category = state.categories.first()
-        if (state.wallets.isNotEmpty() && wallet == null) wallet = state.wallets.first()
+        if (state.wallets.isNotEmpty() && wallet == null) {
+            wallet = state.wallets.find { it.walletId == context.getCurrentWalletId() }
+        }
         if (state.savedTransaction) navController.popBackStack()
         if (state.savedWallet) viewModel.getWallets()
         if (state.savedCategory) viewModel.getCategories(transactionType)

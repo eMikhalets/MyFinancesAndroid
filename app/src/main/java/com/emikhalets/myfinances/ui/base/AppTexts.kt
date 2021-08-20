@@ -17,6 +17,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.emikhalets.myfinances.utils.toValue
 
 @Composable
 fun AppTextScreenTitle(
@@ -133,6 +135,22 @@ fun AppTextWithIcon(
 }
 
 @Composable
+fun TextValue(
+    value: Double,
+    color: Color = MaterialTheme.colors.onPrimary
+) {
+    AppText(
+        text = value.toValue(),
+        textAlign = TextAlign.End,
+        fontSize = 20.sp,
+        color = color,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(end = 16.dp)
+    )
+}
+
+@Composable
 fun TextCenter(
     text: String,
     color: Color = MaterialTheme.colors.onPrimary
@@ -152,11 +170,14 @@ fun AppText(
     text: String,
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Start,
-    color: Color = MaterialTheme.colors.onPrimary
+    color: Color = MaterialTheme.colors.onPrimary,
+    fontSize: TextUnit = MaterialTheme.typography.body1.fontSize
 ) {
     Text(
         text = text,
-        style = MaterialTheme.typography.body1,
+        style = MaterialTheme.typography.body1.copy(
+            fontSize = fontSize
+        ),
         textAlign = textAlign,
         color = color,
         modifier = modifier

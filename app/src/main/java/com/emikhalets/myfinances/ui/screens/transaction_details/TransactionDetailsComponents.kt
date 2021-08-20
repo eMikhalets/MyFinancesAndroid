@@ -54,7 +54,7 @@ fun TransactionTypeChooser(
 @Composable
 fun ControlButtons(
     viewModel: TransactionDetailsVM,
-    state: TransactionDetailsState,
+    date: Long?,
     wallet: Wallet?,
     category: Category?,
     type: TransactionType,
@@ -91,7 +91,7 @@ fun ControlButtons(
                         amount = amount,
                         type = type.value,
                         note = note,
-                        date = state.transaction?.timestamp ?: 0
+                        date = date ?: 0
                     )
                 }
             },

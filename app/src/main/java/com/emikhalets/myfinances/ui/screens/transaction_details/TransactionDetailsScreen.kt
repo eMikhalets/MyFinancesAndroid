@@ -7,9 +7,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Wallet
@@ -17,6 +19,7 @@ import com.emikhalets.myfinances.ui.base.*
 import com.emikhalets.myfinances.ui.screens.dialogs.AddCategoryDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.AddWalletDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.ListChooserDialog
+import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.AnimateFadeInOut
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.formatValue
@@ -42,11 +45,6 @@ fun TransactionDetailsScreen(
     var categoryError by remember { mutableStateOf(false) }
     var valueError by remember { mutableStateOf(false) }
 
-    var showChoosingCategory by remember { mutableStateOf(false) }
-    var showChoosingWallet by remember { mutableStateOf(false) }
-    var showAddingCategory by remember { mutableStateOf(false) }
-    var showAddingWallet by remember { mutableStateOf(false) }
-
     LaunchedEffect("init") {
         viewModel.getTransaction(transactionId)
     }
@@ -69,19 +67,76 @@ fun TransactionDetailsScreen(
         if (state.deletedTransaction) navController.popBackStack()
     }
 
+    TransactionDetailsScreen(
+        navController = navController,
+        viewModel = viewModel,
+        wallets = state.wallets,
+        categories = state.categories,
+        date = state.transaction?.timestamp,
+        note = note,
+        value = value,
+        wallet = wallet,
+        category = category,
+        type = type,
+        walletError = walletError,
+        categoryError = categoryError,
+        valueError = valueError,
+        onNoteChange = { note = it },
+        onValueChange = { value = it },
+        onWalletChange = { wallet = it },
+        onCategoryChange = { category = it },
+        onTypeChange = { type = it },
+        onWalletErrorChange = { walletError = it },
+        onCategoryErrorChange = { categoryError = it },
+        onValueErrorChange = { valueError = it }
+    )
+}
+
+@Composable
+fun TransactionDetailsScreen(
+    navController: NavHostController,
+    viewModel: TransactionDetailsVM,
+    wallets: List<Wallet>,
+    categories: List<Category>,
+    date: Long?,
+    note: String,
+    value: String,
+    wallet: Wallet?,
+    category: Category?,
+    type: TransactionType,
+    walletError: Boolean,
+    categoryError: Boolean,
+    valueError: Boolean,
+    onNoteChange: (String) -> Unit,
+    onValueChange: (String) -> Unit,
+    onWalletChange: (Wallet) -> Unit,
+    onCategoryChange: (Category) -> Unit,
+    onTypeChange: (TransactionType) -> Unit,
+    onWalletErrorChange: (Boolean) -> Unit,
+    onCategoryErrorChange: (Boolean) -> Unit,
+    onValueErrorChange: (Boolean) -> Unit,
+) {
+    var showChoosingCategory by remember { mutableStateOf(false) }
+    var showChoosingWallet by remember { mutableStateOf(false) }
+    var showAddingCategory by remember { mutableStateOf(false) }
+    var showAddingWallet by remember { mutableStateOf(false) }
+
     ScreenScaffold(
         navController = navController,
         title = stringResource(R.string.transaction_details)
     ) {
         Column {
-            TransactionTypeChooser(type = type, onSelectType = { type = it })
-            TextCenter(text = state.transaction?.timestamp.toDate())
+            TransactionTypeChooser(
+                type = type,
+                onSelectType = onTypeChange
+            )
+            TextCenter(date.toDate())
             WalletChooserTextField(
                 wallet = wallet,
                 error = walletError,
                 onClick = {
                     showChoosingWallet = true
-                    walletError = false
+                    onWalletErrorChange(false)
                 }
             )
             CategoryChooserTextField(
@@ -89,43 +144,43 @@ fun TransactionDetailsScreen(
                 error = categoryError,
                 onClick = {
                     showChoosingCategory = true
-                    categoryError = false
+                    onCategoryErrorChange(false)
                 }
             )
             NoteTextField(
                 note = note,
-                onNoteChange = { note = it }
+                onNoteChange = onNoteChange
             )
             ValueTextField(
                 value = value,
                 error = valueError,
                 onValueChange = {
-                    value = it.formatValue()
-                    valueError = false
+                    onValueChange(it.formatValue())
+                    onValueErrorChange(false)
                 }
             )
             Spacer(Modifier.height(16.dp))
             ControlButtons(
                 viewModel = viewModel,
-                state = state,
+                date = date,
                 wallet = wallet,
                 category = category,
                 type = type,
                 note = note,
                 value = value,
                 valueError = valueError,
-                walletErrorChange = { walletError = it },
-                categoryErrorChange = { categoryError = it },
-                valueErrorChange = { valueError = it }
+                walletErrorChange = onWalletErrorChange,
+                categoryErrorChange = onCategoryErrorChange,
+                valueErrorChange = onValueErrorChange
             )
         }
         AnimateFadeInOut(visible = showChoosingWallet, duration = 300) {
             ListChooserDialog(
                 buttonText = stringResource(R.string.new_wallet),
-                items = state.wallets,
+                items = wallets,
                 onDismiss = { showChoosingWallet = false },
                 onSelect = {
-                    wallet = it
+                    onWalletChange(it)
                     showChoosingWallet = false
                 },
                 onAddClick = {
@@ -146,10 +201,10 @@ fun TransactionDetailsScreen(
         AnimateFadeInOut(visible = showChoosingCategory, duration = 300) {
             ListChooserDialog(
                 buttonText = stringResource(R.string.new_category),
-                items = state.categories,
+                items = categories,
                 onDismiss = { showChoosingCategory = false },
                 onSelect = {
-                    category = it
+                    onCategoryChange(it)
                     showChoosingCategory = false
                 },
                 onAddClick = {
@@ -167,5 +222,35 @@ fun TransactionDetailsScreen(
                 onDismiss = { showAddingCategory = false }
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Preview2() {
+    MyFinancesTheme {
+        TransactionDetailsScreen(
+            navController = rememberNavController(),
+            viewModel = hiltViewModel(),
+            wallets = emptyList(),
+            categories = emptyList(),
+            date = 0,
+            note = "Some note",
+            value = "250.54",
+            wallet = null,
+            category = null,
+            type = TransactionType.Income,
+            walletError = false,
+            categoryError = false,
+            valueError = false,
+            onNoteChange = {},
+            onValueChange = {},
+            onWalletChange = {},
+            onCategoryChange = {},
+            onTypeChange = {},
+            onWalletErrorChange = {},
+            onCategoryErrorChange = {},
+            onValueErrorChange = {}
+        )
     }
 }

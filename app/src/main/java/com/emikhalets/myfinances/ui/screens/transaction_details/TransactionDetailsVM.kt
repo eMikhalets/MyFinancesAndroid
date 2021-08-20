@@ -25,8 +25,12 @@ class TransactionDetailsVM @Inject constructor(
     fun getCategories(type: Int) {
         viewModelScope.launch {
             state = when (val result = repo.getCategories(type)) {
-                is Result.Error -> state.setCommonError(result.exception)
-                is Result.Success -> state.setLoadedCategories(result.data)
+                is Result.Error -> state.copy(error = result.exception)
+                is Result.Success -> state.copy(
+                    categories = result.data,
+                    savedCategory = false,
+                    error = null
+                )
             }
         }
     }
@@ -34,8 +38,11 @@ class TransactionDetailsVM @Inject constructor(
     fun getTransaction(id: Long) {
         viewModelScope.launch {
             state = when (val result = repo.getTransaction(id)) {
-                is Result.Error -> state.setCommonError(result.exception)
-                is Result.Success -> state.setLoadedTransaction(result.data)
+                is Result.Error -> state.copy(error = result.exception)
+                is Result.Success -> state.copy(
+                    transaction = result.data, savedTransaction = false,
+                    error = null
+                )
             }
         }
     }
@@ -43,8 +50,11 @@ class TransactionDetailsVM @Inject constructor(
     fun getWallets() {
         viewModelScope.launch {
             state = when (val result = repo.getWallets()) {
-                is Result.Error -> state.setCommonError(result.exception)
-                is Result.Success -> state.setLoadedWallets(result.data)
+                is Result.Error -> state.copy(error = result.exception)
+                is Result.Success -> state.copy(
+                    wallets = result.data, savedWallet = false,
+                    error = null
+                )
             }
         }
     }
@@ -53,8 +63,11 @@ class TransactionDetailsVM @Inject constructor(
         viewModelScope.launch {
             val category = Category(name, type.value, icon)
             state = when (val result = repo.insertCategory(category)) {
-                is Result.Error -> state.setCommonError(result.exception)
-                is Result.Success -> state.setSavedCategory()
+                is Result.Error -> state.copy(error = result.exception)
+                is Result.Success -> state.copy(
+                    savedCategory = true,
+                    error = null
+                )
             }
         }
     }
@@ -80,8 +93,11 @@ class TransactionDetailsVM @Inject constructor(
             )
             transaction?.let {
                 state = when (val result = repo.updateTransaction(transaction)) {
-                    is Result.Error -> state.setCommonError(result.exception)
-                    is Result.Success -> state.setSavedTransaction()
+                    is Result.Error -> state.copy(error = result.exception)
+                    is Result.Success -> state.copy(
+                        savedTransaction = true,
+                        error = null
+                    )
                 }
             }
         }
@@ -91,8 +107,11 @@ class TransactionDetailsVM @Inject constructor(
         viewModelScope.launch {
             val wallet = Wallet(name, value)
             state = when (val result = repo.insertWallet(wallet)) {
-                is Result.Error -> state.setCommonError(result.exception)
-                is Result.Success -> state.setSavedWallet()
+                is Result.Error -> state.copy(error = result.exception)
+                is Result.Success -> state.copy(
+                    savedWallet = true,
+                    error = null
+                )
             }
         }
     }

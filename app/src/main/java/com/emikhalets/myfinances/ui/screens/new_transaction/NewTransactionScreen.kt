@@ -3,6 +3,7 @@ package com.emikhalets.myfinances.ui.screens.new_transaction
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,7 @@ import com.emikhalets.myfinances.utils.enums.AppIcon
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.enums.TransactionType.Companion.getLabel
 import com.emikhalets.myfinances.utils.formatValue
+import com.emikhalets.myfinances.utils.toast
 
 @Composable
 fun NewTransactionScreen(
@@ -32,6 +34,7 @@ fun NewTransactionScreen(
     viewModel: NewTransactionVM = hiltViewModel()
 ) {
     val state = viewModel.state
+    val context = LocalContext.current
 
     var note by remember { mutableStateOf("") }
     var value by remember { mutableStateOf("") }
@@ -47,7 +50,7 @@ fun NewTransactionScreen(
     var showAddingCategory by remember { mutableStateOf(false) }
     var showAddingWallet by remember { mutableStateOf(false) }
 
-    LaunchedEffect("init_key") {
+    LaunchedEffect("init") {
         viewModel.getCategories(transactionType)
         viewModel.getWallets()
     }
@@ -57,6 +60,7 @@ fun NewTransactionScreen(
         if (state.savedTransaction) navController.popBackStack()
         if (state.savedWallet) viewModel.getWallets()
         if (state.savedCategory) viewModel.getCategories(transactionType)
+        if (state.error != null) toast(context, state.errorMessage())
     }
 
     ScreenScaffold(

@@ -5,6 +5,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -21,12 +22,9 @@ import com.emikhalets.myfinances.ui.screens.dialogs.AddCategoryDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.AddWalletDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.ChooseCategoryDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.ChooseWalletDialog
-import com.emikhalets.myfinances.utils.AnimateFadeInOut
-import com.emikhalets.myfinances.utils.CurrencyTransformation
+import com.emikhalets.myfinances.utils.*
 import com.emikhalets.myfinances.utils.enums.AppIcon
 import com.emikhalets.myfinances.utils.enums.TransactionType
-import com.emikhalets.myfinances.utils.formatValue
-import com.emikhalets.myfinances.utils.toDate
 
 @Composable
 fun TransactionDetailsScreen(
@@ -35,6 +33,7 @@ fun TransactionDetailsScreen(
     viewModel: TransactionDetailsVM = hiltViewModel()
 ) {
     val state = viewModel.state
+    val context = LocalContext.current
 
     var note by remember { mutableStateOf("") }
     var value by remember { mutableStateOf("") }
@@ -69,6 +68,7 @@ fun TransactionDetailsScreen(
         if (state.transaction != null && state.wallets.isNotEmpty()) {
             wallet = state.wallets.find { it.walletId == state.transaction.walletId }
         }
+        if (state.error != null) toast(context, state.errorMessage())
     }
 
     ScreenScaffold(

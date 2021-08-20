@@ -1,5 +1,7 @@
 package com.emikhalets.myfinances.utils
 
+import android.content.Context
+import android.widget.Toast
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,4 +46,8 @@ fun Long?.toDate(): String {
     val date = Date(this)
     val formatter = SimpleDateFormat("dd MMMM y", Locale.getDefault())
     return formatter.format(date)
+}
+
+fun toast(context: Context, text: String) {
+    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
 }

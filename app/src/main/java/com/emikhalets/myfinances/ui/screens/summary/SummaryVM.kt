@@ -23,13 +23,19 @@ class SummaryVM @Inject constructor(
         viewModelScope.launch {
             // Loading expense transactions
             state = when (val result = repo.getExpenseTransactions()) {
-                is Result.Error -> state.setCommonError(result.exception)
-                is Result.Success -> state.setLoadedExpense(result.data)
+                is Result.Error -> state.copy(error = result.exception)
+                is Result.Success -> state.copy(
+                    expenseList = result.data,
+                    error = null
+                )
             }
             // Loading income transactions
             state = when (val result = repo.getIncomeTransactions()) {
-                is Result.Error -> state.setCommonError(result.exception)
-                is Result.Success -> state.setLoadedIncome(result.data)
+                is Result.Error -> state.copy(error = result.exception)
+                is Result.Success -> state.copy(
+                    incomeList = result.data,
+                    error = null
+                )
             }
         }
     }

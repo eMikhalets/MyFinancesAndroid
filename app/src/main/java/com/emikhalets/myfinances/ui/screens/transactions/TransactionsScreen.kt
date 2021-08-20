@@ -9,6 +9,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,6 +20,7 @@ import com.emikhalets.myfinances.ui.base.ScreenScaffold
 import com.emikhalets.myfinances.utils.enums.AppIcon
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.navigation.navigateToNewTransaction
+import com.emikhalets.myfinances.utils.toast
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 
@@ -29,16 +31,17 @@ fun TransactionsScreen(
     viewModel: TransactionsVM = hiltViewModel()
 ) {
     val state = viewModel.state
+    val context = LocalContext.current
 
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = 2)
-    val tabs = listOf(
-        stringResource(R.string.expenses),
-        stringResource(R.string.incomes)
-    )
 
-    LaunchedEffect("init_key") {
-        viewModel.getTransactions()
+    LaunchedEffect("init") {
+        viewModel.getExpenseTransactions()
+        viewModel.getIncomeTransactions()
+    }
+    LaunchedEffect(state) {
+        if (state.error != null) toast(context, state.errorMessage())
     }
 
     ScreenScaffold(
@@ -50,7 +53,10 @@ fun TransactionsScreen(
                 navController = navController,
                 scope = scope,
                 pagerState = pagerState,
-                tabs = tabs,
+                tabs = listOf(
+                    stringResource(R.string.expenses),
+                    stringResource(R.string.incomes)
+                ),
                 modifier = Modifier.weight(1f)
             ) { page ->
                 when (page) {

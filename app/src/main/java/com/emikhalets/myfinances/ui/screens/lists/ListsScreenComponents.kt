@@ -18,7 +18,7 @@ import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.ui.base.*
-import com.emikhalets.myfinances.utils.enums.AppIcon
+import com.emikhalets.myfinances.utils.enums.MyIcons
 import com.emikhalets.myfinances.utils.getCurrentWalletId
 import com.emikhalets.myfinances.utils.setCurrentWalletId
 
@@ -38,13 +38,13 @@ fun WalletsList(
     }
 
     Column {
-        AppTextWithIcon(
+        TextWithIcon(
             text = stringResource(R.string.new_wallet),
-            icon = AppIcon.Plus.icon,
+            icon = MyIcons.Plus.icon,
             onClick = { onAddClick() }
         )
         Divider(color = MaterialTheme.colors.secondary)
-        if (list.isEmpty()) AppTextFillScreen(
+        if (list.isEmpty()) TextFullScreen(
             text = stringResource(R.string.empty_wallets)
         )
         else AppVerticalList(list) { wallet ->
@@ -74,7 +74,7 @@ fun WalletListItem(
             .padding(8.dp)
     ) {
         AppIcon(
-            icon = AppIcon.Wallet.icon,
+            icon = MyIcons.Wallet.icon,
             size = 40.dp
         )
         Spacer(Modifier.width(16.dp))
@@ -100,13 +100,13 @@ fun CategoriesList(
     modifier: Modifier = Modifier
 ) {
     Column {
-        AppTextWithIcon(
+        TextWithIcon(
             text = stringResource(R.string.new_category),
-            icon = AppIcon.Plus.icon,
+            icon = MyIcons.Plus.icon,
             onClick = { onAddClick() }
         )
         Divider(color = MaterialTheme.colors.secondary)
-        if (list.isEmpty()) AppTextFillScreen(
+        if (list.isEmpty()) TextFullScreen(
             text = stringResource(R.string.empty_categories)
         )
         else AppVerticalList(list) { category ->
@@ -131,7 +131,7 @@ fun CategoryListItem(
             .padding(8.dp)
     ) {
         Icon(
-            painter = painterResource(AppIcon.get(category.icon).icon),
+            painter = painterResource(MyIcons.get(category.icon).icon),
             contentDescription = "",
             modifier = Modifier.size(40.dp)
         )

@@ -21,7 +21,7 @@ import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Transaction
 import com.emikhalets.myfinances.ui.base.AppTextButton
-import com.emikhalets.myfinances.ui.base.AppTextFillScreen
+import com.emikhalets.myfinances.ui.base.TextFullScreen
 import com.emikhalets.myfinances.ui.base.AppVerticalList
 import com.emikhalets.myfinances.utils.AnimateExpandCollapse
 import com.emikhalets.myfinances.utils.navigation.navigateToTransactionDetails
@@ -33,7 +33,7 @@ fun TransactionsList(
     navController: NavHostController,
     list: List<Transaction>
 ) {
-    if (list.isEmpty()) AppTextFillScreen(
+    if (list.isEmpty()) TextFullScreen(
         text = stringResource(R.string.empty_transactions)
     )
     else AppVerticalList(list) { transaction ->

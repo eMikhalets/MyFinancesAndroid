@@ -1,22 +1,23 @@
 package com.emikhalets.myfinances.ui.base
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import androidx.navigation.NavHostController
-import com.emikhalets.myfinances.R
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -27,7 +28,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun AppPager(
-    navController: NavHostController,
     scope: CoroutineScope,
     pagerState: PagerState,
     tabs: List<String>,
@@ -36,6 +36,8 @@ fun AppPager(
 ) {
     TabRow(
         selectedTabIndex = pagerState.currentPage,
+        backgroundColor = MaterialTheme.colors.surface,
+        contentColor = MaterialTheme.colors.onSurface,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
@@ -50,6 +52,7 @@ fun AppPager(
             )
         }
     }
+    Divider()
     HorizontalPager(
         state = pagerState,
         modifier = modifier.fillMaxSize(),
@@ -60,50 +63,84 @@ fun AppPager(
 @Composable
 fun <T> AppVerticalList(
     list: List<T>,
+    padding: PaddingValues = PaddingValues(0.dp),
     content: @Composable (T) -> Unit
 ) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+    ) {
         items(list) { item ->
             content(item)
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AppDialogCustom(
-    onDismiss: () -> Unit,
-    label: String = "",
-    content: @Composable () -> Unit
+fun IconsList(
+    iconError: Boolean,
+    onSelectIcon: (Int) -> Unit
 ) {
-    Dialog(
-        onDismissRequest = { onDismiss() },
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true
-        )
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .padding(top = 40.dp, bottom = 40.dp)
-                .background(
-                    color = Color.White,
-                    shape = RoundedCornerShape(16.dp)
-                )
-        ) {
-            Column(Modifier.padding(0.dp)) {
-                if (label.isNotEmpty()) {
-                    Text(
-                        text = label,
-                        style = MaterialTheme.typography.subtitle1,
-                        color = MaterialTheme.colors.onSurface,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    )
+    var selected by remember { mutableStateOf(-1) }
+    val icons = listOf(
+        com.emikhalets.myfinances.utils.enums.MyIcons.DotsHollow,
+        com.emikhalets.myfinances.utils.enums.MyIcons.Cutlery,
+        com.emikhalets.myfinances.utils.enums.MyIcons.Gift,
+        com.emikhalets.myfinances.utils.enums.MyIcons.Gym,
+        com.emikhalets.myfinances.utils.enums.MyIcons.Healthcare,
+        com.emikhalets.myfinances.utils.enums.MyIcons.Loan,
+        com.emikhalets.myfinances.utils.enums.MyIcons.Mortarboard,
+        com.emikhalets.myfinances.utils.enums.MyIcons.Tent,
+        com.emikhalets.myfinances.utils.enums.MyIcons.Train,
+        com.emikhalets.myfinances.utils.enums.MyIcons.Tshirt,
+        com.emikhalets.myfinances.utils.enums.MyIcons.User,
+        com.emikhalets.myfinances.utils.enums.MyIcons.Wifi,
+        com.emikhalets.myfinances.utils.enums.MyIcons.Salary,
+        com.emikhalets.myfinances.utils.enums.MyIcons.SaveMoney
+    )
+
+    LazyVerticalGrid(
+        cells = GridCells.Adaptive(60.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp)
+            .border(
+                width = 4.dp,
+                shape = RoundedCornerShape(8.dp),
+                color = if (iconError) {
+                    MaterialTheme.colors.error
+                } else {
+                    Color.Transparent
                 }
-                content()
+            )
+    ) {
+        items(icons) { icon ->
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable {
+                        selected = icon.id
+                        onSelectIcon(icon.id)
+                    }
+                    .background(
+                        color = if (selected == icon.id) {
+                            MaterialTheme.colors.primary.copy(alpha = 0.7f)
+                        } else {
+                            MaterialTheme.colors.surface
+                        },
+                        shape = CircleShape
+                    )
+                    .padding(4.dp)
+            ) {
+                AppIcon(
+                    icon = icon.icon,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
+                )
             }
         }
     }

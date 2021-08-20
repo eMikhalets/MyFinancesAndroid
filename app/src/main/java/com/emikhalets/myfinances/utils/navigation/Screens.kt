@@ -2,7 +2,7 @@ package com.emikhalets.myfinances.utils.navigation
 
 import androidx.annotation.StringRes
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.utils.enums.AppIcon
+import com.emikhalets.myfinances.utils.enums.MyIcons
 
 object Screens {
     const val Transactions = "transactions"
@@ -15,19 +15,19 @@ object Screens {
 sealed class BottomNav(val route: String, val icon: Int, @StringRes val label: Int) {
     object Transactions : BottomNav(
         Screens.Transactions,
-        AppIcon.Home.icon,
+        MyIcons.Home.icon,
         R.string.title_transactions
     )
 
     object Summary : BottomNav(
         Screens.Summary,
-        AppIcon.PieChart.icon,
+        MyIcons.PieChart.icon,
         R.string.title_summary
     )
 
     object Lists : BottomNav(
         Screens.Lists,
-        AppIcon.PriceList.icon,
+        MyIcons.PriceList.icon,
         R.string.title_lists
     )
 }

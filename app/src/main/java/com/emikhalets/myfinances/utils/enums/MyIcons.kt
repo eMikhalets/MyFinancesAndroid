@@ -2,7 +2,7 @@ package com.emikhalets.myfinances.utils.enums
 
 import com.emikhalets.myfinances.R
 
-enum class AppIcon(val id: Int, val icon: Int) {
+enum class MyIcons(val id: Int, val icon: Int) {
     Plus(0, R.drawable.ic_plus),
     Pencil(1, R.drawable.ic_pencil),
     Wallet(2, R.drawable.ic_wallet),
@@ -25,10 +25,12 @@ enum class AppIcon(val id: Int, val icon: Int) {
     User(19, R.drawable.ic_user),
     Wifi(20, R.drawable.ic_wifi),
     Salary(21, R.drawable.ic_salary),
-    SaveMoney(22, R.drawable.ic_save_money);
+    SaveMoney(22, R.drawable.ic_save_money),
+    ArrowBack(23, R.drawable.ic_arrow_down),
+    App(24, R.drawable.ic_launcher_foreground);
 
     companion object {
-        private val map = values().associateBy(AppIcon::id)
-        fun get(id: Int): AppIcon = map[id] ?: Money
+        private val map = values().associateBy(MyIcons::id)
+        fun get(id: Int): MyIcons = map[id] ?: Money
     }
 }

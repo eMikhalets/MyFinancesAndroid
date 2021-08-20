@@ -2,12 +2,8 @@ package com.emikhalets.myfinances.ui.base
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.material.SnackbarDefaults.backgroundColor
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -18,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
+import com.emikhalets.myfinances.utils.enums.MyIcons
 import com.emikhalets.myfinances.utils.navigation.BottomNav
 import com.emikhalets.myfinances.utils.navigation.navigateAsStart
 
@@ -25,52 +22,38 @@ import com.emikhalets.myfinances.utils.navigation.navigateAsStart
 fun ScreenScaffold(
     navController: NavHostController,
     title: String,
-    backIcon: Boolean = false,
+    icon: Int = MyIcons.App.icon,
     content: @Composable () -> Unit
 ) {
     Scaffold(
-        topBar = {
-            AppToolbar(
-                navController = navController,
-                title = title,
-                backIcon = backIcon
-            )
-        }
-    ) {
-        Box(Modifier.padding(it)) {
-            content()
-        }
-    }
+        topBar = { AppToolbar(navController = navController, title = title, icon = icon) },
+        content = { Box(Modifier.padding(it)) { content() } }
+    )
 }
 
 @Composable
 fun AppToolbar(
     navController: NavHostController,
     title: String,
-    backIcon: Boolean = false,
-    actions: @Composable RowScope.() -> Unit = {}
+    icon: Int
 ) {
     TopAppBar(
         title = {
-            Text(
+            AppText(
                 text = title,
-                style = MaterialTheme.typography.body1.copy(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                ),
-                color = MaterialTheme.colors.onPrimary
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
             )
         },
         navigationIcon = {
-            if (backIcon) Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "",
+            AppIcon(
+                icon = icon,
                 modifier = Modifier.clickable { navController.popBackStack() }
             )
         },
-        actions = actions,
-        backgroundColor = MaterialTheme.colors.primarySurface,
-        contentColor = contentColorFor(backgroundColor),
+        actions = {},
+        backgroundColor = MaterialTheme.colors.primary,
+        contentColor = MaterialTheme.colors.onPrimary,
         elevation = 0.dp
     )
 }

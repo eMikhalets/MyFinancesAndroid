@@ -1,13 +1,12 @@
 package com.emikhalets.myfinances.ui.screens.transaction_details
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -17,8 +16,7 @@ import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.ui.base.*
 import com.emikhalets.myfinances.ui.screens.dialogs.AddCategoryDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.AddWalletDialog
-import com.emikhalets.myfinances.ui.screens.dialogs.ChooseCategoryDialog
-import com.emikhalets.myfinances.ui.screens.dialogs.ChooseWalletDialog
+import com.emikhalets.myfinances.ui.screens.dialogs.ListChooserDialog
 import com.emikhalets.myfinances.utils.AnimateFadeInOut
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.formatValue
@@ -122,13 +120,14 @@ fun TransactionDetailsScreen(
             )
         }
         AnimateFadeInOut(visible = showChoosingWallet, duration = 300) {
-            ChooseWalletDialog(
-                wallets = state.wallets,
+            ListChooserDialog(
+                buttonText = stringResource(R.string.new_wallet),
+                items = state.wallets,
+                onDismiss = { showChoosingWallet = false },
                 onSelect = {
                     wallet = it
                     showChoosingWallet = false
                 },
-                onDismiss = { showChoosingWallet = false },
                 onAddClick = {
                     showChoosingWallet = false
                     showAddingWallet = true
@@ -145,13 +144,14 @@ fun TransactionDetailsScreen(
             )
         }
         AnimateFadeInOut(visible = showChoosingCategory, duration = 300) {
-            ChooseCategoryDialog(
-                categories = state.categories,
+            ListChooserDialog(
+                buttonText = stringResource(R.string.new_category),
+                items = state.categories,
+                onDismiss = { showChoosingCategory = false },
                 onSelect = {
                     category = it
                     showChoosingCategory = false
                 },
-                onDismiss = { showChoosingCategory = false },
                 onAddClick = {
                     showChoosingCategory = false
                     showAddingCategory = true

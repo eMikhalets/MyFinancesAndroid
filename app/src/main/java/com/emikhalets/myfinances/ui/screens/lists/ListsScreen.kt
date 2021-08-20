@@ -53,7 +53,6 @@ fun ListsScreen(
     ) {
         Column(Modifier.fillMaxSize()) {
             AppPager(
-                navController = navController,
                 scope = scope,
                 pagerState = pagerState,
                 tabs = listOf(

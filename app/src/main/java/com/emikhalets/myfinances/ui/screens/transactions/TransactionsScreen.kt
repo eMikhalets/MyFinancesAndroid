@@ -17,7 +17,7 @@ import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.ui.base.AppPager
 import com.emikhalets.myfinances.ui.base.ScreenScaffold
-import com.emikhalets.myfinances.utils.enums.AppIcon
+import com.emikhalets.myfinances.utils.enums.MyIcons
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.navigation.navigateToNewTransaction
 import com.emikhalets.myfinances.utils.toast
@@ -50,7 +50,6 @@ fun TransactionsScreen(
     ) {
         Column(Modifier.fillMaxSize()) {
             AppPager(
-                navController = navController,
                 scope = scope,
                 pagerState = pagerState,
                 tabs = listOf(
@@ -85,12 +84,12 @@ fun TransactionsScreen(
                     .fillMaxWidth()
             ) {
                 AddTransactionButton(
-                    icon = AppIcon.Minus.icon,
+                    icon = MyIcons.Minus.icon,
                     onClick = { navController.navigateToNewTransaction(TransactionType.Expense) }
                 )
                 Spacer(modifier = Modifier.width(50.dp))
                 AddTransactionButton(
-                    icon = AppIcon.Plus.icon,
+                    icon = MyIcons.Plus.icon,
                     onClick = { navController.navigateToNewTransaction(TransactionType.Income) }
                 )
             }

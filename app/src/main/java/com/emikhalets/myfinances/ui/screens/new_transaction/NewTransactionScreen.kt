@@ -17,10 +17,9 @@ import com.emikhalets.myfinances.ui.base.AppTextField
 import com.emikhalets.myfinances.ui.base.ScreenScaffold
 import com.emikhalets.myfinances.ui.screens.dialogs.AddCategoryDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.AddWalletDialog
-import com.emikhalets.myfinances.ui.screens.dialogs.ChooseCategoryDialog
-import com.emikhalets.myfinances.ui.screens.dialogs.ChooseWalletDialog
+import com.emikhalets.myfinances.ui.screens.dialogs.ListChooserDialog
 import com.emikhalets.myfinances.utils.*
-import com.emikhalets.myfinances.utils.enums.AppIcon
+import com.emikhalets.myfinances.utils.enums.MyIcons
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.enums.TransactionType.Companion.getLabel
 
@@ -72,7 +71,7 @@ fun NewTransactionScreen(
                 onValueChange = {},
                 label = stringResource(R.string.wallet),
                 leadingIcon = R.drawable.ic_wallet,
-                trailingIcon = AppIcon.ArrowDown.icon,
+                trailingIcon = MyIcons.ArrowDown.icon,
                 enabled = false,
                 onClick = {
                     showChoosingWallet = true
@@ -84,8 +83,8 @@ fun NewTransactionScreen(
                 value = category?.name ?: stringResource(R.string.choose_category),
                 onValueChange = {},
                 label = stringResource(R.string.category),
-                leadingIcon = AppIcon.get(category?.icon ?: 3).icon,
-                trailingIcon = AppIcon.ArrowDown.icon,
+                leadingIcon = MyIcons.get(category?.icon ?: 3).icon,
+                trailingIcon = MyIcons.ArrowDown.icon,
                 enabled = false,
                 onClick = {
                     showChoosingCategory = true
@@ -97,7 +96,7 @@ fun NewTransactionScreen(
                 value = note,
                 onValueChange = { note = it },
                 label = stringResource(R.string.note),
-                leadingIcon = AppIcon.Pencil.icon
+                leadingIcon = MyIcons.Pencil.icon
             )
             AppTextField(
                 label = stringResource(R.string.value),
@@ -106,7 +105,7 @@ fun NewTransactionScreen(
                     value = it.formatValue()
                     valueError = false
                 },
-                leadingIcon = AppIcon.Money.icon,
+                leadingIcon = MyIcons.Money.icon,
                 type = KeyboardType.Number,
                 visualTransformation = CurrencyTransformation(),
                 errorInvalid = valueError
@@ -146,13 +145,14 @@ fun NewTransactionScreen(
             }
         }
         AnimateFadeInOut(visible = showChoosingWallet, duration = 300) {
-            ChooseWalletDialog(
-                wallets = state.wallets,
+            ListChooserDialog(
+                buttonText = stringResource(R.string.new_wallet),
+                items = state.wallets,
+                onDismiss = { showChoosingWallet = false },
                 onSelect = {
                     wallet = it
                     showChoosingWallet = false
                 },
-                onDismiss = { showChoosingWallet = false },
                 onAddClick = {
                     showChoosingWallet = false
                     showAddingWallet = true
@@ -169,13 +169,14 @@ fun NewTransactionScreen(
             )
         }
         AnimateFadeInOut(visible = showChoosingCategory, duration = 300) {
-            ChooseCategoryDialog(
-                categories = state.categories,
+            ListChooserDialog(
+                buttonText = stringResource(R.string.new_category),
+                items = state.categories,
+                onDismiss = { showChoosingCategory = false },
                 onSelect = {
                     category = it
                     showChoosingCategory = false
                 },
-                onDismiss = { showChoosingCategory = false },
                 onAddClick = {
                     showChoosingCategory = false
                     showAddingCategory = true

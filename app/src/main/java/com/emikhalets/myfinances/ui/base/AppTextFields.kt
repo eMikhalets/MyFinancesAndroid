@@ -1,13 +1,18 @@
 package com.emikhalets.myfinances.ui.base
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -18,7 +23,7 @@ import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.utils.CurrencyTransformation
-import com.emikhalets.myfinances.utils.enums.AppIcon
+import com.emikhalets.myfinances.utils.enums.MyIcons
 
 @Composable
 fun ValueTextField(
@@ -30,7 +35,7 @@ fun ValueTextField(
         label = stringResource(R.string.value),
         value = value,
         onValueChange = onValueChange,
-        leadingIcon = AppIcon.Money.icon,
+        leadingIcon = MyIcons.Money.icon,
         type = KeyboardType.Number,
         visualTransformation = CurrencyTransformation(),
         errorInvalid = error
@@ -48,7 +53,7 @@ fun NameTextField(
         errorEmpty = error,
         onValueChange = onNameChange,
         label = stringResource(R.string.name),
-        leadingIcon = AppIcon.Pencil.icon
+        leadingIcon = MyIcons.Pencil.icon
     )
 }
 
@@ -61,7 +66,7 @@ fun NoteTextField(
         value = note,
         onValueChange = onNoteChange,
         label = stringResource(R.string.note),
-        leadingIcon = AppIcon.Pencil.icon
+        leadingIcon = MyIcons.Pencil.icon
     )
 }
 
@@ -75,8 +80,8 @@ fun CategoryChooserTextField(
         value = category?.name ?: stringResource(R.string.choose_category),
         onValueChange = {},
         label = stringResource(R.string.category),
-        leadingIcon = AppIcon.get(category?.icon ?: 3).icon,
-        trailingIcon = AppIcon.ArrowDown.icon,
+        leadingIcon = MyIcons.get(category?.icon ?: 3).icon,
+        trailingIcon = MyIcons.ArrowDown.icon,
         enabled = false,
         onClick = onClick,
         errorSelecting = error
@@ -94,7 +99,7 @@ fun WalletChooserTextField(
         onValueChange = {},
         label = stringResource(R.string.wallet),
         leadingIcon = R.drawable.ic_wallet,
-        trailingIcon = AppIcon.ArrowDown.icon,
+        trailingIcon = MyIcons.ArrowDown.icon,
         padding = PaddingValues(start = 16.dp, end = 16.dp),
         enabled = false,
         onClick = onClick,
@@ -140,17 +145,15 @@ fun AppTextField(
                 )
             },
             leadingIcon = if (leadingIcon != null) {
-                { Icon(painter = painterResource(leadingIcon), contentDescription = "") }
-            } else null,
+                { AppIcon(icon = leadingIcon) }
+            } else {
+                null
+            },
             trailingIcon = if (trailingIcon != null) {
-                {
-                    Icon(
-                        painter = painterResource(trailingIcon),
-                        contentDescription = "",
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
-            } else null,
+                { AppIcon(icon = trailingIcon, size = 16.dp) }
+            } else {
+                null
+            },
             textStyle = MaterialTheme.typography.body1,
             colors = TextFieldDefaults.textFieldColors(
                 textColor = MaterialTheme.colors.onPrimary,

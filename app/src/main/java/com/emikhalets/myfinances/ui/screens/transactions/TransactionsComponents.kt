@@ -92,7 +92,7 @@ fun TransactionsListItem(
         }
         AnimateExpandCollapse(visible = showNote, duration = 300) {
             Column(Modifier.fillMaxWidth()) {
-                Text(
+                if (transaction.note.isNotEmpty()) Text(
                     text = transaction.note,
                     style = MaterialTheme.typography.body1,
                     modifier = Modifier

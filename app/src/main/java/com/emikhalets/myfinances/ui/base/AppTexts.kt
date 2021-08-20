@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -131,4 +130,35 @@ fun AppTextWithIcon(
             )
         )
     }
+}
+
+@Composable
+fun TextCenter(
+    text: String,
+    color: Color = MaterialTheme.colors.onPrimary
+) {
+    AppText(
+        text = text,
+        textAlign = TextAlign.Center,
+        color = color,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    )
+}
+
+@Composable
+fun AppText(
+    text: String,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start,
+    color: Color = MaterialTheme.colors.onPrimary
+) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.body1,
+        textAlign = textAlign,
+        color = color,
+        modifier = modifier
+    )
 }

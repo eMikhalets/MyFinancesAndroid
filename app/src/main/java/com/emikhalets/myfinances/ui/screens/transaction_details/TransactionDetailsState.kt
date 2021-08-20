@@ -11,6 +11,7 @@ data class TransactionDetailsState(
     val savedCategory: Boolean = false,
     val savedTransaction: Boolean = false,
     val savedWallet: Boolean = false,
+    val deletedTransaction: Boolean = false,
     val error: Exception? = null
 ) {
 

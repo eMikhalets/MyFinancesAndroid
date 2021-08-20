@@ -115,4 +115,18 @@ class TransactionDetailsVM @Inject constructor(
             }
         }
     }
+
+    fun deleteTransaction() {
+        viewModelScope.launch {
+            state.transaction?.let {
+                state = when (val result = repo.deleteTransaction(it)) {
+                    is Result.Error -> state.copy(error = result.exception)
+                    is Result.Success -> state.copy(
+                        deletedTransaction = true,
+                        error = null
+                    )
+                }
+            }
+        }
+    }
 }

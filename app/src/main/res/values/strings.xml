@@ -38,6 +38,7 @@
     <string name="cancel">Отменить</string>
     <string name="details">Подробнее</string>
     <string name="transaction_details">Детали транзакции</string>
+    <string name="delete">Удалить</string>
 
     <string name="error">Ошибка</string>
     <string name="error_required_field">Необходимо заполнить</string>

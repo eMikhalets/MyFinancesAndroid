@@ -21,4 +21,7 @@ interface WalletDao : BaseDao<Wallet> {
 
     @Query("SELECT * FROM wallets ORDER BY name ASC")
     suspend fun getAll(): List<Wallet>
+
+    @Query("SELECT * FROM wallets WHERE wallet_id = :id")
+    suspend fun getById(id: Long): Wallet
 }

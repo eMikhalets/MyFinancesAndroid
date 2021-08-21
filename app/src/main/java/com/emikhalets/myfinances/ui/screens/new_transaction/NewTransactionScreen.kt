@@ -44,13 +44,13 @@ fun NewTransactionScreen(
     var showChoosingWallet by remember { mutableStateOf(false) }
     var showAddingCategory by remember { mutableStateOf(false) }
     var showAddingWallet by remember { mutableStateOf(false) }
+    var categoryAfterAdding by remember { mutableStateOf("") }
 
     LaunchedEffect("init") {
         viewModel.getCategories(transactionType)
         viewModel.getWallets()
     }
     LaunchedEffect(state) {
-        if (state.categories.isNotEmpty() && category == null) category = state.categories.first()
         if (state.wallets.isNotEmpty() && wallet == null) {
             wallet = state.wallets.find { it.walletId == context.getCurrentWalletId() }
         }
@@ -58,6 +58,10 @@ fun NewTransactionScreen(
         if (state.savedWallet) viewModel.getWallets()
         if (state.savedCategory) viewModel.getCategories(transactionType)
         if (state.error != null) toast(context, state.errorMessage())
+        if (categoryAfterAdding.isNotEmpty()) {
+            category = state.categories.find { it.name == categoryAfterAdding }
+            if (category != null) categoryAfterAdding = ""
+        }
     }
 
     ScreenScaffold(
@@ -170,6 +174,7 @@ fun NewTransactionScreen(
             AddCategoryDialog(
                 onSave = { name, icon ->
                     showAddingCategory = false
+                    categoryAfterAdding = name
                     viewModel.saveCategory(transactionType, name, icon)
                 },
                 onDismiss = { showAddingCategory = false }

@@ -55,6 +55,15 @@ class RoomRepository @Inject constructor(
         }
     }
 
+    suspend fun getTransactionsBetween(start: Long, end: Long, wallet: Long): Result<List<Transaction>> {
+        return try {
+            Result.Success(transactionDao.getAllBetween(start, end, wallet))
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            Result.Error(ex)
+        }
+    }
+
     suspend fun getExpenseTransactions(): Result<List<Transaction>> {
         return try {
             Result.Success(transactionDao.getByType(TransactionType.Expense.value))

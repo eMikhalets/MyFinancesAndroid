@@ -1,10 +1,9 @@
 package com.emikhalets.myfinances.ui.screens.summary
 
-import com.emikhalets.myfinances.data.entity.Transaction
+import com.emikhalets.myfinances.data.entity.Category
 
 data class SummaryState(
-    val incomeList: List<Transaction> = emptyList(),
-    val expenseList: List<Transaction> = emptyList(),
+    val monthTransactions: Map<Category, Double> = emptyMap(),
     val error: Exception? = null
 ) {
 

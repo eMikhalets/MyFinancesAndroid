@@ -71,7 +71,7 @@ fun TransactionsListItem(
             }
             TextValue(transaction.amount)
         }
-        AnimateExpandCollapse(visible = showNote, duration = 300) {
+        AnimateExpandCollapse(visible = showNote, duration = 200) {
             Column(Modifier.fillMaxWidth()) {
                 if (transaction.note.isNotEmpty()) {
                     AppText(

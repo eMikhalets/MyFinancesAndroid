@@ -48,7 +48,9 @@ fun AppToolbar(
         navigationIcon = {
             AppIcon(
                 icon = icon,
-                modifier = Modifier.clickable { navController.popBackStack() }
+                modifier = Modifier.clickable {
+                    if (icon != MyIcons.App.icon) navController.popBackStack()
+                }
             )
         },
         actions = {},

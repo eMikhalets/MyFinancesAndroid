@@ -3,14 +3,11 @@ package com.emikhalets.myfinances.ui.screens.lists
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -44,18 +41,19 @@ fun WalletsList(
             onClick = { onAddClick() }
         )
         Divider(color = MaterialTheme.colors.secondary)
-        if (list.isEmpty()) TextFullScreen(
-            text = stringResource(R.string.empty_wallets)
-        )
-        else AppVerticalList(list) { wallet ->
-            WalletListItem(
-                wallet = wallet,
-                current = current,
-                onClick = {
-                    context.setCurrentWalletId(wallet.walletId)
-                    current = wallet.walletId
-                }
-            )
+        if (list.isEmpty()) {
+            TextFullScreen(stringResource(R.string.empty_wallets))
+        } else {
+            AppVerticalList(list) { wallet ->
+                WalletListItem(
+                    wallet = wallet,
+                    current = current,
+                    onClick = {
+                        context.setCurrentWalletId(wallet.walletId)
+                        current = wallet.walletId
+                    }
+                )
+            }
         }
     }
 }
@@ -106,14 +104,15 @@ fun CategoriesList(
             onClick = { onAddClick() }
         )
         Divider(color = MaterialTheme.colors.secondary)
-        if (list.isEmpty()) TextFullScreen(
-            text = stringResource(R.string.empty_categories)
-        )
-        else AppVerticalList(list) { category ->
-            CategoryListItem(
-                category = category,
-                onClick = {}
-            )
+        if (list.isEmpty()) {
+            TextFullScreen(stringResource(R.string.empty_categories))
+        } else {
+            AppVerticalList(list) { category ->
+                CategoryListItem(
+                    category = category,
+                    onClick = {}
+                )
+            }
         }
     }
 }
@@ -130,12 +129,11 @@ fun CategoryListItem(
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Icon(
-            painter = painterResource(MyIcons.get(category.icon).icon),
-            contentDescription = "",
-            modifier = Modifier.size(40.dp)
+        AppIcon(
+            icon = MyIcons.get(category.icon).icon,
+            size = 40.dp
         )
         Spacer(Modifier.width(16.dp))
-        Text(text = category.name)
+        AppText(category.name)
     }
 }

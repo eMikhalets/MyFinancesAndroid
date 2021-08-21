@@ -21,6 +21,7 @@ import com.emikhalets.myfinances.ui.screens.dialogs.AddWalletDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.ListChooserDialog
 import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.AnimateFadeInOut
+import com.emikhalets.myfinances.utils.enums.MyIcons
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.formatValue
 import com.emikhalets.myfinances.utils.toDate
@@ -114,7 +115,7 @@ fun TransactionDetailsScreen(
     onTypeChange: (TransactionType) -> Unit,
     onWalletErrorChange: (Boolean) -> Unit,
     onCategoryErrorChange: (Boolean) -> Unit,
-    onValueErrorChange: (Boolean) -> Unit,
+    onValueErrorChange: (Boolean) -> Unit
 ) {
     var showChoosingCategory by remember { mutableStateOf(false) }
     var showChoosingWallet by remember { mutableStateOf(false) }
@@ -123,7 +124,8 @@ fun TransactionDetailsScreen(
 
     ScreenScaffold(
         navController = navController,
-        title = stringResource(R.string.transaction_details)
+        title = stringResource(R.string.transaction_details),
+        icon = MyIcons.ArrowBack.icon
     ) {
         Column {
             TransactionTypeChooser(
@@ -227,7 +229,7 @@ fun TransactionDetailsScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun Preview2() {
+private fun TransactionDetailsPreview() {
     MyFinancesTheme {
         TransactionDetailsScreen(
             navController = rememberNavController(),

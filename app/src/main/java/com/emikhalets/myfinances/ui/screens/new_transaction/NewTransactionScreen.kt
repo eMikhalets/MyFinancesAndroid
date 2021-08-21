@@ -5,23 +5,22 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Wallet
-import com.emikhalets.myfinances.ui.base.AppTextButton
-import com.emikhalets.myfinances.ui.base.AppTextField
-import com.emikhalets.myfinances.ui.base.ScreenScaffold
+import com.emikhalets.myfinances.ui.base.*
 import com.emikhalets.myfinances.ui.screens.dialogs.AddCategoryDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.AddWalletDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.ListChooserDialog
-import com.emikhalets.myfinances.utils.*
-import com.emikhalets.myfinances.utils.enums.MyIcons
+import com.emikhalets.myfinances.utils.AnimateFadeInOut
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.enums.TransactionType.Companion.getLabel
+import com.emikhalets.myfinances.utils.formatValue
+import com.emikhalets.myfinances.utils.getCurrentWalletId
+import com.emikhalets.myfinances.utils.toast
 
 @Composable
 fun NewTransactionScreen(
@@ -66,49 +65,33 @@ fun NewTransactionScreen(
         title = transactionType.getLabel()
     ) {
         Column {
-            AppTextField(
-                value = wallet?.name ?: stringResource(R.string.choose_wallet),
-                onValueChange = {},
-                label = stringResource(R.string.wallet),
-                leadingIcon = R.drawable.ic_wallet,
-                trailingIcon = MyIcons.ArrowDown.icon,
-                enabled = false,
+            WalletChooserTextField(
+                wallet = wallet,
+                error = walletError,
                 onClick = {
                     showChoosingWallet = true
                     walletError = false
-                },
-                errorSelecting = walletError
+                }
             )
-            AppTextField(
-                value = category?.name ?: stringResource(R.string.choose_category),
-                onValueChange = {},
-                label = stringResource(R.string.category),
-                leadingIcon = MyIcons.get(category?.icon ?: 3).icon,
-                trailingIcon = MyIcons.ArrowDown.icon,
-                enabled = false,
+            CategoryChooserTextField(
+                category = category,
+                error = categoryError,
                 onClick = {
                     showChoosingCategory = true
                     categoryError = false
-                },
-                errorSelecting = categoryError
+                }
             )
-            AppTextField(
-                value = note,
-                onValueChange = { note = it },
-                label = stringResource(R.string.note),
-                leadingIcon = MyIcons.Pencil.icon
+            NoteTextField(
+                note = note,
+                onNoteChange = { note = it }
             )
-            AppTextField(
-                label = stringResource(R.string.value),
+            ValueTextField(
                 value = value,
+                error = valueError,
                 onValueChange = {
                     value = it.formatValue()
                     valueError = false
-                },
-                leadingIcon = MyIcons.Money.icon,
-                type = KeyboardType.Number,
-                visualTransformation = CurrencyTransformation(),
-                errorInvalid = valueError
+                }
             )
             Spacer(Modifier.height(16.dp))
             Row(Modifier.fillMaxWidth()) {

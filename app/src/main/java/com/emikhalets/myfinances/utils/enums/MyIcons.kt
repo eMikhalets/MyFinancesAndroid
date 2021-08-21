@@ -26,7 +26,7 @@ enum class MyIcons(val id: Int, val icon: Int) {
     Wifi(20, R.drawable.ic_wifi),
     Salary(21, R.drawable.ic_salary),
     SaveMoney(22, R.drawable.ic_save_money),
-    ArrowBack(23, R.drawable.ic_arrow_down),
+    ArrowBack(23, R.drawable.ic_arrow_back),
     App(24, R.drawable.ic_launcher_foreground);
 
     companion object {

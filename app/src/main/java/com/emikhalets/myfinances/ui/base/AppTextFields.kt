@@ -98,7 +98,7 @@ fun WalletChooserTextField(
         value = wallet?.name ?: stringResource(R.string.choose_wallet),
         onValueChange = {},
         label = stringResource(R.string.wallet),
-        leadingIcon = R.drawable.ic_wallet,
+        leadingIcon = MyIcons.Wallet.icon,
         trailingIcon = MyIcons.ArrowDown.icon,
         padding = PaddingValues(start = 16.dp, end = 16.dp),
         enabled = false,

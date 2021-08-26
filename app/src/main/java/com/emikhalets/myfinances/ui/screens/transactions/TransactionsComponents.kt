@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
+import androidx.compose.material.DropdownMenu
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -13,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.R
@@ -21,6 +23,7 @@ import com.emikhalets.myfinances.ui.base.*
 import com.emikhalets.myfinances.utils.AnimateExpandCollapse
 import com.emikhalets.myfinances.utils.enums.MyIcons
 import com.emikhalets.myfinances.utils.enums.TransactionType
+import com.emikhalets.myfinances.utils.getMonths
 import com.emikhalets.myfinances.utils.navigation.navigateToNewTransaction
 import com.emikhalets.myfinances.utils.navigation.navigateToTransactionDetails
 import com.emikhalets.myfinances.utils.toDate
@@ -156,6 +159,82 @@ fun AddTransactionButton(
                         .fillMaxSize()
                         .padding(12.dp)
                 )
+            }
+        }
+    }
+}
+
+@Composable
+fun DateChooser(
+    month: Int,
+    year: Int,
+    onMonthChange: (Int) -> Unit,
+    onYearChange: (Int) -> Unit
+) {
+    var monthExpanded by remember { mutableStateOf(false) }
+    var yearExpanded by remember { mutableStateOf(false) }
+
+    Row(Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
+            DateChooserTextField(
+                value = getMonths()[month],
+                label = stringResource(R.string.month),
+                onClick = {
+                    monthExpanded = !monthExpanded
+                }
+            )
+            DropdownMenu(
+                expanded = monthExpanded,
+                onDismissRequest = { monthExpanded = false },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                getMonths().forEachIndexed { i, value ->
+                    AppText(
+                        text = value,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .clickable {
+                                onMonthChange(i)
+                                monthExpanded = false
+                            }
+                            .padding(8.dp)
+                    )
+                }
+            }
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
+            DateChooserTextField(
+                value = year.toString(),
+                label = stringResource(R.string.year),
+                onClick = {
+                    yearExpanded = !yearExpanded
+                }
+            )
+            DropdownMenu(
+                expanded = yearExpanded,
+                onDismissRequest = { yearExpanded = false },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                (2001..2023).forEach { year ->
+                    AppText(
+                        text = year.toString(),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .clickable {
+                                onYearChange(year)
+                                yearExpanded = false
+                            }
+                            .padding(8.dp)
+                    )
+                }
             }
         }
     }

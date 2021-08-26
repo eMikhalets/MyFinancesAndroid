@@ -27,7 +27,8 @@ enum class MyIcons(val id: Int, val icon: Int) {
     Salary(21, R.drawable.ic_salary),
     SaveMoney(22, R.drawable.ic_save_money),
     ArrowBack(23, R.drawable.ic_arrow_back),
-    App(24, R.drawable.ic_launcher_foreground);
+    App(24, R.drawable.ic_launcher_foreground),
+    Calendar(25, R.drawable.ic_calendar);
 
     companion object {
         private val map = values().associateBy(MyIcons::id)

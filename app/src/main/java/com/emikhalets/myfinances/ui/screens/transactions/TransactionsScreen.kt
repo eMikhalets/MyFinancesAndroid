@@ -2,9 +2,7 @@ package com.emikhalets.myfinances.ui.screens.transactions
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -29,6 +27,9 @@ fun TransactionsScreen(
     val state = viewModel.state
     val context = LocalContext.current
 
+    var month by remember { mutableStateOf(0) }
+    var year by remember { mutableStateOf(2000) }
+
     LaunchedEffect("init") {
         viewModel.getExpenseTransactions()
         viewModel.getIncomeTransactions()
@@ -40,7 +41,21 @@ fun TransactionsScreen(
     TransactionsScreen(
         navController = navController,
         expenseList = state.expenseList,
-        incomeList = state.incomeList
+        incomeList = state.incomeList,
+        month = month,
+        year = year,
+        onMonthChange = {
+            if (month != it) {
+                month = it
+                //update transactions
+            }
+        },
+        onYearChange = {
+            if (year != it) {
+                year = it
+                //update transactions
+            }
+        }
     )
 }
 
@@ -49,7 +64,11 @@ fun TransactionsScreen(
 fun TransactionsScreen(
     navController: NavHostController,
     expenseList: List<Transaction>,
-    incomeList: List<Transaction>
+    incomeList: List<Transaction>,
+    month: Int,
+    year: Int,
+    onMonthChange: (Int) -> Unit,
+    onYearChange: (Int) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = 2)
@@ -59,6 +78,12 @@ fun TransactionsScreen(
         title = stringResource(R.string.title_transactions)
     ) {
         Column(Modifier.fillMaxSize()) {
+            DateChooser(
+                month = month,
+                year = year,
+                onMonthChange = onMonthChange,
+                onYearChange = onYearChange
+            )
             AppPager(
                 scope = scope,
                 pagerState = pagerState,
@@ -91,7 +116,11 @@ private fun Preview() {
         TransactionsScreen(
             navController = rememberNavController(),
             expenseList = emptyList(),
-            incomeList = emptyList()
+            incomeList = emptyList(),
+            month = 5,
+            year = 2045,
+            onMonthChange = {},
+            onYearChange = {}
         )
     }
 }

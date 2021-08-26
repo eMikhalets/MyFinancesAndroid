@@ -108,10 +108,31 @@ fun WalletChooserTextField(
 }
 
 @Composable
+fun DateChooserTextField(
+    value: String,
+    label: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+) {
+    AppTextField(
+        value = value,
+        onValueChange = {},
+        label = label,
+        leadingIcon = MyIcons.Calendar.icon,
+        trailingIcon = MyIcons.ArrowDown.icon,
+        padding = PaddingValues(start = 4.dp, end = 4.dp),
+        enabled = false,
+        onClick = onClick,
+        modifier = modifier
+    )
+}
+
+@Composable
 fun AppTextField(
     value: String,
     label: String,
     onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     leadingIcon: Int? = null,
     trailingIcon: Int? = null,
@@ -134,7 +155,7 @@ fun AppTextField(
         else -> stringResource(R.string.error)
     }
 
-    Box(Modifier.padding(padding)) {
+    Box(modifier.padding(padding)) {
         TextField(
             value = value,
             onValueChange = onValueChange,

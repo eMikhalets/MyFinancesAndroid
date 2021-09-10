@@ -19,6 +19,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Wallet
@@ -32,13 +33,14 @@ fun ValueTextField(
     onValueChange: (String) -> Unit
 ) {
     AppTextField(
-        label = stringResource(R.string.value),
         value = value,
         onValueChange = onValueChange,
         leadingIcon = MyIcons.Money.icon,
         type = KeyboardType.Number,
         visualTransformation = CurrencyTransformation(),
-        errorInvalid = error
+        errorInvalid = error,
+        fontSize = 24,
+        padding = PaddingValues(start = 16.dp, end = 16.dp)
     )
 }
 
@@ -130,9 +132,9 @@ fun DateChooserTextField(
 @Composable
 fun AppTextField(
     value: String,
-    label: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    label: String? = null,
     onClick: () -> Unit = {},
     leadingIcon: Int? = null,
     trailingIcon: Int? = null,
@@ -145,7 +147,8 @@ fun AppTextField(
     padding: PaddingValues = PaddingValues(top = 16.dp, start = 16.dp, end = 16.dp),
     errorEmpty: Boolean = false,
     errorInvalid: Boolean = false,
-    errorSelecting: Boolean = false
+    errorSelecting: Boolean = false,
+    fontSize: Int = 16
 ) {
     val error = errorEmpty || errorInvalid || errorSelecting
     val errorMessage: String = when {
@@ -155,16 +158,17 @@ fun AppTextField(
         else -> stringResource(R.string.error)
     }
 
+    val labelText: @Composable (() -> Unit)? = if (label == null) {
+        null
+    } else {
+        { Text(text = label, color = MaterialTheme.colors.onPrimary) }
+    }
+
     Box(modifier.padding(padding)) {
         TextField(
             value = value,
             onValueChange = onValueChange,
-            label = {
-                Text(
-                    text = label,
-                    color = MaterialTheme.colors.onPrimary
-                )
-            },
+            label = labelText,
             leadingIcon = if (leadingIcon != null) {
                 { AppIcon(icon = leadingIcon) }
             } else {
@@ -175,7 +179,9 @@ fun AppTextField(
             } else {
                 null
             },
-            textStyle = MaterialTheme.typography.body1,
+            textStyle = MaterialTheme.typography.body1.copy(
+                fontSize = fontSize.sp
+            ),
             colors = TextFieldDefaults.textFieldColors(
                 textColor = MaterialTheme.colors.onPrimary,
                 disabledTextColor = MaterialTheme.colors.onPrimary,

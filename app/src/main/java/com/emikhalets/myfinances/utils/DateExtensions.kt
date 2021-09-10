@@ -24,7 +24,34 @@ fun Calendar.getMinTSOfMonth(timestamp: Long = Date().time): Long {
     return this.timeInMillis
 }
 
-fun getMonths(): List<String> {
+fun Calendar.plusMonth(): Calendar {
+    this.add(Calendar.MONTH, 1)
+    return this
+}
+
+fun Calendar.minusMonth(): Calendar {
+    this.add(Calendar.MONTH, -1)
+    return this
+}
+
+fun Calendar.year(): Int {
+    return this.get(Calendar.YEAR)
+}
+
+fun Calendar.month(): Int {
+    return this.get(Calendar.MONTH)
+}
+
+fun Calendar.monthName(): String {
+    return try {
+        months()[this.month()]
+    } catch (ex: NumberFormatException) {
+        ex.printStackTrace()
+        "-"
+    }
+}
+
+fun months(): List<String> {
     return listOf(
         "Январь",
         "Февраль",

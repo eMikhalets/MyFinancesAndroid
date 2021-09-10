@@ -50,27 +50,19 @@ class RoomRepository @Inject constructor(
         }
     }
 
-    suspend fun getIncomeTransactions(): Result<List<Transaction>> {
+    suspend fun getTransactionsBetween(
+        start: Long,
+        end: Long,
+        wallet: Long
+    ): Result<List<TransactionWithCategory>> {
         return try {
-            Result.Success(transactionDao.getByType(TransactionType.Income.value))
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-            Result.Error(ex)
-        }
-    }
-
-    suspend fun getTransactionsBetween(start: Long, end: Long, wallet: Long): Result<List<Transaction>> {
-        return try {
-            Result.Success(transactionDao.getAllBetween(start, end, wallet))
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-            Result.Error(ex)
-        }
-    }
-
-    suspend fun getExpenseTransactions(): Result<List<Transaction>> {
-        return try {
-            Result.Success(transactionDao.getByType(TransactionType.Expense.value))
+            val result = mutableListOf<TransactionWithCategory>()
+            val transactions = transactionDao.getAllBetween(start, end, wallet)
+            transactions.forEach { transaction ->
+                val category = categoryDao.getCategoryById(transaction.categoryId)
+                result.add(TransactionWithCategory(transaction, category))
+            }
+            Result.Success(result)
         } catch (ex: Exception) {
             ex.printStackTrace()
             Result.Error(ex)

@@ -26,7 +26,7 @@ fun SummaryScreen(
         viewModel.getSummaryMonth(context.getCurrentWalletId())
     }
     LaunchedEffect(state) {
-        if (state.error != null) toast(context, state.errorMessage())
+        if (state.error != null) toast(context, state.error)
     }
 
     Column(Modifier.fillMaxSize()) {

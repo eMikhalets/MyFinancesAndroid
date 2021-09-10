@@ -64,7 +64,7 @@ fun TransactionDetailsScreen(
         if (state.transaction != null && state.wallets.isNotEmpty()) {
             wallet = state.wallets.find { it.walletId == state.transaction.walletId }
         }
-        if (state.error != null) toast(context, state.errorMessage())
+        if (state.error != null) toast(context, state.error)
         if (state.deletedTransaction) navController.popBackStack()
     }
 

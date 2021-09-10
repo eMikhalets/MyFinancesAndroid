@@ -1,12 +1,18 @@
 package com.emikhalets.myfinances.ui.screens.transactions
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -17,18 +23,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.data.entity.Transaction
-import com.emikhalets.myfinances.ui.base.AppIcon
-import com.emikhalets.myfinances.ui.base.AppPager
-import com.emikhalets.myfinances.ui.base.AppText
-import com.emikhalets.myfinances.ui.base.ScreenScaffold
+import com.emikhalets.myfinances.data.entity.TransactionWithCategory
+import com.emikhalets.myfinances.ui.base.*
 import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
-import com.emikhalets.myfinances.utils.month
-import com.emikhalets.myfinances.utils.months
-import com.emikhalets.myfinances.utils.toast
-import com.emikhalets.myfinances.utils.year
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.rememberPagerState
+import com.emikhalets.myfinances.utils.*
+import com.emikhalets.myfinances.utils.enums.MyIcons
+import com.emikhalets.myfinances.utils.enums.TransactionType
+import com.emikhalets.myfinances.utils.navigation.navigateToNewTransaction
+import com.emikhalets.myfinances.utils.navigation.navigateToTransactionDetails
 import java.util.*
 
 @Composable
@@ -43,17 +45,15 @@ fun TransactionsScreen(
     var year by remember { mutableStateOf(Calendar.getInstance().year()) }
 
     LaunchedEffect("init") {
-        viewModel.getExpenseTransactions()
-        viewModel.getIncomeTransactions()
+        viewModel.getTransactions(month, year, context.getCurrentWalletId())
     }
     LaunchedEffect(state) {
-        if (state.error != null) toast(context, state.errorMessage())
+        if (state.error != null) toast(context, state.error)
     }
 
     TransactionsScreen(
         navController = navController,
-        expenseList = state.expenseList,
-        incomeList = state.incomeList,
+        transactions = state.transactions,
         month = month,
         year = year,
         onBackDateClick = {
@@ -62,7 +62,7 @@ fun TransactionsScreen(
             new.add(Calendar.MONTH, -1)
             month = new.month()
             if (month == 11) year--
-            Log.d("TAG", "onDateChange: $month")
+            viewModel.getTransactions(month, year, context.getCurrentWalletId())
         },
         onForwardDateClick = {
             val new = Calendar.getInstance()
@@ -70,26 +70,20 @@ fun TransactionsScreen(
             new.add(Calendar.MONTH, 1)
             month = new.month()
             if (month == 0) year++
-            Log.d("TAG", "onDateChange: $month")
-            // viewModel.getTransactions with new date
+            viewModel.getTransactions(month, year, context.getCurrentWalletId())
         },
     )
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun TransactionsScreen(
     navController: NavHostController,
-    expenseList: List<Transaction>,
-    incomeList: List<Transaction>,
+    transactions: List<TransactionWithCategory>,
     month: Int,
     year: Int,
     onBackDateClick: () -> Unit,
     onForwardDateClick: () -> Unit
 ) {
-    val scope = rememberCoroutineScope()
-    val pagerState = rememberPagerState(pageCount = 2)
-
     ScreenScaffold(
         navController = navController,
         title = stringResource(R.string.title_transactions)
@@ -101,27 +95,137 @@ fun TransactionsScreen(
                 onBackDateClick = onBackDateClick,
                 onForwardDateClick = onForwardDateClick
             )
-            AppPager(
-                scope = scope,
-                pagerState = pagerState,
-                tabs = listOf(
-                    stringResource(R.string.expenses),
-                    stringResource(R.string.incomes)
-                ),
-                modifier = Modifier.weight(1f)
-            ) { page ->
-                when (page) {
-                    0 -> TransactionsList(
-                        navController = navController,
-                        list = expenseList
-                    )
-                    1 -> TransactionsList(
-                        navController = navController,
-                        list = incomeList
+            Divider(color = MaterialTheme.colors.secondary)
+            if (transactions.isEmpty()) {
+                TextFullScreen(stringResource(R.string.empty_transactions))
+            } else {
+                AppVerticalList(transactions) { transaction ->
+                    TransactionsListItem(
+                        transaction = transaction,
+                        onClick = { navController.navigateToTransactionDetails(it) }
                     )
                 }
             }
             AddButtonsLayout(navController)
+        }
+    }
+}
+
+@Composable
+fun TransactionsListItem(
+    transaction: TransactionWithCategory,
+    onClick: (Long) -> Unit
+) {
+    var showNote by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .clickable { showNote = !showNote }
+            .fillMaxWidth()
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            AppIcon(
+                icon = 1,
+                size = 32.dp
+            )
+            Spacer(Modifier.width(24.dp))
+            Column {
+                AppText("")
+                TextSecondary(transaction.transaction.timestamp.toDate())
+            }
+            TextValue(transaction.transaction.amount)
+        }
+        AnimateExpandCollapse(visible = showNote, duration = 200) {
+            Column(Modifier.fillMaxWidth()) {
+                if (transaction.transaction.note.isNotEmpty()) {
+                    AppText(
+                        text = transaction.transaction.note,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 52.dp, end = 32.dp)
+                    )
+                }
+                AppTextButton(
+                    text = stringResource(R.string.details),
+                    padding = PaddingValues(top = 4.dp, bottom = 4.dp),
+                    onClick = { onClick(transaction.transaction.transactionId) }
+                )
+            }
+        }
+        Divider(color = MaterialTheme.colors.secondary)
+    }
+}
+
+@Composable
+fun AddButtonsLayout(
+    navController: NavHostController
+) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Transparent,
+                        MaterialTheme.colors.surface
+                    )
+                )
+            )
+            .padding(16.dp)
+            .fillMaxWidth()
+    ) {
+        AddTransactionButton(
+            icon = MyIcons.Minus.icon,
+            onClick = { navController.navigateToNewTransaction(TransactionType.Expense) }
+        )
+        Spacer(modifier = Modifier.width(50.dp))
+        AddTransactionButton(
+            icon = MyIcons.Plus.icon,
+            onClick = { navController.navigateToNewTransaction(TransactionType.Income) }
+        )
+    }
+}
+
+@Composable
+fun AddTransactionButton(
+    icon: Int,
+    onClick: () -> Unit
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .size(60.dp)
+            .background(MaterialTheme.colors.primary, CircleShape)
+            .clip(CircleShape)
+            .clickable { onClick() }
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(4.dp)
+                .background(MaterialTheme.colors.onPrimary, CircleShape)
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(1.dp)
+                    .background(MaterialTheme.colors.primary, CircleShape)
+            ) {
+                AppIcon(
+                    icon = icon,
+                    color = MaterialTheme.colors.onPrimary,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(12.dp)
+                )
+            }
         }
     }
 }
@@ -192,8 +296,7 @@ private fun Preview() {
     MyFinancesTheme {
         TransactionsScreen(
             navController = rememberNavController(),
-            expenseList = emptyList(),
-            incomeList = emptyList(),
+            transactions = emptyList(),
             month = Calendar.getInstance().month(),
             year = Calendar.getInstance().year(),
             onBackDateClick = {},

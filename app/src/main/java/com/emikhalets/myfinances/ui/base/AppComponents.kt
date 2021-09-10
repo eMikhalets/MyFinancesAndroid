@@ -63,11 +63,12 @@ fun AppPager(
 @Composable
 fun <T> AppVerticalList(
     list: List<T>,
+    modifier: Modifier = Modifier,
     padding: PaddingValues = PaddingValues(0.dp),
     content: @Composable (T) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(padding)
     ) {

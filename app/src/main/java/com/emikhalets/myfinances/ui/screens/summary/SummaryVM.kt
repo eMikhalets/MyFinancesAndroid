@@ -29,7 +29,7 @@ class SummaryVM @Inject constructor(
             state = when (val result = repo.getTransactionsBetween(start, end, wallet)) {
                 is Result.Error -> state.copy(error = result.exception)
                 is Result.Success -> state.copy(
-                    monthTransactions = mapTransactionsToSummary(result.data),
+//                    monthTransactions = mapTransactionsToSummary(result.data),
                     error = null
                 )
             }

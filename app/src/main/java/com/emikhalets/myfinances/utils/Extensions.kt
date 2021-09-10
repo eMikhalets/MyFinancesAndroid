@@ -48,6 +48,10 @@ fun Long?.toDate(): String {
     return formatter.format(date)
 }
 
-fun toast(context: Context, text: String) {
-    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+fun toast(context: Context, exception: Exception) {
+    Toast.makeText(context, exception.errorMessage(), Toast.LENGTH_SHORT).show()
+}
+
+fun Exception.errorMessage(): String {
+    return this.message ?: "No message"
 }

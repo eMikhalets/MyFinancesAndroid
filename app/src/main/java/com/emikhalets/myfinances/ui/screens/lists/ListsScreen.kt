@@ -44,7 +44,7 @@ fun ListsScreen(
         if (state.savedCategoryExpense) viewModel.getCategoriesExpense()
         if (state.savedCategoryIncome) viewModel.getCategoriesIncome()
         if (state.savedWallet) viewModel.getWallets()
-        if (state.error != null) toast(context, state.errorMessage())
+        if (state.error != null) toast(context, state.error)
     }
 
     ScreenScaffold(

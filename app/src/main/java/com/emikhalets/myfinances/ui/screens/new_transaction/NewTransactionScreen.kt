@@ -57,7 +57,7 @@ fun NewTransactionScreen(
         if (state.savedTransaction) navController.popBackStack()
         if (state.savedWallet) viewModel.getWallets()
         if (state.savedCategory) viewModel.getCategories(transactionType)
-        if (state.error != null) toast(context, state.errorMessage())
+        if (state.error != null) toast(context, state.error)
         if (categoryAfterAdding.isNotEmpty()) {
             category = state.categories.find { it.name == categoryAfterAdding }
             if (category != null) categoryAfterAdding = ""

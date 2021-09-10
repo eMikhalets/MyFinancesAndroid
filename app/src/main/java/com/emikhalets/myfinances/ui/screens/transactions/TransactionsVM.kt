@@ -7,8 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.myfinances.data.Result
 import com.emikhalets.myfinances.data.RoomRepository
+import com.emikhalets.myfinances.utils.getMaxTSOfMonth
+import com.emikhalets.myfinances.utils.getMinTSOfMonth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,26 +22,16 @@ class TransactionsVM @Inject constructor(
     var state by mutableStateOf(TransactionsState())
         private set
 
-    fun getExpenseTransactions() {
+    fun getTransactions(month: Int, year: Int, wallet: Long) {
         viewModelScope.launch {
-            state = when (val result = repo.getExpenseTransactions()) {
-                is Result.Error -> state.copy(error = result.exception)
-                is Result.Success -> state.copy(
-                    expenseList = result.data,
-                    error = null
-                )
-            }
-        }
-    }
-
-    fun getIncomeTransactions() {
-        viewModelScope.launch {
-            state = when (val result = repo.getIncomeTransactions()) {
-                is Result.Error -> state.copy(error = result.exception)
-                is Result.Success -> state.copy(
-                    incomeList = result.data,
-                    error = null
-                )
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.MONTH, month)
+            calendar.set(Calendar.YEAR, year)
+            val start = calendar.getMinTSOfMonth(calendar.timeInMillis)
+            val end = calendar.getMaxTSOfMonth(calendar.timeInMillis)
+            state = when (val result = repo.getTransactionsBetween(start, end, wallet)) {
+                is Result.Error -> state.setError(result.exception)
+                is Result.Success -> state.setTransactions(result.data)
             }
         }
     }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
@@ -97,9 +98,17 @@ fun TransactionsScreen(
             )
             Divider(color = MaterialTheme.colors.secondary)
             if (transactions.isEmpty()) {
-                TextFullScreen(stringResource(R.string.empty_transactions))
+                TextFullScreen(
+                    text = stringResource(R.string.empty_transactions),
+                    modifier = Modifier.weight(1f)
+                )
             } else {
-                AppVerticalList(transactions) { transaction ->
+                AppVerticalList(
+                    list = transactions,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                ) { transaction ->
                     TransactionsListItem(
                         transaction = transaction,
                         onClick = { navController.navigateToTransactionDetails(it) }
@@ -112,10 +121,7 @@ fun TransactionsScreen(
 }
 
 @Composable
-fun TransactionsListItem(
-    transaction: TransactionWithCategory,
-    onClick: (Long) -> Unit
-) {
+fun TransactionsListItem(transaction: TransactionWithCategory, onClick: (Long) -> Unit) {
     var showNote by remember { mutableStateOf(false) }
 
     Column(
@@ -162,9 +168,7 @@ fun TransactionsListItem(
 }
 
 @Composable
-fun AddButtonsLayout(
-    navController: NavHostController
-) {
+fun AddButtonsLayout(navController: NavHostController) {
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -192,41 +196,22 @@ fun AddButtonsLayout(
 }
 
 @Composable
-fun AddTransactionButton(
-    icon: Int,
-    onClick: () -> Unit
-) {
+fun AddTransactionButton(icon: Int, onClick: () -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .size(60.dp)
-            .background(MaterialTheme.colors.primary, CircleShape)
-            .clip(CircleShape)
+            .size(80.dp, 40.dp)
+            .background(MaterialTheme.colors.primary, RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(8.dp))
             .clickable { onClick() }
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
+        AppIcon(
+            icon = icon,
+            color = MaterialTheme.colors.onPrimary,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(4.dp)
-                .background(MaterialTheme.colors.onPrimary, CircleShape)
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(1.dp)
-                    .background(MaterialTheme.colors.primary, CircleShape)
-            ) {
-                AppIcon(
-                    icon = icon,
-                    color = MaterialTheme.colors.onPrimary,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(12.dp)
-                )
-            }
-        }
+                .padding(8.dp)
+        )
     }
 }
 

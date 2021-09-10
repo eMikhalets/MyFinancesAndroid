@@ -13,7 +13,6 @@ import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,9 +49,9 @@ class NewTransactionVM @Inject constructor(
         }
     }
 
-    fun saveCategory(type: TransactionType, name: String, icon: Int) {
+    fun saveCategory(type: TransactionType, name: String) {
         viewModelScope.launch {
-            val category = Category(name, type.value, icon)
+            val category = Category(name = name, type = type.value)
             state = when (val result = repo.insertCategory(category)) {
                 is Result.Error -> state.copy(error = result.exception)
                 is Result.Success -> state.copy(
@@ -76,10 +75,7 @@ class NewTransactionVM @Inject constructor(
                 walletId = wallet.walletId,
                 amount = value,
                 type = type.value,
-                note = note,
-                categoryName = category.name,
-                categoryIcon = category.icon,
-                timestamp = Date().time
+                note = note
             )
             state = when (val result = repo.insertTransaction(transaction)) {
                 is Result.Error -> state.copy(error = result.exception)
@@ -93,7 +89,7 @@ class NewTransactionVM @Inject constructor(
 
     fun saveWallet(name: String, value: Double) {
         viewModelScope.launch {
-            val wallet = Wallet(name, value)
+            val wallet = Wallet(name = name, amount = value)
             state = when (val result = repo.insertWallet(wallet)) {
                 is Result.Error -> state.copy(error = result.exception)
                 is Result.Success -> state.copy(

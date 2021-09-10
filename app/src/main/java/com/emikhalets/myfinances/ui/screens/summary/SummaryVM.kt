@@ -51,9 +51,9 @@ class SummaryVM @Inject constructor(
     private fun mapTransactionsToSummary(list: List<Transaction>): Map<Category, Double> {
         val map = mutableMapOf<Category, Double>()
         list.forEach {
-            val category = Category(it.categoryId, it.categoryName, it.type, it.categoryIcon)
-            val value = map[category] ?: 0.0
-            map[category] = value + it.amount
+//            val category = Category(id = it.categoryId, name = it.categoryName, type = it.type)
+//            val value = map[category] ?: 0.0
+//            map[category] = value + it.amount
         }
         return map
     }

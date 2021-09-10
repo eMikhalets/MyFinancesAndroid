@@ -5,6 +5,7 @@ import com.emikhalets.myfinances.data.dao.TransactionDao
 import com.emikhalets.myfinances.data.dao.WalletDao
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Transaction
+import com.emikhalets.myfinances.data.entity.TransactionWithCategory
 import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import javax.inject.Inject
@@ -39,6 +40,9 @@ class RoomRepository @Inject constructor(
 
     suspend fun getTransaction(id: Long): Result<Transaction> {
         return try {
+            val transaction = transactionDao.getItemById(id)
+            val category = categoryDao.getCategoryById(transaction.categoryId)
+            val result = TransactionWithCategory(transaction, category)
             Result.Success(transactionDao.getItemById(id))
         } catch (ex: Exception) {
             ex.printStackTrace()

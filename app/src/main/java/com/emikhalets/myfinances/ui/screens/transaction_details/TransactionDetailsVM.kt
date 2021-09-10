@@ -59,9 +59,9 @@ class TransactionDetailsVM @Inject constructor(
         }
     }
 
-    fun saveCategory(type: TransactionType, name: String, icon: Int) {
+    fun saveCategory(type: TransactionType, name: String) {
         viewModelScope.launch {
-            val category = Category(name, type.value, icon)
+            val category = Category(name = name, type = type.value)
             state = when (val result = repo.insertCategory(category)) {
                 is Result.Error -> state.copy(error = result.exception)
                 is Result.Success -> state.copy(
@@ -87,8 +87,6 @@ class TransactionDetailsVM @Inject constructor(
                 amount = amount,
                 type = type,
                 note = note,
-                categoryName = category.name,
-                categoryIcon = category.icon,
                 timestamp = date
             )
             transaction?.let {
@@ -105,7 +103,7 @@ class TransactionDetailsVM @Inject constructor(
 
     fun saveWallet(name: String, value: Double) {
         viewModelScope.launch {
-            val wallet = Wallet(name, value)
+            val wallet = Wallet(name = name, amount = value)
             state = when (val result = repo.insertWallet(wallet)) {
                 is Result.Error -> state.copy(error = result.exception)
                 is Result.Success -> state.copy(

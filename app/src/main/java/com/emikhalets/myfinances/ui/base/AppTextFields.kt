@@ -80,7 +80,7 @@ fun CategoryChooserTextField(
         value = category?.name ?: stringResource(R.string.choose_category),
         onValueChange = {},
         label = stringResource(R.string.category),
-        leadingIcon = MyIcons.get(category?.icon ?: 3).icon,
+//        leadingIcon = MyIcons.get(category?.icon ?: 3).icon,
         trailingIcon = MyIcons.ArrowDown.icon,
         enabled = false,
         onClick = onClick,

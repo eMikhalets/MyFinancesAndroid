@@ -42,7 +42,7 @@ fun <T> ListChooserDialog(
                         }
                         is Category -> {
                             name = item.name
-                            icon = MyIcons.get(item.icon).icon
+                            icon = 1
                         }
                     }
                     TextWithIcon(

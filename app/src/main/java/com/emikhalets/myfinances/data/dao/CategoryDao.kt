@@ -22,6 +22,9 @@ interface CategoryDao : BaseDao<Category> {
     @Query("SELECT * FROM categories")
     suspend fun getAll(): List<Category>
 
+    @Query("SELECT * FROM categories WHERE category_id = :id")
+    suspend fun getCategoryById(id: Long): Category
+
     @Query("SELECT * FROM categories WHERE type = :type ORDER BY name ASC")
     suspend fun getAllByType(type: Int): List<Category>
 }

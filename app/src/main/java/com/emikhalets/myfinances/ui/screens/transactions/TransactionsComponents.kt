@@ -64,12 +64,12 @@ fun TransactionsListItem(
                 .padding(8.dp)
         ) {
             AppIcon(
-                icon = MyIcons.get(transaction.categoryIcon).icon,
+                icon = 1,
                 size = 32.dp
             )
             Spacer(Modifier.width(24.dp))
             Column {
-                AppText(transaction.categoryName)
+                AppText("")
                 TextSecondary(transaction.timestamp.toDate())
             }
             TextValue(transaction.amount)

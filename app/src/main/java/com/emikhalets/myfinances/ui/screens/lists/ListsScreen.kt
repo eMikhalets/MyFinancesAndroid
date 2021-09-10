@@ -98,9 +98,9 @@ fun ListsScreen(
         }
         AnimateFadeInOut(visible = showAddingCategory, duration = 300) {
             AddCategoryDialog(
-                onSave = { name, icon ->
+                onSave = { name, _ ->
                     showAddingCategory = false
-                    viewModel.saveCategory(selectedCategoryType, name, icon)
+                    viewModel.saveCategory(selectedCategoryType, name)
                 },
                 onDismiss = { showAddingCategory = false }
             )

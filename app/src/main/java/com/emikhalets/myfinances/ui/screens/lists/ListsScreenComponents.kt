@@ -130,7 +130,7 @@ fun CategoryListItem(
             .padding(8.dp)
     ) {
         AppIcon(
-            icon = MyIcons.get(category.icon).icon,
+            icon = 1,
             size = 40.dp
         )
         Spacer(Modifier.width(16.dp))

@@ -217,9 +217,9 @@ fun TransactionDetailsScreen(
         }
         AnimateFadeInOut(visible = showAddingCategory, duration = 300) {
             AddCategoryDialog(
-                onSave = { name, icon ->
+                onSave = { name, _ ->
                     showAddingCategory = false
-                    viewModel.saveCategory(type, name, icon)
+                    viewModel.saveCategory(type, name)
                 },
                 onDismiss = { showAddingCategory = false }
             )

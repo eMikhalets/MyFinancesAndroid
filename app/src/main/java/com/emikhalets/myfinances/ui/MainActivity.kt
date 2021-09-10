@@ -2,6 +2,7 @@ package com.emikhalets.myfinances.ui
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -11,8 +12,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.ui.base.AppBottomBar
 import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
+import com.emikhalets.myfinances.utils.getCurrentWalletId
 import com.emikhalets.myfinances.utils.navigation.AppNavGraph
 import com.emikhalets.myfinances.utils.navigation.BottomNav
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,8 +23,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    private val viewModel: MainVM by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (getCurrentWalletId() <= 0) {
+            viewModel.createDefaultWallet(getString(R.string.default_wallet))
+        }
 
         setContent {
             val navController = rememberNavController()

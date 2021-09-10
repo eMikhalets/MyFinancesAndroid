@@ -14,6 +14,7 @@
     <string name="incomes">Доходы</string>
     <string name="income">Доход</string>
     <string name="wallets">Кошельки</string>
+    <string name="default_wallet">Основной</string>
 
     <string name="empty_categories">Нет категорий</string>
     <string name="empty_transactions">Нет транзакций</string>

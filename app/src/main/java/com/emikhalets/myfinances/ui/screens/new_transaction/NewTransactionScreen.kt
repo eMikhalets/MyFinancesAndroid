@@ -1,16 +1,28 @@
 package com.emikhalets.myfinances.ui.screens.new_transaction
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.ui.base.*
+import com.emikhalets.myfinances.ui.base.AppText
+import com.emikhalets.myfinances.ui.base.ScreenScaffold
+import com.emikhalets.myfinances.ui.base.ValueTextField
 import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
+import com.emikhalets.myfinances.utils.enums.Keyboard
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.formatValue
 
@@ -203,13 +215,64 @@ fun NewTransactionScreen(
         navController = navController,
         title = title
     ) {
-        ValueTextField(
-            value = value,
-            error = valueError,
-            onValueChange = {
-                onValueChange(value)
-                valueError = false
-            }
+        Column(Modifier.fillMaxSize()) {
+            ValueTextField(
+                value = value,
+                error = valueError,
+                onValueChange = {
+                    onValueChange(value)
+                    valueError = false
+                }
+            )
+            Spacer(Modifier.height(8.dp))
+            Keyboard(onClick = {})
+        }
+    }
+}
+
+@Composable
+fun Keyboard(onClick: (String) -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(horizontalArrangement = Arrangement.Center) {
+            KeyboardButton(value = Keyboard.NUM_1.value, onClick = onClick)
+            KeyboardButton(value = Keyboard.NUM_2.value, onClick = onClick)
+            KeyboardButton(value = Keyboard.NUM_3.value, onClick = onClick)
+        }
+        Row(horizontalArrangement = Arrangement.Center) {
+            KeyboardButton(value = Keyboard.NUM_4.value, onClick = onClick)
+            KeyboardButton(value = Keyboard.NUM_5.value, onClick = onClick)
+            KeyboardButton(value = Keyboard.NUM_6.value, onClick = onClick)
+        }
+        Row(horizontalArrangement = Arrangement.Center) {
+            KeyboardButton(value = Keyboard.NUM_7.value, onClick = onClick)
+            KeyboardButton(value = Keyboard.NUM_8.value, onClick = onClick)
+            KeyboardButton(value = Keyboard.NUM_9.value, onClick = onClick)
+        }
+        Row(horizontalArrangement = Arrangement.Center) {
+            KeyboardButton(value = Keyboard.DOT.value, onClick = onClick)
+            KeyboardButton(value = Keyboard.NUM_0.value, onClick = onClick)
+            KeyboardButton(value = Keyboard.DEL.value, onClick = onClick)
+        }
+    }
+}
+
+@Composable
+fun KeyboardButton(value: String, onClick: (String) -> Unit) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .padding(4.dp)
+            .background(MaterialTheme.colors.secondary.copy(alpha = 0.3f))
+            .clickable { onClick(value) }
+            .size(80.dp, 50.dp)
+            .border(1.dp, MaterialTheme.colors.primary, RoundedCornerShape(4.dp))
+    ) {
+        AppText(
+            text = value,
+            fontSize = 18.sp
         )
     }
 }

@@ -27,11 +27,7 @@ import com.emikhalets.myfinances.utils.CurrencyTransformation
 import com.emikhalets.myfinances.utils.enums.MyIcons
 
 @Composable
-fun ValueTextField(
-    value: String,
-    error: Boolean,
-    onValueChange: (String) -> Unit
-) {
+fun ValueTextField(value: String, error: Boolean, onValueChange: (String) -> Unit) {
     AppTextField(
         value = value,
         onValueChange = onValueChange,
@@ -45,11 +41,7 @@ fun ValueTextField(
 }
 
 @Composable
-fun NameTextField(
-    name: String,
-    error: Boolean,
-    onNameChange: (String) -> Unit
-) {
+fun NameTextField(name: String, error: Boolean, onNameChange: (String) -> Unit) {
     AppTextField(
         value = name,
         errorEmpty = error,
@@ -60,10 +52,7 @@ fun NameTextField(
 }
 
 @Composable
-fun NoteTextField(
-    note: String,
-    onNoteChange: (String) -> Unit
-) {
+fun NoteTextField(note: String, onNoteChange: (String) -> Unit) {
     AppTextField(
         value = note,
         onValueChange = onNoteChange,
@@ -73,11 +62,7 @@ fun NoteTextField(
 }
 
 @Composable
-fun CategoryChooserTextField(
-    category: Category?,
-    onClick: () -> Unit = {},
-    error: Boolean
-) {
+fun CategoryChooserTextField(category: Category?, onClick: () -> Unit = {}, error: Boolean) {
     AppTextField(
         value = category?.name ?: stringResource(R.string.choose_category),
         onValueChange = {},
@@ -91,11 +76,7 @@ fun CategoryChooserTextField(
 }
 
 @Composable
-fun WalletChooserTextField(
-    wallet: Wallet?,
-    onClick: () -> Unit = {},
-    error: Boolean
-) {
+fun WalletChooserTextField(wallet: Wallet?, onClick: () -> Unit = {}, error: Boolean) {
     AppTextField(
         value = wallet?.name ?: stringResource(R.string.choose_wallet),
         onValueChange = {},
@@ -144,7 +125,7 @@ fun AppTextField(
     type: KeyboardType = KeyboardType.Text,
     capitalization: KeyboardCapitalization = KeyboardCapitalization.Sentences,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    padding: PaddingValues = PaddingValues(top = 16.dp, start = 16.dp, end = 16.dp),
+    padding: PaddingValues = PaddingValues(0.dp),
     errorEmpty: Boolean = false,
     errorInvalid: Boolean = false,
     errorSelecting: Boolean = false,

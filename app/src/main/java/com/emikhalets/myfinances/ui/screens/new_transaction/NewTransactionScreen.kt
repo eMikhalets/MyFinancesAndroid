@@ -1,16 +1,19 @@
 package com.emikhalets.myfinances.ui.screens.new_transaction
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import android.content.Context
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -18,13 +21,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.ui.base.AppText
-import com.emikhalets.myfinances.ui.base.ScreenScaffold
-import com.emikhalets.myfinances.ui.base.ValueTextField
+import com.emikhalets.myfinances.data.entity.Category
+import com.emikhalets.myfinances.ui.base.*
 import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
+import com.emikhalets.myfinances.utils.AnimateExpandCollapse
 import com.emikhalets.myfinances.utils.enums.Keyboard
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.formatValue
+import com.emikhalets.myfinances.utils.getCurrentWalletId
+import com.emikhalets.myfinances.utils.toast
 
 @Composable
 fun NewTransactionScreen(
@@ -35,165 +40,40 @@ fun NewTransactionScreen(
     val state = viewModel.state
     val context = LocalContext.current
 
-//    var note by remember { mutableStateOf("") }
-    var value by remember { mutableStateOf("") }
-//    var wallet by remember { mutableStateOf<Wallet?>(null) }
-//    var category by remember { mutableStateOf<Category?>(null) }
+    var value by remember { mutableStateOf("0") }
+    var note by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf<Category?>(null) }
 
-//    var walletError by remember { mutableStateOf(false) }
-//    var categoryError by remember { mutableStateOf(false) }
-//    var valueError by remember { mutableStateOf(false) }
-
-//    var showChoosingCategory by remember { mutableStateOf(false) }
-//    var showChoosingWallet by remember { mutableStateOf(false) }
-//    var showAddingCategory by remember { mutableStateOf(false) }
-//    var showAddingWallet by remember { mutableStateOf(false) }
-//    var categoryAfterAdding by remember { mutableStateOf("") }
-
-//    LaunchedEffect("init") {
-//        viewModel.getCategories(transactionType)
-//        viewModel.getWallets()
-//    }
-//    LaunchedEffect(state) {
-//        if (state.wallets.isNotEmpty() && wallet == null) {
-//            wallet = state.wallets.find { it.walletId == context.getCurrentWalletId() }
-//        }
-//        if (state.savedTransaction) navController.popBackStack()
-//        if (state.savedWallet) viewModel.getWallets()
-//        if (state.savedCategory) viewModel.getCategories(transactionType)
-//        if (state.error != null) toast(context, state.error)
-//        if (categoryAfterAdding.isNotEmpty()) {
-//            category = state.categories.find { it.name == categoryAfterAdding }
-//            if (category != null) categoryAfterAdding = ""
-//        }
-//    }
+    LaunchedEffect("init") {
+        viewModel.getCategories(transactionType)
+    }
+    LaunchedEffect(state) {
+        if (state.savedTransaction) navController.popBackStack()
+        if (state.savedCategory) viewModel.getCategories(transactionType)
+        if (state.error != null) toast(context, state.error)
+    }
 
     NewTransactionScreen(
         navController = navController,
         transactionType = transactionType,
         value = value,
-        onValueChange = {
-            value = it.formatValue()
+        onValueChange = { value = (value + it).formatValue() },
+        note = note,
+        onNoteChange = { note = it },
+        category = category,
+        categories = state.categories,
+        onCategoryClick = { category = it },
+        context = context,
+        onSaveClick = {
+            viewModel.saveTransaction(
+                context.getCurrentWalletId(),
+                category,
+                note,
+                value.toDouble(),
+                transactionType
+            )
         }
     )
-
-//    ScreenScaffold(
-//        navController = navController,
-//        title = transactionType.getLabel()
-//    ) {
-//        Column {
-//            WalletChooserTextField(
-//                wallet = wallet,
-//                error = walletError,
-//                onClick = {
-//                    showChoosingWallet = true
-//                    walletError = false
-//                }
-//            )
-//            CategoryChooserTextField(
-//                category = category,
-//                error = categoryError,
-//                onClick = {
-//                    showChoosingCategory = true
-//                    categoryError = false
-//                }
-//            )
-//            NoteTextField(
-//                note = note,
-//                onNoteChange = { note = it }
-//            )
-//            ValueTextField(
-//                value = value,
-//                error = valueError,
-//                onValueChange = {
-//                    value = it.formatValue()
-//                    valueError = false
-//                }
-//            )
-//            Spacer(Modifier.height(16.dp))
-//            Row(Modifier.fillMaxWidth()) {
-//                AppTextButton(
-//                    text = stringResource(R.string.cancel),
-//                    onClick = { navController.popBackStack() },
-//                    modifier = Modifier.weight(1f)
-//                )
-//                AppTextButton(
-//                    text = stringResource(R.string.save),
-//                    onClick = {
-//                        val amount = try {
-//                            value.toDouble()
-//                        } catch (ex: NumberFormatException) {
-//                            ex.printStackTrace()
-//                            valueError = true
-//                            0.0
-//                        }
-//                        when {
-//                            wallet == null -> walletError = true
-//                            category == null -> categoryError = true
-//                            valueError -> valueError = true
-//                            else -> viewModel.saveTransaction(
-//                                wallet!!,
-//                                category!!,
-//                                note,
-//                                amount,
-//                                transactionType
-//                            )
-//                        }
-//                    },
-//                    modifier = Modifier.weight(1f)
-//                )
-//            }
-//        }
-//        AnimateFadeInOut(visible = showChoosingWallet, duration = 300) {
-//            ListChooserDialog(
-//                buttonText = stringResource(R.string.new_wallet),
-//                items = state.wallets,
-//                onDismiss = { showChoosingWallet = false },
-//                onSelect = {
-//                    wallet = it
-//                    showChoosingWallet = false
-//                },
-//                onAddClick = {
-//                    showChoosingWallet = false
-//                    showAddingWallet = true
-//                }
-//            )
-//        }
-//        AnimateFadeInOut(visible = showAddingWallet, duration = 300) {
-//            AddWalletDialog(
-//                onSave = { name, value ->
-//                    showAddingWallet = false
-//                    viewModel.saveWallet(name, value)
-//                },
-//                onDismiss = { showAddingWallet = false }
-//            )
-//        }
-//        AnimateFadeInOut(visible = showChoosingCategory, duration = 300) {
-//            ListChooserDialog(
-//                buttonText = stringResource(R.string.new_category),
-//                items = state.categories,
-//                onDismiss = { showChoosingCategory = false },
-//                onSelect = {
-//                    category = it
-//                    showChoosingCategory = false
-//                },
-//                onAddClick = {
-//                    showChoosingCategory = false
-//                    showAddingCategory = true
-//                }
-//            )
-//        }
-//        AnimateFadeInOut(visible = showAddingCategory, duration = 300) {
-//            AddCategoryDialog(
-//                onSave = { name, _ ->
-//                    showAddingCategory = false
-//                    categoryAfterAdding = name
-//                    viewModel.saveCategory(transactionType, name)
-//                },
-//                onDismiss = { showAddingCategory = false }
-//            )
-//        }
-//    }
 }
 
 @Composable
@@ -201,31 +81,83 @@ fun NewTransactionScreen(
     navController: NavHostController,
     transactionType: TransactionType,
     value: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    note: String,
+    onNoteChange: (String) -> Unit,
+    category: Category?,
+    categories: List<Category>,
+    onCategoryClick: (Category) -> Unit,
+    context: Context,
+    onSaveClick: () -> Unit
 ) {
-    var valueError by remember { mutableStateOf(false) }
-
     val title = when (transactionType) {
         TransactionType.Expense -> stringResource(R.string.new_expense)
         TransactionType.Income -> stringResource(R.string.new_income)
         TransactionType.None -> "-"
     }
 
-    ScreenScaffold(
-        navController = navController,
-        title = title
-    ) {
-        Column(Modifier.fillMaxSize()) {
-            ValueTextField(
-                value = value,
-                error = valueError,
-                onValueChange = {
-                    onValueChange(value)
-                    valueError = false
-                }
+    ScreenScaffold(navController = navController, title = title) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            ValueField(value)
+            Spacer(Modifier.height(16.dp))
+            NoteTextField(note = note, onNoteChange = onNoteChange)
+            Spacer(Modifier.height(16.dp))
+            Keyboard(onClick = onValueChange)
+            Spacer(Modifier.height(16.dp))
+            CategoriesLayout(categories = categories, onCategoryClick = onCategoryClick)
+            Spacer(Modifier.height(16.dp))
+            ControlButtons(
+                navController = navController,
+                context = context,
+                category = category,
+                onSaveClick = onSaveClick
             )
-            Spacer(Modifier.height(8.dp))
-            Keyboard(onClick = {})
+            Spacer(Modifier.height(16.dp))
+        }
+    }
+}
+
+@Composable
+fun ValueField(value: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+            .border(1.dp, MaterialTheme.colors.primary, RoundedCornerShape(4.dp))
+    ) {
+        AppIcon(
+            icon = R.drawable.ic_money,
+            modifier = Modifier.padding(16.dp)
+        )
+        Divider(
+            color = MaterialTheme.colors.secondary,
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(top = 8.dp, bottom = 8.dp)
+                .width(1.dp)
+        )
+        if (value.isEmpty()) {
+            AppText(
+                text = "0",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+        } else {
+            AppText(
+                text = value,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
@@ -267,12 +199,77 @@ fun KeyboardButton(value: String, onClick: (String) -> Unit) {
             .padding(4.dp)
             .background(MaterialTheme.colors.secondary.copy(alpha = 0.3f))
             .clickable { onClick(value) }
+            .clip(RoundedCornerShape(4.dp))
             .size(80.dp, 50.dp)
             .border(1.dp, MaterialTheme.colors.primary, RoundedCornerShape(4.dp))
     ) {
         AppText(
             text = value,
             fontSize = 18.sp
+        )
+    }
+}
+
+@Composable
+fun CategoriesLayout(categories: List<Category>, onCategoryClick: (Category) -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, MaterialTheme.colors.primary, RoundedCornerShape(4.dp))
+            .padding(16.dp)
+    ) {
+        AppText(
+            text = stringResource(R.string.choose_category),
+            fontSize = 18.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded = !expanded }
+                .clip(RoundedCornerShape(4.dp))
+        )
+        AnimateExpandCollapse(visible = expanded, duration = 300) {
+            Divider(
+                color = MaterialTheme.colors.secondary,
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+            )
+            AppVerticalList(list = categories) { category ->
+                AppText(
+                    text = category.name,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onCategoryClick(category) }
+                        .padding(16.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ControlButtons(
+    navController: NavHostController,
+    context: Context,
+    category: Category?,
+    onSaveClick: () -> Unit
+) {
+    Row(Modifier.fillMaxWidth()) {
+        AppTextButton(
+            text = stringResource(R.string.cancel),
+            onClick = { navController.popBackStack() },
+            modifier = Modifier.weight(1f)
+        )
+        AppTextButton(
+            text = stringResource(R.string.save),
+            onClick = {
+                when (category) {
+                    null -> toast(context, R.string.error_selecting_category)
+                    else -> onSaveClick()
+                }
+            },
+            modifier = Modifier.weight(1f)
         )
     }
 }
@@ -284,8 +281,15 @@ fun NewTransactionScreenPreview() {
         NewTransactionScreen(
             navController = rememberNavController(),
             transactionType = TransactionType.Expense,
-            value = "50.00",
-            onValueChange = {}
+            value = "120.03",
+            onValueChange = {},
+            note = "",
+            onNoteChange = {},
+            category = null,
+            categories = emptyList(),
+            onCategoryClick = {},
+            context = LocalContext.current,
+            onSaveClick = {}
         )
     }
 }

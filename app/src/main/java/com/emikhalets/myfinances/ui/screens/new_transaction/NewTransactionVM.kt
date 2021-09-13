@@ -9,7 +9,6 @@ import com.emikhalets.myfinances.data.Result
 import com.emikhalets.myfinances.data.RoomRepository
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Transaction
-import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -26,25 +25,8 @@ class NewTransactionVM @Inject constructor(
     fun getCategories(type: TransactionType) {
         viewModelScope.launch {
             state = when (val result = repo.getCategories(type.value)) {
-                is Result.Error -> state.copy(error = result.exception)
-                is Result.Success -> state.copy(
-                    categories = result.data,
-                    savedCategory = false,
-                    error = null
-                )
-            }
-        }
-    }
-
-    fun getWallets() {
-        viewModelScope.launch {
-            state = when (val result = repo.getWallets()) {
-                is Result.Error -> state.copy(error = result.exception)
-                is Result.Success -> state.copy(
-                    wallets = result.data,
-                    savedWallet = false,
-                    error = null
-                )
+                is Result.Error -> state.setError(result.exception)
+                is Result.Success -> state.setCategories(result.data)
             }
         }
     }
@@ -53,49 +35,32 @@ class NewTransactionVM @Inject constructor(
         viewModelScope.launch {
             val category = Category(name = name, type = type.value)
             state = when (val result = repo.insertCategory(category)) {
-                is Result.Error -> state.copy(error = result.exception)
-                is Result.Success -> state.copy(
-                    savedCategory = true,
-                    error = null
-                )
+                is Result.Error -> state.setError(result.exception)
+                is Result.Success -> state.setCategorySaved()
             }
         }
     }
 
     fun saveTransaction(
-        wallet: Wallet,
-        category: Category,
+        wallet: Long,
+        category: Category?,
         note: String,
         value: Double,
         type: TransactionType
     ) {
+        if (category == null) return
+
         viewModelScope.launch {
             val transaction = Transaction(
                 categoryId = category.categoryId,
-                walletId = wallet.walletId,
+                walletId = wallet,
                 amount = value,
                 type = type.value,
                 note = note
             )
             state = when (val result = repo.insertTransaction(transaction)) {
-                is Result.Error -> state.copy(error = result.exception)
-                is Result.Success -> state.copy(
-                    savedTransaction = true,
-                    error = null
-                )
-            }
-        }
-    }
-
-    fun saveWallet(name: String, value: Double) {
-        viewModelScope.launch {
-            val wallet = Wallet(name = name, amount = value)
-            state = when (val result = repo.insertWallet(wallet)) {
-                is Result.Error -> state.copy(error = result.exception)
-                is Result.Success -> state.copy(
-                    savedWallet = true,
-                    error = null
-                )
+                is Result.Error -> state.setError(result.exception)
+                is Result.Success -> state.setTransactionSaved()
             }
         }
     }

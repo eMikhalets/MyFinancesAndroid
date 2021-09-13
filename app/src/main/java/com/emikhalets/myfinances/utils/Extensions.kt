@@ -2,6 +2,7 @@ package com.emikhalets.myfinances.utils
 
 import android.content.Context
 import android.widget.Toast
+import androidx.annotation.StringRes
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -10,27 +11,20 @@ import java.util.*
  * Форматирует запятую в точку
  */
 fun String.formatValue(): String {
-    var result = ""
-    var dotIndex = -1
-    var counter = 0
-    this.forEachIndexed { index, item ->
-        when {
-            item == '.' || item == ',' -> {
-                if (dotIndex < 0) result += '.'
-                dotIndex = index
-            }
-            dotIndex > 0 -> {
-                if (counter < 2) {
-                    result += item
-                    counter++
-                } else {
-                    return@forEachIndexed
-                }
-            }
-            else -> result += item
+    return when {
+        this.length >= 2 && this.first() == '0' -> {
+            this.substring(1, this.lastIndex)
+        }
+        this.last() == '.' -> {
+            this.substring(0, this.length - 2)
+        }
+        this.contains('.') && this.split('.')[1].length > 2 -> {
+            this.substring(0, this.length - 2)
+        }
+        else -> {
+            this
         }
     }
-    return result
 }
 
 fun Double.toValue(): String {
@@ -46,6 +40,10 @@ fun Long?.toDate(): String {
     val date = Date(this)
     val formatter = SimpleDateFormat("dd MMMM y", Locale.getDefault())
     return formatter.format(date)
+}
+
+fun toast(context: Context, @StringRes res: Int) {
+    Toast.makeText(context, res, Toast.LENGTH_SHORT).show()
 }
 
 fun toast(context: Context, exception: Exception) {

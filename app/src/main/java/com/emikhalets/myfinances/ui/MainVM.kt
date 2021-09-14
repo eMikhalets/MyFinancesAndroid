@@ -23,11 +23,8 @@ class MainVM @Inject constructor(
     fun createDefaultWallet(name: String) {
         viewModelScope.launch {
             state = when (val result = repo.insertWallet(Wallet(name = name))) {
-                is Result.Error -> state.copy(error = result.exception)
-                is Result.Success -> state.copy(
-                    defaultWalletCreated = true,
-                    error = null
-                )
+                is Result.Error -> state.setError(result.exception)
+                is Result.Success -> state.setWalletCreated()
             }
         }
     }

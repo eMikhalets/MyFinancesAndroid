@@ -23,8 +23,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.data.entity.Category
-import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.utils.CurrencyTransformation
 import com.emikhalets.myfinances.utils.enums.MyIcons
 
@@ -65,55 +63,6 @@ fun NoteTextField(note: String, onNoteChange: (String) -> Unit) {
         keyboardActions = KeyboardActions(
             onDone = { focusManager.clearFocus() }
         )
-    )
-}
-
-@Composable
-fun CategoryChooserTextField(category: Category?, onClick: () -> Unit = {}, error: Boolean) {
-    AppTextField(
-        value = category?.name ?: stringResource(R.string.choose_category),
-        onValueChange = {},
-        label = stringResource(R.string.category),
-//        leadingIcon = MyIcons.get(category?.icon ?: 3).icon,
-        trailingIcon = MyIcons.ArrowDown.icon,
-        enabled = false,
-        onClick = onClick,
-        errorSelecting = error
-    )
-}
-
-@Composable
-fun WalletChooserTextField(wallet: Wallet?, onClick: () -> Unit = {}, error: Boolean) {
-    AppTextField(
-        value = wallet?.name ?: stringResource(R.string.choose_wallet),
-        onValueChange = {},
-        label = stringResource(R.string.wallet),
-        leadingIcon = MyIcons.Wallet.icon,
-        trailingIcon = MyIcons.ArrowDown.icon,
-        padding = PaddingValues(start = 16.dp, end = 16.dp),
-        enabled = false,
-        onClick = onClick,
-        errorSelecting = error
-    )
-}
-
-@Composable
-fun DateChooserTextField(
-    value: String,
-    label: String,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
-) {
-    AppTextField(
-        value = value,
-        onValueChange = {},
-        label = label,
-        leadingIcon = MyIcons.Calendar.icon,
-        trailingIcon = MyIcons.ArrowDown.icon,
-        padding = PaddingValues(start = 4.dp, end = 4.dp),
-        enabled = false,
-        onClick = onClick,
-        modifier = modifier
     )
 }
 

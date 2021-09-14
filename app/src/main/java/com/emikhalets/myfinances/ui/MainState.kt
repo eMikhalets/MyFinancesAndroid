@@ -5,7 +5,14 @@ data class MainState(
     val error: Exception? = null
 ) {
 
-    fun errorMessage(): String {
-        return error?.message ?: ""
+    fun setWalletCreated(): MainState {
+        return this.copy(
+            defaultWalletCreated = true,
+            error = null
+        )
+    }
+
+    fun setError(exception: Exception): MainState {
+        return this.copy(error = exception)
     }
 }

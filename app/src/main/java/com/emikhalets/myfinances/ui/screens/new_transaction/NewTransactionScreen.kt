@@ -40,7 +40,7 @@ fun NewTransactionScreen(
     val state = viewModel.state
     val context = LocalContext.current
 
-    var value by remember { mutableStateOf("0") }
+    var value by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     var category by remember { mutableStateOf<Category?>(null) }
 
@@ -57,7 +57,14 @@ fun NewTransactionScreen(
         navController = navController,
         transactionType = transactionType,
         value = value,
-        onValueChange = { value = (value + it).formatValue() },
+        onValueChange = {
+            value = if (it == Keyboard.DEL.value) {
+                if (value.isEmpty()) ""
+                else value.substring(0, value.length - 1)
+            } else {
+                (value + it).formatValue()
+            }
+        },
         note = note,
         onNoteChange = { note = it },
         category = category,
@@ -218,7 +225,6 @@ fun CategoriesLayout(categories: List<Category>, onCategoryClick: (Category) -> 
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp, MaterialTheme.colors.primary, RoundedCornerShape(4.dp))
-            .padding(16.dp)
     ) {
         AppText(
             text = stringResource(R.string.choose_category),
@@ -228,13 +234,14 @@ fun CategoriesLayout(categories: List<Category>, onCategoryClick: (Category) -> 
                 .fillMaxWidth()
                 .clickable { expanded = !expanded }
                 .clip(RoundedCornerShape(4.dp))
+                .padding(16.dp)
         )
         AnimateExpandCollapse(visible = expanded, duration = 300) {
             Divider(
                 color = MaterialTheme.colors.secondary,
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp)
             )
-            AppVerticalList(list = categories) { category ->
+            categories.forEach { category ->
                 AppText(
                     text = category.name,
                     textAlign = TextAlign.Center,
@@ -244,6 +251,14 @@ fun CategoriesLayout(categories: List<Category>, onCategoryClick: (Category) -> 
                         .padding(16.dp)
                 )
             }
+            AppText(
+                text = stringResource(R.string.new_category),
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {}
+                    .padding(16.dp)
+            )
         }
     }
 }

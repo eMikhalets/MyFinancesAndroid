@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -13,6 +14,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -53,11 +55,16 @@ fun NameTextField(name: String, error: Boolean, onNameChange: (String) -> Unit) 
 
 @Composable
 fun NoteTextField(note: String, onNoteChange: (String) -> Unit) {
+    val focusManager = LocalFocusManager.current
+
     AppTextField(
         value = note,
         onValueChange = onNoteChange,
         label = stringResource(R.string.note),
-        leadingIcon = MyIcons.Pencil.icon
+        leadingIcon = MyIcons.Pencil.icon,
+        keyboardActions = KeyboardActions(
+            onDone = { focusManager.clearFocus() }
+        )
     )
 }
 
@@ -123,6 +130,7 @@ fun AppTextField(
     readOnly: Boolean = false,
     singleLine: Boolean = true,
     type: KeyboardType = KeyboardType.Text,
+    keyboardActions: KeyboardActions = KeyboardActions(),
     capitalization: KeyboardCapitalization = KeyboardCapitalization.Sentences,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     padding: PaddingValues = PaddingValues(0.dp),
@@ -156,7 +164,7 @@ fun AppTextField(
                 null
             },
             trailingIcon = if (trailingIcon != null) {
-                { AppIcon(icon = trailingIcon, size = 16.dp) }
+                { AppIcon(icon = trailingIcon) }
             } else {
                 null
             },
@@ -183,6 +191,7 @@ fun AppTextField(
             singleLine = singleLine,
             maxLines = Int.MAX_VALUE,
             isError = error,
+            keyboardActions = keyboardActions,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = type,
                 capitalization = capitalization

@@ -12,14 +12,14 @@ import java.util.*
  */
 fun String.formatValue(): String {
     return when {
-        this.length >= 2 && this.first() == '0' -> {
-            this.substring(1, this.lastIndex)
+        this.first() == '.' -> {
+            "0$this"
         }
-        this.last() == '.' -> {
-            this.substring(0, this.length - 2)
+        this.count { it == '.' } > 1 -> {
+            this.substring(0, this.length - 1)
         }
         this.contains('.') && this.split('.')[1].length > 2 -> {
-            this.substring(0, this.length - 2)
+            this.substring(0, this.length - 1)
         }
         else -> {
             this

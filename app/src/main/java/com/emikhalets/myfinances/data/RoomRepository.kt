@@ -38,12 +38,12 @@ class RoomRepository @Inject constructor(
 
     // ========== Transactions Dao ==========
 
-    suspend fun getTransaction(id: Long): Result<Transaction> {
+    suspend fun getTransaction(id: Long): Result<TransactionWithCategory> {
         return try {
             val transaction = transactionDao.getItemById(id)
             val category = categoryDao.getCategoryById(transaction.categoryId)
             val result = TransactionWithCategory(transaction, category)
-            Result.Success(transactionDao.getItemById(id))
+            Result.Success(result)
         } catch (ex: Exception) {
             ex.printStackTrace()
             Result.Error(ex)

@@ -116,7 +116,11 @@ fun NewTransactionScreen(
             Spacer(Modifier.height(16.dp))
             Keyboard(onClick = onValueChange)
             Spacer(Modifier.height(16.dp))
-            CategoriesLayout(categories = categories, onCategoryClick = onCategoryClick)
+            CategoriesLayout(
+                selected = category,
+                categories = categories,
+                onCategoryClick = onCategoryClick
+            )
             Spacer(Modifier.height(16.dp))
             ControlButtons(
                 navController = navController,
@@ -218,7 +222,11 @@ fun KeyboardButton(value: String, onClick: (String) -> Unit) {
 }
 
 @Composable
-fun CategoriesLayout(categories: List<Category>, onCategoryClick: (Category) -> Unit) {
+fun CategoriesLayout(
+    selected: Category?,
+    categories: List<Category>,
+    onCategoryClick: (Category) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
 
     Column(
@@ -227,7 +235,7 @@ fun CategoriesLayout(categories: List<Category>, onCategoryClick: (Category) -> 
             .border(1.dp, MaterialTheme.colors.primary, RoundedCornerShape(4.dp))
     ) {
         AppText(
-            text = stringResource(R.string.choose_category),
+            text = selected?.name ?: stringResource(R.string.choose_category),
             fontSize = 18.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier

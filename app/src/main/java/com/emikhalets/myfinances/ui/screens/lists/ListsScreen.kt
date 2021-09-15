@@ -183,7 +183,7 @@ fun WalletListItem(
                 )
             }
         }
-        TextValue(value = wallet.amount)
+        TextValue(value = wallet.value)
     }
 }
 

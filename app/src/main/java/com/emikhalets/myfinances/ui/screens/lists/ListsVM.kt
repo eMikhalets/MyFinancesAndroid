@@ -85,7 +85,7 @@ class ListsVM @Inject constructor(
 
     fun saveWallet(name: String, value: Double) {
         viewModelScope.launch {
-            val wallet = Wallet(name = name, amount = value)
+            val wallet = Wallet(name = name, value = value)
             state = when (val result = repo.insertWallet(wallet)) {
                 is Result.Error -> state.copy(error = result.exception)
                 is Result.Success -> state.copy(

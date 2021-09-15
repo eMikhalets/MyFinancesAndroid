@@ -54,7 +54,7 @@ class NewTransactionVM @Inject constructor(
             val transaction = Transaction(
                 categoryId = category.categoryId,
                 walletId = wallet,
-                amount = value,
+                value = value,
                 type = type.value,
                 note = note
             )

@@ -56,7 +56,7 @@ fun TransactionDetailsScreen(
     LaunchedEffect(state.transaction) {
         if (state.transaction != null) {
             note = state.transaction.transaction.note
-            value = state.transaction.transaction.amount.toString()
+            value = state.transaction.transaction.value.toString()
             category = state.transaction.category
             type = TransactionType.get(state.transaction.transaction.type)
         }

@@ -25,12 +25,9 @@ import com.emikhalets.myfinances.ui.base.AppPager
 import com.emikhalets.myfinances.ui.base.AppText
 import com.emikhalets.myfinances.ui.base.ScreenScaffold
 import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
-import com.emikhalets.myfinances.utils.getCurrentWalletId
-import com.emikhalets.myfinances.utils.sectionBorder
-import com.emikhalets.myfinances.utils.toast
+import com.emikhalets.myfinances.utils.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
-import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
@@ -41,40 +38,54 @@ fun SummaryScreen(
     val state = viewModel.state
     val context = LocalContext.current
 
-    val date by remember { mutableStateOf(Date()) }
-    val budget by remember { mutableStateOf("") }
-    val expense by remember { mutableStateOf("") }
-    val income by remember { mutableStateOf("") }
+    var month by remember { mutableStateOf(Calendar.getInstance().month()) }
+    var year by remember { mutableStateOf(Calendar.getInstance().year()) }
+    var budget by remember { mutableStateOf("") }
+    var expense by remember { mutableStateOf("") }
+    var income by remember { mutableStateOf("") }
 
     LaunchedEffect("init") {
-        viewModel.getSummaryMonth(context.getCurrentWalletId())
+        viewModel.getWallet(context.getCurrentWalletId())
+        viewModel.getSummary(month, year, context.getCurrentWalletId())
     }
     LaunchedEffect(state) {
-        if (state.error != null) toast(context, state.error)
+        state.error?.let { error -> toast(context, error) }
+    }
+    LaunchedEffect(state.wallet) {
+        state.wallet?.let { currentWallet ->
+            budget = currentWallet.budget.toString()
+        }
+    }
+    LaunchedEffect(state.monthExpenses) {
+        expense = state.monthExpenses.toString()
+    }
+    LaunchedEffect(state.monthIncomes) {
+        income = state.monthIncomes.toString()
     }
 
     SummaryScreen(
         navController = rememberNavController(),
-        date = Date(),
+        month = month,
+        year = year,
         budget = budget,
         expense = expense,
         income = income,
-        summaryExpenses = emptyList(),
-        summaryIncomes = emptyList()
+        summaryExpenses = state.summaryExpenses,
+        summaryIncomes = state.summaryIncomes
     )
 }
 
 @Composable
 fun SummaryScreen(
     navController: NavHostController,
-    date: Date,
+    month: Int,
+    year: Int,
     budget: String,
     expense: String,
     income: String,
     summaryExpenses: List<SummaryTransaction>,
     summaryIncomes: List<SummaryTransaction>
 ) {
-    val dateText = SimpleDateFormat("MMMM, y", Locale.getDefault()).format(date)
 
     ScreenScaffold(
         navController = navController,
@@ -87,7 +98,7 @@ fun SummaryScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             AppText(
-                text = dateText,
+                text = "${months()[month]}, $year",
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -250,7 +261,8 @@ private fun Preview() {
     MyFinancesTheme {
         SummaryScreen(
             navController = rememberNavController(),
-            date = Date(),
+            month = 9,
+            year = 2021,
             budget = "20000",
             expense = "14562.18",
             income = "61487.12",

@@ -144,7 +144,7 @@ fun TransactionsListItem(transaction: TransactionWithCategory, onClick: (Long) -
                 AppText("")
                 TextSecondary(transaction.transaction.timestamp.toDate())
             }
-            TextValue(transaction.transaction.amount)
+            TextValue(transaction.transaction.value)
         }
         AnimateExpandCollapse(visible = showNote, duration = 200) {
             Column(Modifier.fillMaxWidth()) {

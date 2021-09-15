@@ -60,7 +60,7 @@ class TransactionDetailsVM @Inject constructor(
             val transaction = state.transaction?.transaction?.copy(
                 categoryId = category.categoryId,
                 walletId = wallet,
-                amount = amount,
+                value = amount,
                 type = type,
                 note = note,
             )

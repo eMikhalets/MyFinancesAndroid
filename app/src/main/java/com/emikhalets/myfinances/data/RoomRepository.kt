@@ -91,10 +91,10 @@ class RoomRepository @Inject constructor(
     suspend fun deleteTransaction(transaction: Transaction): Result<Int> {
         return try {
             var wallet = walletDao.getById(transaction.walletId)
-            val value = wallet.amount
+            val value = wallet.value
             wallet = when (TransactionType.get(transaction.type)) {
-                TransactionType.Expense -> wallet.copy(amount = value + transaction.amount)
-                TransactionType.Income -> wallet.copy(amount = value - transaction.amount)
+                TransactionType.Expense -> wallet.copy(value = value + transaction.value)
+                TransactionType.Income -> wallet.copy(value = value - transaction.value)
                 TransactionType.None -> wallet
             }
             walletDao.update(wallet)
@@ -106,6 +106,15 @@ class RoomRepository @Inject constructor(
     }
 
     // ========== Wallets Dao ==========
+
+    suspend fun getWallet(id: Long): Result<Wallet> {
+        return try {
+            Result.Success(walletDao.getById(id))
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            Result.Error(ex)
+        }
+    }
 
     suspend fun getWallets(): Result<List<Wallet>> {
         return try {

@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -19,6 +20,7 @@ import androidx.compose.ui.window.DialogProperties
 fun AppDialogCustom(
     onDismiss: () -> Unit,
     label: String = "",
+    padding: Dp = 0.dp,
     content: @Composable () -> Unit
 ) {
     Dialog(
@@ -37,7 +39,7 @@ fun AppDialogCustom(
                     shape = RoundedCornerShape(16.dp)
                 )
         ) {
-            Column(Modifier.padding(0.dp)) {
+            Column(Modifier.padding(padding)) {
                 if (label.isNotEmpty()) {
                     Text(
                         text = label,

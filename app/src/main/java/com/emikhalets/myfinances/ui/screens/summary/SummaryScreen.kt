@@ -158,6 +158,9 @@ fun SummaryExpenseIncome(expense: String, income: String) {
 
 @Composable
 fun SummaryBudget(budget: String, expense: String) {
+    val budgetValue = if (budget.isEmpty()) 0.0 else budget.toDouble()
+    val expenseValue = if (expense.isEmpty()) 0.0 else expense.toDouble()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -186,7 +189,7 @@ fun SummaryBudget(budget: String, expense: String) {
             modifier = Modifier.fillMaxWidth()
         )
         AppText(
-            text = "${budget.toDouble() - expense.toDouble()}",
+            text = "${budgetValue - expenseValue}",
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()

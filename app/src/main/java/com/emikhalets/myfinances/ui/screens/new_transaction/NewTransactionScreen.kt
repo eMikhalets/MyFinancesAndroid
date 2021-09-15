@@ -23,13 +23,11 @@ import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.ui.base.*
+import com.emikhalets.myfinances.ui.screens.dialogs.AddCategoryDialog
 import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
-import com.emikhalets.myfinances.utils.AnimateExpandCollapse
+import com.emikhalets.myfinances.utils.*
 import com.emikhalets.myfinances.utils.enums.Keyboard
 import com.emikhalets.myfinances.utils.enums.TransactionType
-import com.emikhalets.myfinances.utils.formatValue
-import com.emikhalets.myfinances.utils.getCurrentWalletId
-import com.emikhalets.myfinances.utils.toast
 
 @Composable
 fun NewTransactionScreen(
@@ -49,8 +47,13 @@ fun NewTransactionScreen(
     }
     LaunchedEffect(state) {
         if (state.savedTransaction) navController.popBackStack()
-        if (state.savedCategory) viewModel.getCategories(transactionType)
         if (state.error != null) toast(context, state.error)
+    }
+    LaunchedEffect(state.savedTransaction) {
+        if (state.savedTransaction) navController.popBackStack()
+    }
+    LaunchedEffect(state.savedCategory) {
+        if (state.savedCategory) viewModel.getCategories(transactionType)
     }
 
     NewTransactionScreen(
@@ -79,7 +82,8 @@ fun NewTransactionScreen(
                 value.toDouble(),
                 transactionType
             )
-        }
+        },
+        onAddClick = { viewModel.saveCategory(transactionType, it) }
     )
 }
 
@@ -95,8 +99,11 @@ fun NewTransactionScreen(
     categories: List<Category>,
     onCategoryClick: (Category) -> Unit,
     context: Context,
-    onSaveClick: () -> Unit
+    onSaveClick: () -> Unit,
+    onAddClick: (String) -> Unit
 ) {
+    var showAddCategory by remember { mutableStateOf(false) }
+
     val title = when (transactionType) {
         TransactionType.Expense -> stringResource(R.string.new_expense)
         TransactionType.Income -> stringResource(R.string.new_income)
@@ -119,7 +126,8 @@ fun NewTransactionScreen(
             CategoriesLayout(
                 selected = category,
                 categories = categories,
-                onCategoryClick = onCategoryClick
+                onCategoryClick = onCategoryClick,
+                onAddClick = { showAddCategory = true }
             )
             Spacer(Modifier.height(16.dp))
             ControlButtons(
@@ -130,6 +138,15 @@ fun NewTransactionScreen(
             )
             Spacer(Modifier.height(16.dp))
         }
+    }
+    AnimateFadeInOut(visible = showAddCategory, duration = 300) {
+        AddCategoryDialog(
+            onSave = {
+                onAddClick(it)
+                showAddCategory = false
+            },
+            onDismiss = { showAddCategory = false }
+        )
     }
 }
 
@@ -225,7 +242,8 @@ fun KeyboardButton(value: String, onClick: (String) -> Unit) {
 fun CategoriesLayout(
     selected: Category?,
     categories: List<Category>,
-    onCategoryClick: (Category) -> Unit
+    onCategoryClick: (Category) -> Unit,
+    onAddClick: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -245,28 +263,30 @@ fun CategoriesLayout(
                 .padding(16.dp)
         )
         AnimateExpandCollapse(visible = expanded, duration = 300) {
-            Divider(
-                color = MaterialTheme.colors.secondary,
-                modifier = Modifier.padding(start = 8.dp, end = 8.dp)
-            )
-            categories.forEach { category ->
+            Column(Modifier.fillMaxWidth()) {
+                Divider(
+                    color = MaterialTheme.colors.secondary,
+                    modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+                )
+                categories.forEach { category ->
+                    AppText(
+                        text = category.name,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onCategoryClick(category) }
+                            .padding(16.dp)
+                    )
+                }
                 AppText(
-                    text = category.name,
+                    text = stringResource(R.string.new_category),
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { onCategoryClick(category) }
+                        .clickable { onAddClick() }
                         .padding(16.dp)
                 )
             }
-            AppText(
-                text = stringResource(R.string.new_category),
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {}
-                    .padding(16.dp)
-            )
         }
     }
 }
@@ -312,7 +332,8 @@ fun NewTransactionScreenPreview() {
             categories = emptyList(),
             onCategoryClick = {},
             context = LocalContext.current,
-            onSaveClick = {}
+            onSaveClick = {},
+            onAddClick = {}
         )
     }
 }

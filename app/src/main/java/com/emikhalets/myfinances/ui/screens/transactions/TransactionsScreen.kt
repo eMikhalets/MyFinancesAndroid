@@ -217,7 +217,7 @@ fun AddTransactionButton(icon: Int, onClick: () -> Unit) {
             .clickable { onClick() }
     ) {
         AppIcon(
-            icon = icon,
+            drawable = icon,
             color = MaterialTheme.colors.onPrimary,
             modifier = Modifier
                 .fillMaxSize()

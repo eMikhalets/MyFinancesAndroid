@@ -144,7 +144,7 @@ fun IconsList(
                     .padding(4.dp)
             ) {
                 AppIcon(
-                    icon = icon.icon,
+                    drawable = icon.icon,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(8.dp)
@@ -168,7 +168,7 @@ fun DateChooser(
             modifier = Modifier.fillMaxWidth()
         ) {
             AppIcon(
-                icon = R.drawable.ic_arrow_back,
+                drawable = R.drawable.ic_arrow_back,
                 modifier = Modifier
                     .clickable { onBackDateClick() }
                     .padding(16.dp)
@@ -182,7 +182,7 @@ fun DateChooser(
                     .weight(1f)
             )
             AppIcon(
-                icon = R.drawable.ic_arrow_forward,
+                drawable = R.drawable.ic_arrow_forward,
                 modifier = Modifier
                     .clickable { onForwardDateClick() }
                     .padding(16.dp)

@@ -108,12 +108,12 @@ fun AppTextField(
             onValueChange = onValueChange,
             label = labelText,
             leadingIcon = if (leadingIcon != null) {
-                { AppIcon(icon = leadingIcon) }
+                { AppIcon(drawable = leadingIcon) }
             } else {
                 null
             },
             trailingIcon = if (trailingIcon != null) {
-                { AppIcon(icon = trailingIcon) }
+                { AppIcon(drawable = trailingIcon) }
             } else {
                 null
             },

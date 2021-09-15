@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -14,8 +13,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
+import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.utils.enums.MyIcons
-import com.emikhalets.myfinances.utils.navigation.BottomNav
+import com.emikhalets.myfinances.utils.navigation.Screen
 import com.emikhalets.myfinances.utils.navigation.navigateAsStart
 
 @Composable
@@ -46,12 +46,18 @@ fun AppToolbar(
             )
         },
         navigationIcon = {
-            AppIcon(
-                icon = icon,
-                modifier = Modifier.clickable {
-                    if (icon != MyIcons.App.icon) navController.popBackStack()
+            when (icon) {
+                R.drawable.ic_launcher_foreground -> {
+                    AppImage(icon)
                 }
-            )
+                else -> {
+                    AppIcon(
+                        drawable = icon,
+                        size = 0.dp,
+                        modifier = Modifier.clickable { navController.popBackStack() }
+                    )
+                }
+            }
         },
         actions = {},
         backgroundColor = MaterialTheme.colors.primary,
@@ -64,18 +70,18 @@ fun AppToolbar(
 fun AppBottomBar(
     navController: NavHostController,
     currentDestination: NavDestination?,
-    items: List<BottomNav>
+    items: List<Screen>
 ) {
     BottomNavigation {
         items.forEach { item ->
             BottomNavigationItem(
                 icon = {
-                    Icon(
-                        painter = painterResource(item.icon),
-                        contentDescription = ""
+                    AppIcon(
+                        drawable = item.icon,
+                        size = 20.dp
                     )
                 },
-                label = { Text(stringResource(item.label)) },
+                label = { Text(stringResource(item.title)) },
                 selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
                 onClick = { navController.navigateAsStart(item.route) }
             )

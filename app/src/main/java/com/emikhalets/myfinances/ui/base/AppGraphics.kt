@@ -1,5 +1,6 @@
 package com.emikhalets.myfinances.ui.base
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
@@ -10,23 +11,43 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.emikhalets.myfinances.utils.enums.MyIcons
 
 @Composable
 fun AppIcon(
-    icon: Int,
+    @DrawableRes drawable: Int?,
     modifier: Modifier = Modifier,
     size: Dp = 24.dp,
     color: Color = MaterialTheme.colors.onPrimary
 ) {
-    if (icon == MyIcons.App.icon) {
-        Image(painter = painterResource(MyIcons.App.icon), contentDescription = "")
-    } else {
-        Icon(
-            painter = painterResource(icon),
-            contentDescription = "",
-            tint = color,
-            modifier = modifier.size(size)
-        )
-    }
+    if (drawable == null) return
+
+    Icon(
+        painter = painterResource(drawable),
+        contentDescription = "",
+        tint = color,
+        modifier = if (size > 0.dp) {
+            modifier.size(size)
+        } else {
+            modifier
+        }
+    )
+}
+
+@Composable
+fun AppImage(
+    @DrawableRes drawable: Int?,
+    modifier: Modifier = Modifier,
+    size: Dp = 0.dp
+) {
+    if (drawable == null) return
+
+    Image(
+        painter = painterResource(drawable),
+        contentDescription = "",
+        modifier = if (size > 0.dp) {
+            modifier.size(size)
+        } else {
+            modifier
+        }
+    )
 }

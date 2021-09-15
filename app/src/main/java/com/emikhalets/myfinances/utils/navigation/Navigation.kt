@@ -17,18 +17,18 @@ fun AppNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screens.Transactions
+        startDestination = Screen.Transactions.route
     ) {
-        composable(Screens.Transactions) {
+        composable(Screen.Transactions.route) {
             TransactionsScreen(navController = navController)
         }
-        composable(Screens.Summary) {
+        composable(Screen.Summary.route) {
             SummaryScreen(navController = navController)
         }
-        composable(Screens.Lists) {
+        composable(Screen.Lists.route) {
             ListsScreen(navController = navController)
         }
-        composable(Screens.NewTransaction) {
+        composable(Screen.NewTransaction.route) {
             navController.getSerializable<TransactionType>(NavArgs.TRANSACTION_TYPE) {
                 NewTransactionScreen(
                     navController = navController,
@@ -36,7 +36,7 @@ fun AppNavGraph(
                 )
             }
         }
-        composable(Screens.TransactionDetails) {
+        composable(Screen.TransactionDetails.route) {
             navController.getLong(NavArgs.TRANSACTION_ID) {
                 TransactionDetailsScreen(
                     navController = navController,

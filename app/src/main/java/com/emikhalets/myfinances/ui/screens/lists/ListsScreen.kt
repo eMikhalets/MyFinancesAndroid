@@ -162,7 +162,7 @@ fun WalletListItem(
             .padding(8.dp)
     ) {
         AppIcon(
-            icon = MyIcons.Wallet.icon,
+            drawable = MyIcons.Wallet.icon,
             size = 40.dp
         )
         Spacer(Modifier.width(16.dp))
@@ -220,7 +220,7 @@ fun CategoryListItem(
             .padding(8.dp)
     ) {
         AppIcon(
-            icon = 1,
+            drawable = 1,
             size = 40.dp
         )
         Spacer(Modifier.width(16.dp))

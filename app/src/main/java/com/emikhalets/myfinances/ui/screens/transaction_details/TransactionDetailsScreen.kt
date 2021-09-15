@@ -190,7 +190,7 @@ fun ValueField(value: String) {
             .border(1.dp, MaterialTheme.colors.primary, RoundedCornerShape(4.dp))
     ) {
         AppIcon(
-            icon = R.drawable.ic_money,
+            drawable = R.drawable.ic_money,
             modifier = Modifier.padding(16.dp)
         )
         Divider(

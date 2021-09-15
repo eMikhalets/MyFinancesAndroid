@@ -62,7 +62,7 @@ fun TextWithIcon(
             .fillMaxWidth()
     ) {
         AppIcon(
-            icon = icon,
+            drawable = icon,
             size = iconSize
         )
         Spacer(Modifier.width(16.dp))
@@ -112,7 +112,7 @@ fun AppTextWithIcon(
     ) {
         if (drawable != null) {
             AppIcon(
-                icon = drawable,
+                drawable = drawable,
                 color = drawableColor,
                 size = drawableSize
             )

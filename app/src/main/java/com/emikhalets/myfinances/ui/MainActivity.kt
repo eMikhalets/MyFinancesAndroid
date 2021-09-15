@@ -17,7 +17,7 @@ import com.emikhalets.myfinances.ui.base.AppBottomBar
 import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.SharedPrefs
 import com.emikhalets.myfinances.utils.navigation.AppNavGraph
-import com.emikhalets.myfinances.utils.navigation.BottomNav
+import com.emikhalets.myfinances.utils.navigation.Screen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -43,11 +43,7 @@ class MainActivity : AppCompatActivity() {
                         AppBottomBar(
                             navController = navController,
                             currentDestination = currentDestination,
-                            items = listOf(
-                                BottomNav.Transactions,
-                                BottomNav.Summary,
-                                BottomNav.Lists
-                            )
+                            items = Screen.getBottomNavigationScreens()
                         )
                     },
                     backgroundColor = MaterialTheme.colors.surface

@@ -4,6 +4,7 @@
     <string name="title_transactions">Транзакции</string>
     <string name="title_summary">Сводка</string>
     <string name="title_lists">Списки</string>
+    <string name="title_new_transaction">Новая транзакция</string>
     <string name="title_transaction">Подробности</string>
 
     <string name="var_amount">%.2f ₽</string>

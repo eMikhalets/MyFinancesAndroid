@@ -24,11 +24,11 @@ fun NavHostController.navigateAsStart(route: String) {
 }
 
 fun NavHostController.navigateToNewTransaction(type: TransactionType) {
-    navigate(Screens.NewTransaction, bundleOf(NavArgs.TRANSACTION_TYPE to type))
+    navigate(Screen.NewTransaction.route, bundleOf(NavArgs.TRANSACTION_TYPE to type))
 }
 
 fun NavHostController.navigateToTransactionDetails(id: Long) {
-    navigate(Screens.TransactionDetails, bundleOf(NavArgs.TRANSACTION_ID to id))
+    navigate(Screen.TransactionDetails.route, bundleOf(NavArgs.TRANSACTION_ID to id))
 }
 
 private fun NavController.navigate(

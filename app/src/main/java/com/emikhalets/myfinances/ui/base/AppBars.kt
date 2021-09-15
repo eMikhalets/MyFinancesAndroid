@@ -73,17 +73,39 @@ fun AppBottomBar(
     items: List<Screen>
 ) {
     BottomNavigation {
-        items.forEach { item ->
+        items.forEach { screen ->
+            val isSelected: Boolean = currentDestination?.hierarchy?.any {
+                it.route == screen.route
+            } ?: false
+
+            val color = if (isSelected) {
+                MaterialTheme.colors.onPrimary
+            } else {
+                MaterialTheme.colors.onPrimary.copy(alpha = 0.6f)
+            }
+
             BottomNavigationItem(
                 icon = {
                     AppIcon(
-                        drawable = item.icon,
-                        size = 20.dp
+                        drawable = screen.icon,
+                        size = 20.dp,
+                        color = color
                     )
                 },
-                label = { Text(stringResource(item.title)) },
-                selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
-                onClick = { navController.navigateAsStart(item.route) }
+                label = {
+                    AppText(
+                        text = stringResource(screen.title),
+                        fontColor = color,
+                        fontSize = 12.sp,
+                        fontWeight = if (isSelected) {
+                            FontWeight.Medium
+                        } else {
+                            FontWeight.Normal
+                        }
+                    )
+                },
+                selected = isSelected,
+                onClick = { navController.navigateAsStart(screen.route) }
             )
         }
     }

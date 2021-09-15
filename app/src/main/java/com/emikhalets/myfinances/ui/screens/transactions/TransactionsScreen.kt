@@ -43,13 +43,12 @@ fun TransactionsScreen(
     val state = viewModel.state
     val context = LocalContext.current
 
-    var month by remember { mutableStateOf(Calendar.getInstance().month()) }
-    var year by remember { mutableStateOf(Calendar.getInstance().year()) }
+    var date by remember { mutableStateOf(Calendar.getInstance().timeInMillis) }
     var currentWalletId by remember { mutableStateOf(0L) }
 
     LaunchedEffect("init") {
         currentWalletId = SharedPrefs.getCurrentWalletId(context)
-        viewModel.getTransactions(month, year, currentWalletId)
+        viewModel.getTransactions(date, currentWalletId)
     }
     LaunchedEffect(state) {
         if (state.error != null) toast(context, state.error)
@@ -58,24 +57,11 @@ fun TransactionsScreen(
     TransactionsScreen(
         navController = navController,
         transactions = state.transactions,
-        month = month,
-        year = year,
-        onBackDateClick = {
-            val new = Calendar.getInstance()
-            new.set(Calendar.MONTH, month)
-            new.add(Calendar.MONTH, -1)
-            month = new.month()
-            if (month == 11) year--
-            viewModel.getTransactions(month, year, currentWalletId)
-        },
-        onForwardDateClick = {
-            val new = Calendar.getInstance()
-            new.set(Calendar.MONTH, month)
-            new.add(Calendar.MONTH, 1)
-            month = new.month()
-            if (month == 0) year++
-            viewModel.getTransactions(month, year, currentWalletId)
-        },
+        date = date,
+        onDateChange = {
+            date = it
+            viewModel.getTransactions(date, currentWalletId)
+        }
     )
 }
 
@@ -83,22 +69,15 @@ fun TransactionsScreen(
 fun TransactionsScreen(
     navController: NavHostController,
     transactions: List<TransactionWithCategory>,
-    month: Int,
-    year: Int,
-    onBackDateClick: () -> Unit,
-    onForwardDateClick: () -> Unit
+    date: Long,
+    onDateChange: (Long) -> Unit
 ) {
     ScreenScaffold(
         navController = navController,
         title = stringResource(R.string.title_transactions)
     ) {
         Column(Modifier.fillMaxSize()) {
-            DateChooser(
-                month = month,
-                year = year,
-                onBackDateClick = onBackDateClick,
-                onForwardDateClick = onForwardDateClick
-            )
+            DateChooser(date = date, onDateChange = onDateChange)
             if (transactions.isEmpty()) {
                 TextFullScreen(
                     text = stringResource(R.string.empty_transactions),
@@ -310,10 +289,8 @@ private fun Preview() {
                     category = Category(name = "Category")
                 )
             ),
-            month = Calendar.getInstance().month(),
-            year = Calendar.getInstance().year(),
-            onBackDateClick = {},
-            onForwardDateClick = {}
+            date = Calendar.getInstance().timeInMillis,
+            onDateChange = {}
         )
     }
 }

@@ -24,14 +24,18 @@ fun Calendar.getMinTSOfMonth(timestamp: Long = Date().time): Long {
     return this.timeInMillis
 }
 
-fun Calendar.plusMonth(): Calendar {
-    this.add(Calendar.MONTH, 1)
-    return this
+fun Long.plusMonth(): Calendar {
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = this
+    calendar.add(Calendar.MONTH, 1)
+    return calendar
 }
 
-fun Calendar.minusMonth(): Calendar {
-    this.add(Calendar.MONTH, -1)
-    return this
+fun Long.minusMonth(): Calendar {
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = this
+    calendar.add(Calendar.MONTH, -1)
+    return calendar
 }
 
 fun Calendar.year(): Int {
@@ -48,6 +52,17 @@ fun Calendar.monthName(): String {
     } catch (ex: NumberFormatException) {
         ex.printStackTrace()
         "-"
+    }
+}
+
+fun Long.formatForDateChooser(): String {
+    return try {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = this
+        "${months()[calendar.month()]}, ${calendar.year()}"
+    } catch (ex: NumberFormatException) {
+        ex.printStackTrace()
+        "-, -"
     }
 }
 

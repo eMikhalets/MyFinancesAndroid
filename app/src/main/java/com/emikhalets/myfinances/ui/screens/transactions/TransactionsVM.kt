@@ -22,11 +22,10 @@ class TransactionsVM @Inject constructor(
     var state by mutableStateOf(TransactionsState())
         private set
 
-    fun getTransactions(month: Int, year: Int, wallet: Long) {
+    fun getTransactions(date: Long, wallet: Long) {
         viewModelScope.launch {
             val calendar = Calendar.getInstance()
-            calendar.set(Calendar.MONTH, month)
-            calendar.set(Calendar.YEAR, year)
+            calendar.timeInMillis = date
             val start = calendar.getMinTSOfMonth(calendar.timeInMillis)
             val end = calendar.getMaxTSOfMonth(calendar.timeInMillis)
             state = when (val result = repo.getTransactionsBetween(start, end, wallet)) {

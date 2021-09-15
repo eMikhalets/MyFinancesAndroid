@@ -116,6 +116,11 @@ fun TransactionsScreen(
                     }
                 }
             }
+        }
+        Column(
+            verticalArrangement = Arrangement.Bottom,
+            modifier = Modifier.fillMaxSize()
+        ) {
             AddButtonsLayout(navController)
         }
     }
@@ -243,7 +248,63 @@ private fun Preview() {
                     category = Category(name = "Category")
                 ),
                 TransactionWithCategory(
-                    transaction = Transaction(value = 5355.43, type = 0),
+                    transaction = Transaction(value = 5355.43, type = 1),
+                    category = Category(name = "Category")
+                ),
+                TransactionWithCategory(
+                    transaction = Transaction(value = 53555.43, type = 0),
+                    category = Category(name = "Category")
+                ),
+                TransactionWithCategory(
+                    transaction = Transaction(value = 535.43, type = 1),
+                    category = Category(name = "Category")
+                ),
+                TransactionWithCategory(
+                    transaction = Transaction(value = 55.43, type = 1),
+                    category = Category(name = "Category")
+                ),
+                TransactionWithCategory(
+                    transaction = Transaction(value = 5355.43, type = 1),
+                    category = Category(name = "Category")
+                ),
+                TransactionWithCategory(
+                    transaction = Transaction(value = 55.43, type = 1),
+                    category = Category(name = "Category")
+                ),
+                TransactionWithCategory(
+                    transaction = Transaction(value = 5355.43, type = 1),
+                    category = Category(name = "Category")
+                ),
+                TransactionWithCategory(
+                    transaction = Transaction(value = 53555.43, type = 0),
+                    category = Category(name = "Category")
+                ),
+                TransactionWithCategory(
+                    transaction = Transaction(value = 535.43, type = 1),
+                    category = Category(name = "Category")
+                ),
+                TransactionWithCategory(
+                    transaction = Transaction(value = 55.43, type = 1),
+                    category = Category(name = "Category")
+                ),
+                TransactionWithCategory(
+                    transaction = Transaction(value = 5355.43, type = 1),
+                    category = Category(name = "Category")
+                ),
+                TransactionWithCategory(
+                    transaction = Transaction(value = 55.43, type = 1),
+                    category = Category(name = "Category")
+                ),
+                TransactionWithCategory(
+                    transaction = Transaction(value = 5355.43, type = 1),
+                    category = Category(name = "Category")
+                ),
+                TransactionWithCategory(
+                    transaction = Transaction(value = 53555.43, type = 0),
+                    category = Category(name = "Category")
+                ),
+                TransactionWithCategory(
+                    transaction = Transaction(value = 535.43, type = 1),
                     category = Category(name = "Category")
                 )
             ),

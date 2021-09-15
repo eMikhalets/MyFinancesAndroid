@@ -44,6 +44,9 @@
     <string name="by_default">По умолчанию</string>
     <string name="month">Месяц</string>
     <string name="year">Год</string>
+    <string name="budget_on_month">Бюджет на месяц</string>
+    <string name="budget_balance">Баланс бюджета</string>
+    <string name="transactions_on_categories">Сумма транзакций по категориям</string>
 
     <string name="error">Ошибка</string>
     <string name="error_required_field">Необходимо заполнить</string>

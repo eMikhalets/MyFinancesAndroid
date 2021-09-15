@@ -1,8 +1,15 @@
 package com.emikhalets.myfinances.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.unit.dp
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,4 +59,9 @@ fun toast(context: Context, exception: Exception) {
 
 fun Exception.errorMessage(): String {
     return this.message ?: "No message"
+}
+
+@SuppressLint("UnnecessaryComposedModifier")
+fun Modifier.sectionBorder(): Modifier = composed {
+    this.border(1.dp, MaterialTheme.colors.primary, RoundedCornerShape(4.dp))
 }

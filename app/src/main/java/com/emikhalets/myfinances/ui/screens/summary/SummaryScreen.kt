@@ -128,7 +128,7 @@ fun SummaryExpenseIncome(expense: String, income: String) {
     ) {
         AppText(
             text = expense,
-            color = Color.Red,
+            fontColor = Color.Red,
             fontSize = 18.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -145,7 +145,7 @@ fun SummaryExpenseIncome(expense: String, income: String) {
         )
         AppText(
             text = income,
-            color = Color.Green,
+            fontColor = Color.Green,
             fontSize = 18.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier

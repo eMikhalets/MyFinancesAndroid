@@ -8,12 +8,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.emikhalets.myfinances.R
+import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toValue
 
 @Composable
@@ -30,7 +36,7 @@ fun TextFullScreen(
     ) {
         AppText(
             text = text,
-            color = color,
+            fontColor = color,
             fontSize = fontSize,
             fontWeight = fontWeight
         )
@@ -62,7 +68,7 @@ fun TextWithIcon(
         Spacer(Modifier.width(16.dp))
         AppText(
             text = text,
-            color = color,
+            fontColor = color,
             fontSize = fontSize,
             fontWeight = fontWeight
         )
@@ -70,66 +76,85 @@ fun TextWithIcon(
 }
 
 @Composable
-fun TextValue(
+fun AppTextMoney(
     value: Double,
-    color: Color = MaterialTheme.colors.onPrimary
+    type: TransactionType? = null
 ) {
-    AppText(
+    val icon = when (type) {
+        TransactionType.Expense -> R.drawable.ic_minus
+        TransactionType.Income -> R.drawable.ic_plus
+        else -> null
+    }
+
+    AppTextWithIcon(
         text = value.toValue(),
-        textAlign = TextAlign.End,
-        fontSize = 20.sp,
-        color = color,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(end = 16.dp)
+        drawable = icon,
+        drawablePadding = 16.dp,
+        drawableSize = 18.dp,
+        fontSize = 18.sp
     )
 }
 
 @Composable
-fun TextCenter(
+fun AppTextWithIcon(
     text: String,
-    color: Color = MaterialTheme.colors.onPrimary
+    modifier: Modifier = Modifier,
+    drawable: Int? = null,
+    drawablePadding: Dp = 0.dp,
+    drawableColor: Color = MaterialTheme.colors.onSurface,
+    drawableSize: Dp = 24.dp,
+    fontSize: TextUnit = MaterialTheme.typography.body1.fontSize,
+    fontColor: Color = MaterialTheme.colors.onSurface,
 ) {
-    AppText(
-        text = text,
-        textAlign = TextAlign.Center,
-        color = color,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-    )
-}
-
-@Composable
-fun TextSecondary(
-    text: String,
-    modifier: Modifier = Modifier
-) {
-    AppText(
-        text = text,
-        fontSize = 12.sp,
-        color = MaterialTheme.colors.secondary,
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-    )
+    ) {
+        if (drawable != null) {
+            AppIcon(
+                icon = drawable,
+                color = drawableColor,
+                size = drawableSize
+            )
+            Spacer(modifier = Modifier.width(drawablePadding))
+        }
+        AppText(
+            text = text,
+            fontSize = fontSize,
+            fontColor = fontColor
+        )
+    }
 }
 
 @Composable
 fun AppText(
     text: String,
     modifier: Modifier = Modifier,
-    textAlign: TextAlign = TextAlign.Start,
-    color: Color = MaterialTheme.colors.onPrimary,
+    fontColor: Color = MaterialTheme.colors.onSurface,
     fontSize: TextUnit = MaterialTheme.typography.body1.fontSize,
-    fontWeight: FontWeight? = MaterialTheme.typography.body1.fontWeight
+    fontStyle: FontStyle? = MaterialTheme.typography.body1.fontStyle,
+    fontWeight: FontWeight? = MaterialTheme.typography.body1.fontWeight,
+    fontFamily: FontFamily? = MaterialTheme.typography.body1.fontFamily,
+    letterSpacing: TextUnit = MaterialTheme.typography.body1.letterSpacing,
+    textDecoration: TextDecoration? = TextDecoration.None,
+    textAlign: TextAlign? = TextAlign.Start,
+    lineHeight: TextUnit = MaterialTheme.typography.body1.lineHeight,
+    overflow: TextOverflow = TextOverflow.Clip,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     Text(
         text = text,
-        style = MaterialTheme.typography.body1.copy(
-            fontSize = fontSize,
-            fontWeight = fontWeight
-        ),
+        modifier = modifier,
+        color = fontColor,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
         textAlign = textAlign,
-        color = color,
-        modifier = modifier
+        lineHeight = lineHeight,
+        overflow = overflow,
+        maxLines = maxLines
     )
 }

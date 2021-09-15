@@ -179,11 +179,11 @@ fun WalletListItem(
                 Spacer(Modifier.width(8.dp))
                 AppText(
                     text = stringResource(R.string.by_default),
-                    color = MaterialTheme.colors.secondary
+                    fontColor = MaterialTheme.colors.secondary
                 )
             }
         }
-        TextValue(value = wallet.value)
+//        AppTextMoney(value = wallet.value)
     }
 }
 

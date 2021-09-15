@@ -37,7 +37,7 @@ fun AppTextButton(
     ) {
         AppText(
             text = text,
-            color = textColor,
+            fontColor = textColor,
             modifier = Modifier.padding(padding)
         )
     }

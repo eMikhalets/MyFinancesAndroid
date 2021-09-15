@@ -158,7 +158,7 @@ fun TransactionTypeChooser(type: TransactionType, onSelectType: (TransactionType
         AppText(
             text = stringResource(R.string.expense),
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colors.onPrimary,
+            fontColor = MaterialTheme.colors.onPrimary,
             modifier = Modifier
                 .weight(1f)
                 .clickable { onSelectType(TransactionType.Expense) }
@@ -168,7 +168,7 @@ fun TransactionTypeChooser(type: TransactionType, onSelectType: (TransactionType
         AppText(
             text = stringResource(R.string.income),
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colors.onPrimary,
+            fontColor = MaterialTheme.colors.onPrimary,
             modifier = Modifier
                 .weight(1f)
                 .clickable { onSelectType(TransactionType.Income) }

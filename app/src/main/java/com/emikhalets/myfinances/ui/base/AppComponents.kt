@@ -1,5 +1,6 @@
 package com.emikhalets.myfinances.ui.base
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,7 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.emikhalets.myfinances.R
+import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
+import com.emikhalets.myfinances.utils.months
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -144,5 +151,58 @@ fun IconsList(
                 )
             }
         }
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun DateChooser(
+    month: Int,
+    year: Int,
+    onBackDateClick: () -> Unit,
+    onForwardDateClick: () -> Unit
+) {
+    Column(Modifier.fillMaxWidth()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            AppIcon(
+                icon = R.drawable.ic_arrow_back,
+                modifier = Modifier
+                    .clickable { onBackDateClick() }
+                    .padding(16.dp)
+            )
+            AppText(
+                text = "${months()[month]}, $year",
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            )
+            AppIcon(
+                icon = R.drawable.ic_arrow_forward,
+                modifier = Modifier
+                    .clickable { onForwardDateClick() }
+                    .padding(16.dp)
+            )
+        }
+        Divider(color = MaterialTheme.colors.secondary)
+    }
+}
+
+// ================================== Previews ==================================
+
+@Preview(showBackground = true)
+@Composable
+private fun DateChooserPreview() {
+    MyFinancesTheme {
+        DateChooser(
+            month = 8,
+            year = 2021,
+            onBackDateClick = {},
+            onForwardDateClick = {}
+        )
     }
 }

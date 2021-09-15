@@ -43,10 +43,12 @@ fun SummaryScreen(
     var budget by remember { mutableStateOf("") }
     var expense by remember { mutableStateOf("") }
     var income by remember { mutableStateOf("") }
+    var currentWalletId by remember { mutableStateOf(0L) }
 
     LaunchedEffect("init") {
-        viewModel.getWallet(context.getCurrentWalletId())
-        viewModel.getSummary(month, year, context.getCurrentWalletId())
+        currentWalletId = SharedPrefs.getCurrentWalletId(context)
+        viewModel.getWallet(currentWalletId)
+        viewModel.getSummary(month, year, currentWalletId)
     }
     LaunchedEffect(state) {
         state.error?.let { error -> toast(context, error) }

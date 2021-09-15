@@ -25,10 +25,10 @@ import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.ui.base.*
 import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.AnimateExpandCollapse
+import com.emikhalets.myfinances.utils.SharedPrefs
 import com.emikhalets.myfinances.utils.enums.Keyboard
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.formatValue
-import com.emikhalets.myfinances.utils.getCurrentWalletId
 import com.emikhalets.myfinances.utils.toast
 
 @Composable
@@ -44,8 +44,10 @@ fun TransactionDetailsScreen(
     var value by remember { mutableStateOf("") }
     var category by remember { mutableStateOf<Category?>(null) }
     var type by remember { mutableStateOf(TransactionType.None) }
+    var currentWalletId by remember { mutableStateOf(0L) }
 
     LaunchedEffect("init") {
+        currentWalletId = SharedPrefs.getCurrentWalletId(context)
         viewModel.getTransaction(transactionId)
     }
     LaunchedEffect(type) {
@@ -89,7 +91,7 @@ fun TransactionDetailsScreen(
         onCategoryClick = { category = it },
         onSaveClick = {
             viewModel.saveTransaction(
-                context.getCurrentWalletId(),
+                currentWalletId,
                 category!!,
                 value.toDouble(),
                 type.value,

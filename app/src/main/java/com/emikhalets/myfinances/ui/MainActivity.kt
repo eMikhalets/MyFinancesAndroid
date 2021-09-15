@@ -15,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.ui.base.AppBottomBar
 import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
-import com.emikhalets.myfinances.utils.getCurrentWalletId
+import com.emikhalets.myfinances.utils.SharedPrefs
 import com.emikhalets.myfinances.utils.navigation.AppNavGraph
 import com.emikhalets.myfinances.utils.navigation.BottomNav
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,8 +28,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (getCurrentWalletId() <= 0) {
-            viewModel.createDefaultWallet(getString(R.string.default_wallet))
+        if (SharedPrefs.getCurrentWalletId(this) <= 0) {
+            viewModel.createDefaultWallet(this, getString(R.string.default_wallet_name))
         }
 
         setContent {

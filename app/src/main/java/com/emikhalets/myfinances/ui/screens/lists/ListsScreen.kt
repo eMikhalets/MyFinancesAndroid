@@ -16,13 +16,11 @@ import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.ui.base.*
-import com.emikhalets.myfinances.ui.screens.dialogs.AddCategoryDialog
 import com.emikhalets.myfinances.ui.screens.dialogs.AddWalletDialog
 import com.emikhalets.myfinances.utils.AnimateFadeInOut
+import com.emikhalets.myfinances.utils.SharedPrefs
 import com.emikhalets.myfinances.utils.enums.MyIcons
 import com.emikhalets.myfinances.utils.enums.TransactionType
-import com.emikhalets.myfinances.utils.getCurrentWalletId
-import com.emikhalets.myfinances.utils.setCurrentWalletId
 import com.emikhalets.myfinances.utils.toast
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
@@ -122,13 +120,9 @@ fun WalletsList(
     onAddClick: () -> Unit
 ) {
     val context = LocalContext.current
-    var current by remember { mutableStateOf(context.getCurrentWalletId()) }
+    var current by remember { mutableStateOf(SharedPrefs.getCurrentWalletId(context)) }
 
     LaunchedEffect("init") {
-        if (list.any { it.walletId == current }) {
-            current = 0
-            context.setCurrentWalletId(0)
-        }
     }
 
     Column {
@@ -146,7 +140,6 @@ fun WalletsList(
                     wallet = wallet,
                     current = current,
                     onClick = {
-                        context.setCurrentWalletId(wallet.walletId)
                         current = wallet.walletId
                     }
                 )

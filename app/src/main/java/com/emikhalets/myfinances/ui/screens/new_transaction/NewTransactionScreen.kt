@@ -41,8 +41,10 @@ fun NewTransactionScreen(
     var value by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     var category by remember { mutableStateOf<Category?>(null) }
+    var currentWalletId by remember { mutableStateOf(0L) }
 
     LaunchedEffect("init") {
+        currentWalletId = SharedPrefs.getCurrentWalletId(context)
         viewModel.getCategories(transactionType)
     }
     LaunchedEffect(state) {
@@ -76,7 +78,7 @@ fun NewTransactionScreen(
         context = context,
         onSaveClick = {
             viewModel.saveTransaction(
-                context.getCurrentWalletId(),
+                currentWalletId,
                 category,
                 note,
                 value.toDouble(),

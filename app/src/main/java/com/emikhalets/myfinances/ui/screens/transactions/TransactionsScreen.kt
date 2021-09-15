@@ -45,9 +45,11 @@ fun TransactionsScreen(
 
     var month by remember { mutableStateOf(Calendar.getInstance().month()) }
     var year by remember { mutableStateOf(Calendar.getInstance().year()) }
+    var currentWalletId by remember { mutableStateOf(0L) }
 
     LaunchedEffect("init") {
-        viewModel.getTransactions(month, year, context.getCurrentWalletId())
+        currentWalletId = SharedPrefs.getCurrentWalletId(context)
+        viewModel.getTransactions(month, year, currentWalletId)
     }
     LaunchedEffect(state) {
         if (state.error != null) toast(context, state.error)
@@ -64,7 +66,7 @@ fun TransactionsScreen(
             new.add(Calendar.MONTH, -1)
             month = new.month()
             if (month == 11) year--
-            viewModel.getTransactions(month, year, context.getCurrentWalletId())
+            viewModel.getTransactions(month, year, currentWalletId)
         },
         onForwardDateClick = {
             val new = Calendar.getInstance()
@@ -72,7 +74,7 @@ fun TransactionsScreen(
             new.add(Calendar.MONTH, 1)
             month = new.month()
             if (month == 0) year++
-            viewModel.getTransactions(month, year, context.getCurrentWalletId())
+            viewModel.getTransactions(month, year, currentWalletId)
         },
     )
 }

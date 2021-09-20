@@ -1,6 +1,6 @@
 package com.emikhalets.myfinances.data.entity
 
 data class SummaryTransaction(
-    val value: Double = 0.0,
-    val category: Category = Category()
+    var value: Double = 0.0,
+    var category: Category = Category()
 )

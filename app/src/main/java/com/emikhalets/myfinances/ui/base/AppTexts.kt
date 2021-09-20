@@ -78,7 +78,10 @@ fun TextWithIcon(
 @Composable
 fun AppTextMoney(
     value: Double,
-    type: TransactionType? = null
+    modifier: Modifier = Modifier,
+    type: TransactionType? = null,
+    fontSize: TextUnit = 18.sp,
+    fontColor: Color = MaterialTheme.colors.onSurface
 ) {
     val icon = when (type) {
         TransactionType.Expense -> R.drawable.ic_minus
@@ -91,7 +94,9 @@ fun AppTextMoney(
         drawable = icon,
         drawablePadding = 16.dp,
         drawableSize = 18.dp,
-        fontSize = 18.sp
+        fontSize = fontSize,
+        fontColor = fontColor,
+        modifier = modifier
     )
 }
 
@@ -108,6 +113,7 @@ fun AppTextWithIcon(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
         modifier = modifier
     ) {
         if (drawable != null) {

@@ -34,11 +34,10 @@ class SummaryVM @Inject constructor(
         }
     }
 
-    fun getSummary(month: Int, year: Int, wallet: Long) {
+    fun getSummary(date: Long, wallet: Long) {
         viewModelScope.launch {
             val calendar = Calendar.getInstance()
-            calendar.set(Calendar.MONTH, month)
-            calendar.set(Calendar.YEAR, year)
+            calendar.timeInMillis = date
             val start = calendar.getMinTSOfMonth(calendar.timeInMillis)
             val end = calendar.getMaxTSOfMonth(calendar.timeInMillis)
             state = when (val result = repo.getTransactionsBetween(start, end, wallet)) {
@@ -57,22 +56,35 @@ class SummaryVM @Inject constructor(
         transactions.forEach { transaction ->
             when (TransactionType.get(transaction.transaction.type)) {
                 TransactionType.Expense -> {
-                    summaryExpenses.add(
-                        SummaryTransaction(
-                            value = transaction.transaction.value,
-                            category = transaction.category
+                    val expense = summaryExpenses.find {
+                        it.category.name == transaction.category.name
+                    }
+                    if (expense == null) {
+                        summaryExpenses.add(
+                            SummaryTransaction(
+                                value = transaction.transaction.value,
+                                category = transaction.category
+                            )
                         )
-                    )
-                    expenses += transaction.transaction.type
+                    } else {
+                        expense.value += transaction.transaction.value
+                    }
+                    expenses += transaction.transaction.value
                 }
                 TransactionType.Income -> {
-                    summaryIncomes.add(
-                        SummaryTransaction(
-                            value = transaction.transaction.value,
-                            category = transaction.category
+                    val income = summaryIncomes.find {
+                        it.category.name == transaction.category.name
+                    }
+                    if (income == null) {
+                        summaryIncomes.add(
+                            SummaryTransaction(
+                                value = transaction.transaction.value,
+                                category = transaction.category
+                            )
                         )
-                    )
-                    incomes += transaction.transaction.value
+                    } else {
+                        income.value += transaction.transaction.value
+                    }
                 }
                 TransactionType.None -> {
                 }

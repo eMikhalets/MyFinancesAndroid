@@ -21,11 +21,11 @@ import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.SummaryTransaction
-import com.emikhalets.myfinances.ui.base.AppPager
-import com.emikhalets.myfinances.ui.base.AppText
-import com.emikhalets.myfinances.ui.base.ScreenScaffold
+import com.emikhalets.myfinances.ui.base.*
 import com.emikhalets.myfinances.ui.theme.MyFinancesTheme
-import com.emikhalets.myfinances.utils.*
+import com.emikhalets.myfinances.utils.SharedPrefs
+import com.emikhalets.myfinances.utils.sectionBorder
+import com.emikhalets.myfinances.utils.toast
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import java.util.*
@@ -38,37 +38,39 @@ fun SummaryScreen(
     val state = viewModel.state
     val context = LocalContext.current
 
-    var month by remember { mutableStateOf(Calendar.getInstance().month()) }
-    var year by remember { mutableStateOf(Calendar.getInstance().year()) }
-    var budget by remember { mutableStateOf("") }
-    var expense by remember { mutableStateOf("") }
-    var income by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf(Calendar.getInstance().timeInMillis) }
+    var budget by remember { mutableStateOf(0.0) }
+    var expense by remember { mutableStateOf(0.0) }
+    var income by remember { mutableStateOf(0.0) }
     var currentWalletId by remember { mutableStateOf(0L) }
 
     LaunchedEffect("init") {
         currentWalletId = SharedPrefs.getCurrentWalletId(context)
         viewModel.getWallet(currentWalletId)
-        viewModel.getSummary(month, year, currentWalletId)
+        viewModel.getSummary(date, currentWalletId)
     }
     LaunchedEffect(state) {
         state.error?.let { error -> toast(context, error) }
     }
     LaunchedEffect(state.wallet) {
         state.wallet?.let { currentWallet ->
-            budget = currentWallet.budget.toString()
+            budget = currentWallet.budget
         }
     }
     LaunchedEffect(state.monthExpenses) {
-        expense = state.monthExpenses.toString()
+        expense = state.monthExpenses
     }
     LaunchedEffect(state.monthIncomes) {
-        income = state.monthIncomes.toString()
+        income = state.monthIncomes
     }
 
     SummaryScreen(
         navController = rememberNavController(),
-        month = month,
-        year = year,
+        date = date,
+        onDateChange = {
+            date = it
+            viewModel.getSummary(date, currentWalletId)
+        },
         budget = budget,
         expense = expense,
         income = income,
@@ -80,11 +82,11 @@ fun SummaryScreen(
 @Composable
 fun SummaryScreen(
     navController: NavHostController,
-    month: Int,
-    year: Int,
-    budget: String,
-    expense: String,
-    income: String,
+    date: Long,
+    onDateChange: (Long) -> Unit,
+    budget: Double,
+    expense: Double,
+    income: Double,
     summaryExpenses: List<SummaryTransaction>,
     summaryIncomes: List<SummaryTransaction>
 ) {
@@ -96,16 +98,9 @@ fun SummaryScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 16.dp, end = 16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            AppText(
-                text = "${months()[month]}, $year",
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
+            DateChooser(date = date, onDateChange = onDateChange)
             Spacer(Modifier.height(8.dp))
             SummaryExpenseIncome(expense = expense, income = income)
             Spacer(Modifier.height(16.dp))
@@ -121,18 +116,17 @@ fun SummaryScreen(
 }
 
 @Composable
-fun SummaryExpenseIncome(expense: String, income: String) {
+fun SummaryExpenseIncome(expense: Double, income: Double) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
+            .padding(start = 16.dp, end = 16.dp)
             .sectionBorder()
     ) {
-        AppText(
-            text = expense,
+        AppTextMoney(
+            value = expense,
             fontColor = Color.Red,
-            fontSize = 18.sp,
-            textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
@@ -145,11 +139,9 @@ fun SummaryExpenseIncome(expense: String, income: String) {
                 .padding(top = 8.dp, bottom = 8.dp)
                 .width(1.dp)
         )
-        AppText(
-            text = income,
+        AppTextMoney(
+            value = income,
             fontColor = Color.Green,
-            fontSize = 18.sp,
-            textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
@@ -159,13 +151,11 @@ fun SummaryExpenseIncome(expense: String, income: String) {
 }
 
 @Composable
-fun SummaryBudget(budget: String, expense: String) {
-    val budgetValue = if (budget.isEmpty()) 0.0 else budget.toDouble()
-    val expenseValue = if (expense.isEmpty()) 0.0 else expense.toDouble()
-
+fun SummaryBudget(budget: Double, expense: Double) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp)
             .sectionBorder()
             .padding(8.dp)
     ) {
@@ -176,10 +166,9 @@ fun SummaryBudget(budget: String, expense: String) {
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
-        AppText(
-            text = budget,
+        AppTextMoney(
+            value = budget,
             fontSize = 20.sp,
-            textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(8.dp))
@@ -190,10 +179,9 @@ fun SummaryBudget(budget: String, expense: String) {
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
-        AppText(
-            text = "${budgetValue - expenseValue}",
+        AppTextMoney(
+            value = budget - expense,
             fontSize = 20.sp,
-            textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -208,7 +196,11 @@ fun SummaryTransactionOnCategories(
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = 2)
 
-    Column(Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp)
+    ) {
         AppText(
             text = stringResource(R.string.transactions_on_categories),
             textAlign = TextAlign.Center,
@@ -266,11 +258,11 @@ private fun Preview() {
     MyFinancesTheme {
         SummaryScreen(
             navController = rememberNavController(),
-            month = 9,
-            year = 2021,
-            budget = "20000",
-            expense = "14562.18",
-            income = "61487.12",
+            date = Calendar.getInstance().timeInMillis,
+            onDateChange = {},
+            budget = 20000.0,
+            expense = 14562.0,
+            income = 61487.12,
             summaryExpenses = listOf(
                 SummaryTransaction(154.23, Category(name = "category_1")),
                 SummaryTransaction(154.23, Category(name = "category_2")),

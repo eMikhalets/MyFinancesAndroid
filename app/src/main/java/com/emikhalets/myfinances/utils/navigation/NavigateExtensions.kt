@@ -36,7 +36,7 @@ private fun NavController.navigate(
     params: Bundle?,
     builder: NavOptionsBuilder.() -> Unit = {}
 ) {
-    this.currentBackStackEntry?.arguments = params
+//    this.currentBackStackEntry?.arguments = params
     navigate(route, builder)
 }
 

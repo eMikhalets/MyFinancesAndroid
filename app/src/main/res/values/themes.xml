@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="Theme.MyFinances" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="android:statusBarColor">#418851</item>
+    <style name="Theme.MyFinances" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/blue_400</item>
     </style>
 </resources>

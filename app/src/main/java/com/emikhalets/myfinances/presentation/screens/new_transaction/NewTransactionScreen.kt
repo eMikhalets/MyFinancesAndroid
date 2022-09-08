@@ -44,7 +44,7 @@ fun NewTransactionScreen(
     var currentWalletId by remember { mutableStateOf(0L) }
 
     LaunchedEffect("init") {
-        currentWalletId = SharedPrefs.getCurrentWalletId(context)
+        currentWalletId = Prefs.getCurrentWalletId(context)
         viewModel.getCategories(transactionType)
     }
     LaunchedEffect(state) {

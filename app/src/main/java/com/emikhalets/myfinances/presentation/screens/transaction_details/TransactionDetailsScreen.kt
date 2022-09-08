@@ -25,7 +25,7 @@ import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.presentation.base.*
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.AnimateExpandCollapse
-import com.emikhalets.myfinances.utils.SharedPrefs
+import com.emikhalets.myfinances.utils.Prefs
 import com.emikhalets.myfinances.utils.enums.Keyboard
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.formatValue
@@ -47,7 +47,7 @@ fun TransactionDetailsScreen(
     var currentWalletId by remember { mutableStateOf(0L) }
 
     LaunchedEffect("init") {
-        currentWalletId = SharedPrefs.getCurrentWalletId(context)
+        currentWalletId = Prefs.getCurrentWalletId(context)
         viewModel.getTransaction(transactionId)
     }
     LaunchedEffect(type) {

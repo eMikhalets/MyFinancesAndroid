@@ -50,7 +50,7 @@ import com.emikhalets.myfinances.presentation.base.ScreenScaffold
 import com.emikhalets.myfinances.presentation.base.TextFullScreen
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.AnimateExpandCollapse
-import com.emikhalets.myfinances.utils.SharedPrefs
+import com.emikhalets.myfinances.utils.Prefs
 import com.emikhalets.myfinances.utils.enums.MyIcons
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.navigation.navigateToNewTransaction
@@ -70,7 +70,7 @@ fun TransactionsScreen(
     var currentWalletId by remember { mutableStateOf(0L) }
 
     LaunchedEffect("init") {
-        currentWalletId = SharedPrefs.getCurrentWalletId(context)
+        currentWalletId = Prefs.getCurrentWalletId(context)
         viewModel.getTransactions(date, currentWalletId)
     }
     LaunchedEffect(state) {

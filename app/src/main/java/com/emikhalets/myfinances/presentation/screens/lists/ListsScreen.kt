@@ -18,7 +18,7 @@ import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.presentation.base.*
 import com.emikhalets.myfinances.presentation.screens.dialogs.AddWalletDialog
 import com.emikhalets.myfinances.utils.AnimateFadeInOut
-import com.emikhalets.myfinances.utils.SharedPrefs
+import com.emikhalets.myfinances.utils.Prefs
 import com.emikhalets.myfinances.utils.enums.MyIcons
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toast
@@ -120,7 +120,7 @@ fun WalletsList(
     onAddClick: () -> Unit
 ) {
     val context = LocalContext.current
-    var current by remember { mutableStateOf(SharedPrefs.getCurrentWalletId(context)) }
+    var current by remember { mutableStateOf(Prefs.getCurrentWalletId(context)) }
 
     LaunchedEffect("init") {
     }

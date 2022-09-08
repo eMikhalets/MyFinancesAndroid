@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.emikhalets.myfinances.data.Result
 import com.emikhalets.myfinances.data.RoomRepository
 import com.emikhalets.myfinances.data.entity.Wallet
-import com.emikhalets.myfinances.utils.SharedPrefs
+import com.emikhalets.myfinances.utils.Prefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,7 +26,7 @@ class MainVM @Inject constructor(
         viewModelScope.launch {
             when (val result = repo.insertWallet(Wallet(name = name))) {
                 is Result.Error -> state = state.setError(result.exception)
-                is Result.Success -> SharedPrefs.setCurrentWalletId(context, 1)
+                is Result.Success -> Prefs.setCurrentWalletId(context, 1)
             }
         }
     }

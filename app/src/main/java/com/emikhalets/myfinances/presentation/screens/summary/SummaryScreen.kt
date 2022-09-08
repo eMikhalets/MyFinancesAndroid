@@ -23,7 +23,7 @@ import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.SummaryTransaction
 import com.emikhalets.myfinances.presentation.base.*
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
-import com.emikhalets.myfinances.utils.SharedPrefs
+import com.emikhalets.myfinances.utils.Prefs
 import com.emikhalets.myfinances.utils.sectionBorder
 import com.emikhalets.myfinances.utils.toast
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -45,7 +45,7 @@ fun SummaryScreen(
     var currentWalletId by remember { mutableStateOf(0L) }
 
     LaunchedEffect("init") {
-        currentWalletId = SharedPrefs.getCurrentWalletId(context)
+        currentWalletId = Prefs.getCurrentWalletId(context)
         viewModel.getWallet(currentWalletId)
         viewModel.getSummary(date, currentWalletId)
     }

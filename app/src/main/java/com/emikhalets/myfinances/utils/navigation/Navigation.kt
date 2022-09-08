@@ -4,11 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.emikhalets.myfinances.ui.screens.lists.ListsScreen
-import com.emikhalets.myfinances.ui.screens.new_transaction.NewTransactionScreen
-import com.emikhalets.myfinances.ui.screens.summary.SummaryScreen
-import com.emikhalets.myfinances.ui.screens.transaction_details.TransactionDetailsScreen
-import com.emikhalets.myfinances.ui.screens.transactions.TransactionsScreen
+import com.emikhalets.myfinances.presentation.screens.lists.ListsScreen
+import com.emikhalets.myfinances.presentation.screens.new_transaction.NewTransactionScreen
+import com.emikhalets.myfinances.presentation.screens.summary.SummaryScreen
+import com.emikhalets.myfinances.presentation.screens.transaction_details.TransactionDetailsScreen
+import com.emikhalets.myfinances.presentation.screens.transactions.TransactionsScreen
 import com.emikhalets.myfinances.utils.enums.TransactionType
 
 @Composable

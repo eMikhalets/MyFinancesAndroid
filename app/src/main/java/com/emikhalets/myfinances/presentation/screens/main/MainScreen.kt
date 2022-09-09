@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.screens.transactions
+package com.emikhalets.myfinances.presentation.screens.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

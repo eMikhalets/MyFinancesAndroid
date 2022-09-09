@@ -15,7 +15,7 @@ import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Wallet
-import com.emikhalets.myfinances.presentation.base.*
+import com.emikhalets.myfinances.presentation.core.*
 import com.emikhalets.myfinances.presentation.screens.dialogs.AddWalletDialog
 import com.emikhalets.myfinances.utils.AnimateFadeInOut
 import com.emikhalets.myfinances.utils.Prefs

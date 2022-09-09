@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.di
+package com.emikhalets.myfinances.utils.di
 
 import android.content.Context
 import com.emikhalets.myfinances.data.AppDatabase

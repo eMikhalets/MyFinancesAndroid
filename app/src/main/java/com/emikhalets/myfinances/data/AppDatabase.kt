@@ -18,7 +18,7 @@ import com.emikhalets.myfinances.data.entity.Wallet
         Wallet::class,
     ],
     version = 1,
-    exportSchema = false
+    exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -35,10 +35,7 @@ abstract class AppDatabase : RoomDatabase() {
             instance ?: buildDatabase(context).also { instance = it }
         }
 
-        private fun buildDatabase(context: Context) = Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            "MyFinances"
-        ).build()
+        private fun buildDatabase(context: Context) =
+            Room.databaseBuilder(context, AppDatabase::class.java, "MyFinances").build()
     }
 }

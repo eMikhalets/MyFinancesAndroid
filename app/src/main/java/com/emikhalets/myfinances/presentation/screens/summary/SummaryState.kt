@@ -1,6 +1,5 @@
 package com.emikhalets.myfinances.presentation.screens.summary
 
-import com.emikhalets.myfinances.data.entity.SummaryTransaction
 import com.emikhalets.myfinances.data.entity.Wallet
 
 data class SummaryState(

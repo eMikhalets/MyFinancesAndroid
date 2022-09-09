@@ -22,7 +22,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
-import com.emikhalets.myfinances.presentation.base.*
+import com.emikhalets.myfinances.presentation.core.*
 import com.emikhalets.myfinances.presentation.screens.dialogs.AddCategoryDialog
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.*

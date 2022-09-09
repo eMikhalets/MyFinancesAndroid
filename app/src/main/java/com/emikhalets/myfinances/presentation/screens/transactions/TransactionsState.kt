@@ -1,7 +1,6 @@
 package com.emikhalets.myfinances.presentation.screens.transactions
 
 import com.emikhalets.myfinances.data.entity.Transaction
-import com.emikhalets.myfinances.data.entity.TransactionWithCategory
 
 data class TransactionsState(
     val transactions: List<TransactionWithCategory> = emptyList(),

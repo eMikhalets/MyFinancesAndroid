@@ -2,18 +2,29 @@ package com.emikhalets.myfinances.data.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.emikhalets.myfinances.utils.enums.TransactionType
-import java.util.*
 
 @Entity(tableName = "transactions")
 data class Transaction(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "transaction_id") val transactionId: Long = 0,
-    @ColumnInfo(name = "category_id") val categoryId: Long = 0,
-    @ColumnInfo(name = "wallet_id") val walletId: Long = 0,
-    @ColumnInfo(name = "value") var value: Double = 0.0,
-    @ColumnInfo(name = "type") var type: Int = TransactionType.None.value,
-    @ColumnInfo(name = "note") var note: String = "",
-    @ColumnInfo(name = "timestamp") var timestamp: Long = Date().time
-)
+    @ColumnInfo(name = "id") val id: Long = 0,
+    @ColumnInfo(name = "category_id") val categoryId: Long,
+    @ColumnInfo(name = "wallet_id") val walletId: Long,
+    @ColumnInfo(name = "value") var value: Double,
+    @ColumnInfo(name = "type") var type: TransactionType,
+    @ColumnInfo(name = "note") var note: String,
+    @ColumnInfo(name = "timestamp") var timestamp: Long,
+) {
+
+    @Ignore
+    constructor(
+        categoryId: Long,
+        walletId: Long,
+        value: Double,
+        type: TransactionType,
+        note: String,
+        timestamp: Long,
+    ) : this(0, categoryId, walletId, value, type, note, timestamp)
+}

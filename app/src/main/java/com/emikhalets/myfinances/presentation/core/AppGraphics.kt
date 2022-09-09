@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.base
+package com.emikhalets.myfinances.presentation.core
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

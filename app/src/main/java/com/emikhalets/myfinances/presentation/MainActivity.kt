@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.presentation.base.AppBottomBar
+import com.emikhalets.myfinances.presentation.core.AppBottomBar
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.Prefs
 import com.emikhalets.myfinances.utils.navigation.AppNavGraph

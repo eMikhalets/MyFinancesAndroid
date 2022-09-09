@@ -14,8 +14,12 @@ android {
         targetSdk 31
         versionCode 1
         versionName "1.0.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -42,6 +46,9 @@ android {
         kotlinCompilerVersion kotlin_version
         kotlinCompilerExtensionVersion compose_version
     }
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
 }
 
 dependencies {
@@ -49,6 +56,7 @@ dependencies {
     // General
     implementation ('androidx.core:core-ktx:1.8.0')
     implementation ('com.google.android.material:material:1.6.1')
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
     // Compose
     implementation ("androidx.compose.ui:ui:$compose_version")

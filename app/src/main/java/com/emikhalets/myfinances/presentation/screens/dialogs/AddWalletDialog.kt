@@ -8,9 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.presentation.base.AppTextButton
-import com.emikhalets.myfinances.presentation.base.NameTextField
-import com.emikhalets.myfinances.presentation.base.ValueTextField
+import com.emikhalets.myfinances.presentation.core.AppTextButton
+import com.emikhalets.myfinances.presentation.core.NameTextField
+import com.emikhalets.myfinances.presentation.core.ValueTextField
 import com.emikhalets.myfinances.utils.formatValue
 
 @Composable

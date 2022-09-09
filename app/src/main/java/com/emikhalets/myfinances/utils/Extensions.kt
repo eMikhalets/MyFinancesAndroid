@@ -12,6 +12,19 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.unit.dp
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+suspend inline fun <T : Any> runDatabaseRequest(crossinline block: suspend () -> T): Result<T> {
+    return withContext(Dispatchers.Default) {
+        try {
+            Result.success(block())
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            Result.failure(ex)
+        }
+    }
+}
 
 /**
  * Форматирует строку ти денежному типу. Не дает ввести более 2 элементов после точки.

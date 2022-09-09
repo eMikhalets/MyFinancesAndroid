@@ -5,8 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emikhalets.myfinances.data.Result
-import com.emikhalets.myfinances.data.RoomRepository
+import com.emikhalets.myfinances.data.AppRepository
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.utils.enums.TransactionType
@@ -16,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListsVM @Inject constructor(
-    private val repo: RoomRepository
+    private val repo: AppRepository
 ) : ViewModel() {
 
     var state by mutableStateOf(ListsState())

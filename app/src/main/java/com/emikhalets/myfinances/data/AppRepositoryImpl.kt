@@ -40,7 +40,12 @@ class AppRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteCategory(category: Category): Result<Int> {
-        return runDatabaseRequest { categoryDao.delete(category) }
+        return runDatabaseRequest {
+            val transactions = transactionDao.getAll(prefs.currentWalletId, category.id)
+            transactions.map { it.copy(categoryId = -1) }
+            transactionDao.updateAll(transactions)
+            categoryDao.delete(category)
+        }
     }
 
 
@@ -90,6 +95,9 @@ class AppRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteWallet(wallet: Wallet): Result<Int> {
-        return runDatabaseRequest { walletDao.delete(wallet) }
+        return runDatabaseRequest {
+            transactionDao.delete(wallet.id)
+            walletDao.delete(wallet)
+        }
     }
 }

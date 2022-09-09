@@ -17,6 +17,9 @@ interface BaseDao<T> {
     @Update
     suspend fun update(item: T): Int
 
+    @Update
+    suspend fun updateAll(items: List<T>): List<Int>
+
     @Delete
     suspend fun delete(item: T): Int
 }

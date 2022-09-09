@@ -15,6 +15,8 @@ import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+const val DEFAULT_ERROR = "null"
+
 suspend inline fun <T : Any> runDatabaseRequest(crossinline block: suspend () -> T): Result<T> {
     return withContext(Dispatchers.Default) {
         try {

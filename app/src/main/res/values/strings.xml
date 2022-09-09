@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">MyFinances</string>
 
-    <string name="title_transactions">Транзакции</string>
-    <string name="title_summary">Сводка</string>
-    <string name="title_lists">Списки</string>
-    <string name="title_new_transaction">Новая транзакция</string>
-    <string name="title_transaction">Подробности</string>
+    <string name="title_main_screen">Транзакции</string>
+    <string name="title_transaction_screen">Транзакция</string>
+    <string name="title_categories_screen">Категории</string>
+    <string name="title_category_screen">Категория</string>
+    <string name="title_wallets_screen">Кошельки</string>
+    <string name="title_wallet_screen">Кошелек</string>
 
     <string name="var_amount">%.2f ₽</string>
 

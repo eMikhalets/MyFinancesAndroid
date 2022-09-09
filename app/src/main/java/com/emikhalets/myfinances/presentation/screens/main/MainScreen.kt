@@ -48,7 +48,6 @@ import com.emikhalets.myfinances.presentation.core.ScreenScaffold
 import com.emikhalets.myfinances.presentation.core.TextFullScreen
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.AnimateExpandCollapse
-import com.emikhalets.myfinances.utils.Prefs
 import com.emikhalets.myfinances.utils.enums.MyIcons
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.navigation.navigateToNewTransaction
@@ -57,20 +56,15 @@ import com.emikhalets.myfinances.utils.toast
 import java.util.*
 
 @Composable
-fun TransactionsScreen(
+fun MainScreen(
     navController: NavHostController,
-    viewModel: TransactionsVM = hiltViewModel()
+    viewModel: MainViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state
     val context = LocalContext.current
 
-    var date by remember { mutableStateOf(Calendar.getInstance().timeInMillis) }
-    var currentWalletId by remember { mutableStateOf(0L) }
+    LaunchedEffect(Unit) { viewModel.getTransactions() }
 
-    LaunchedEffect("init") {
-        currentWalletId = Prefs.getCurrentWalletId(context)
-        viewModel.getTransactions(date, currentWalletId)
-    }
     LaunchedEffect(state) {
         if (state.error != null) toast(context, state.error)
     }
@@ -91,7 +85,7 @@ fun TransactionsScreen(
     navController: NavHostController,
     transactions: List<TransactionWithCategory>,
     date: Long,
-    onDateChange: (Long) -> Unit
+    onDateChange: (Long) -> Unit,
 ) {
     ScreenScaffold(
         navController = navController,

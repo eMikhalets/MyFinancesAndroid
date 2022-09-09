@@ -6,10 +6,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.myfinances.data.AppRepository
+import com.emikhalets.myfinances.data.entity.Transaction
+import com.emikhalets.myfinances.utils.DEFAULT_ERROR
+import com.emikhalets.myfinances.utils.enums.TransactionType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repo: AppRepository) : ViewModel() {
@@ -17,12 +22,22 @@ class MainViewModel @Inject constructor(private val repo: AppRepository) : ViewM
     var state by mutableStateOf(MainState())
         private set
 
-    fun getTransactions(date: Long, wallet: Long) {
-        viewModelScope.launch {
-            state = when (val result = repo.getTransactionsBetween(start, end, wallet)) {
-                is Result.Error -> state.setError(result.exception)
-                is Result.Success -> state.setTransactions(result.data)
-            }
+    private val transactionsFlow = flow<List<Transaction>> {
+    }
+
+    fun getTransactions() {
+        viewModelScope.launch(Dispatchers.Default) {
+            repo.getTransactions()
+                .onSuccess { setTransactionsState(it) }
+                .onFailure { state = state.setError(it.message ?: DEFAULT_ERROR) }
+        }
+    }
+
+    private suspend fun setTransactionsState(flow: Flow<List<Transaction>>) {
+        flow.collect { transactions ->
+            val expenseList = transactions.filter { it.type == TransactionType.Expense }
+            val incomeList = transactions.filter { it.type == TransactionType.Income }
+            state = state.setTransactions(incomeList, expenseList)
         }
     }
 }

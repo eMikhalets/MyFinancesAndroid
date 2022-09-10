@@ -1,63 +1,29 @@
 package com.emikhalets.myfinances.utils.navigation
 
-import android.os.Bundle
-import androidx.compose.runtime.Composable
-import androidx.core.os.bundleOf
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.NavOptionsBuilder
-import com.emikhalets.myfinances.utils.enums.TransactionType
 
-object NavArgs {
-    const val TRANSACTION_TYPE = "arg_transaction_type"
-    const val TRANSACTION_ID = "arg_transaction_id"
+object AppNavArgs {
+    const val TRANSACTION_ID = "transactionId"
+    const val CATEGORY_ID = "categoryId"
+    const val WALLET_ID = "walletId"
 }
 
-fun NavHostController.navigateAsStart(route: String) {
-    if (currentDestination?.route != route) {
-        navigate(route) {
-            popUpTo(graph.findStartDestination().id) { saveState = true }
-            restoreState = true
-        }
-    }
+fun NavHostController.navigateToTransaction(id: Long) {
+    navigate("${AppScreen.Transaction.route}/$id")
 }
 
-fun NavHostController.navigateToNewTransaction(type: TransactionType) {
-    navigate(Screen.NewTransaction.route, bundleOf(NavArgs.TRANSACTION_TYPE to type))
+fun NavHostController.navigateToCategories() {
+    navigate(AppScreen.Categories.route)
 }
 
-fun NavHostController.navigateToTransactionDetails(id: Long) {
-    navigate(Screen.TransactionDetails.route, bundleOf(NavArgs.TRANSACTION_ID to id))
+fun NavHostController.navigateToCategory(id: Long) {
+    navigate("${AppScreen.Category.route}/$id")
 }
 
-private fun NavController.navigate(
-    route: String,
-    params: Bundle?,
-    builder: NavOptionsBuilder.() -> Unit = {}
-) {
-//    this.currentBackStackEntry?.arguments = params
-    navigate(route, builder)
+fun NavHostController.navigateToWallets() {
+    navigate(AppScreen.Wallets.route)
 }
 
-//======================================================================================
-
-@Composable
-fun <T> NavController.getSerializable(
-    key: String,
-    content: @Composable (T) -> Unit
-) {
-    this.previousBackStackEntry?.arguments?.getSerializable(key)?.let {
-        content(it as T)
-    }
-}
-
-@Composable
-fun NavController.getLong(
-    key: String,
-    content: @Composable (Long) -> Unit
-) {
-    this.previousBackStackEntry?.arguments?.getLong(key)?.let {
-        content(it)
-    }
+fun NavHostController.navigateToWallet(id: Long) {
+    navigate("${AppScreen.Wallet.route}/$id")
 }

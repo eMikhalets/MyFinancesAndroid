@@ -45,11 +45,10 @@ import com.emikhalets.myfinances.presentation.core.AppTextButton
 import com.emikhalets.myfinances.presentation.core.AppTextMoney
 import com.emikhalets.myfinances.presentation.core.DateChooser
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
-import com.emikhalets.myfinances.presentation.core.TextFullScreen
+import com.emikhalets.myfinances.presentation.core.TextMaxSize
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.AnimateExpandCollapse
 import com.emikhalets.myfinances.utils.Prefs
-import com.emikhalets.myfinances.utils.enums.MyIcons
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.navigation.navigateToNewTransaction
 import com.emikhalets.myfinances.utils.navigation.navigateToTransactionDetails
@@ -100,7 +99,7 @@ fun TransactionsScreen(
         Column(Modifier.fillMaxSize()) {
             DateChooser(date = date, onDateChange = onDateChange)
             if (transactions.isEmpty()) {
-                TextFullScreen(
+                TextMaxSize(
                     text = stringResource(R.string.empty_transactions),
                     modifier = Modifier.weight(1f)
                 )

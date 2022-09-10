@@ -23,7 +23,7 @@ import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toValue
 
 @Composable
-fun TextFullScreen(
+fun TextMaxSize(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colors.onPrimary,

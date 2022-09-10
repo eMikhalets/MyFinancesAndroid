@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 data class Wallet(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") val id: Long = 0,
-    @ColumnInfo(name = "name") var name: String,
+    @ColumnInfo(name = "name") val name: String,
 ) {
 
     @Ignore

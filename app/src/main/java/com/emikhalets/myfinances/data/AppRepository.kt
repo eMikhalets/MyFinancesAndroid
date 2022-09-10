@@ -2,6 +2,7 @@ package com.emikhalets.myfinances.data
 
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Transaction
+import com.emikhalets.myfinances.data.entity.TransactionEntity
 import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import kotlinx.coroutines.flow.Flow
@@ -27,9 +28,9 @@ interface AppRepository {
      * Transactions Dao
      */
 
-    suspend fun getTransactions(): Result<Flow<List<Transaction>>>
+    suspend fun getTransactions(): Result<Flow<List<TransactionEntity>>>
 
-    suspend fun getTransaction(id: Long): Result<Flow<Transaction>>
+    suspend fun getTransaction(id: Long): Result<Flow<TransactionEntity>>
 
     suspend fun insertTransaction(transaction: Transaction): Result<Long>
 

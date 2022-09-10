@@ -10,6 +10,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.unit.dp
+import com.emikhalets.myfinances.R
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlinx.coroutines.Dispatchers
@@ -60,7 +61,7 @@ fun Double.toValue(): String {
 fun Long?.toDate(): String {
     if (this == null) return "no date"
     val date = Date(this)
-    val formatter = SimpleDateFormat("dd MMMM y", Locale.getDefault())
+    val formatter = SimpleDateFormat("d MMM yyyy", Locale.getDefault())
     return formatter.format(date)
 }
 
@@ -68,12 +69,13 @@ fun toast(context: Context, @StringRes res: Int) {
     Toast.makeText(context, res, Toast.LENGTH_SHORT).show()
 }
 
-fun toast(context: Context, exception: Exception) {
-    Toast.makeText(context, exception.errorMessage(), Toast.LENGTH_SHORT).show()
+fun toast(context: Context, message: String) {
+    if (message.isEmpty()) return
+    Toast.makeText(context, message.errorOrDefault(context), Toast.LENGTH_SHORT).show()
 }
 
-fun Exception.errorMessage(): String {
-    return this.message ?: "No message"
+private fun String.errorOrDefault(context: Context): String {
+    return if (this == DEFAULT_ERROR) context.getString(R.string.app_default_error) else this
 }
 
 @SuppressLint("UnnecessaryComposedModifier")

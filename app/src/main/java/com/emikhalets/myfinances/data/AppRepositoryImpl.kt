@@ -5,6 +5,7 @@ import com.emikhalets.myfinances.data.dao.TransactionDao
 import com.emikhalets.myfinances.data.dao.WalletDao
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Transaction
+import com.emikhalets.myfinances.data.entity.TransactionEntity
 import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.utils.Prefs
 import com.emikhalets.myfinances.utils.enums.TransactionType
@@ -53,12 +54,12 @@ class AppRepositoryImpl @Inject constructor(
      * Transactions Dao
      */
 
-    override suspend fun getTransactions(): Result<Flow<List<Transaction>>> {
+    override suspend fun getTransactions(): Result<Flow<List<TransactionEntity>>> {
         val walletId = prefs.currentWalletId
         return runDatabaseRequest { transactionDao.getAllOrderByTime(walletId) }
     }
 
-    override suspend fun getTransaction(id: Long): Result<Flow<Transaction>> {
+    override suspend fun getTransaction(id: Long): Result<Flow<TransactionEntity>> {
         return runDatabaseRequest { transactionDao.getById(id) }
     }
 

@@ -12,10 +12,10 @@ data class Transaction(
     @ColumnInfo(name = "id") val id: Long = 0,
     @ColumnInfo(name = "category_id") val categoryId: Long,
     @ColumnInfo(name = "wallet_id") val walletId: Long,
-    @ColumnInfo(name = "value") var value: Double,
-    @ColumnInfo(name = "type") var type: TransactionType,
-    @ColumnInfo(name = "note") var note: String,
-    @ColumnInfo(name = "timestamp") var timestamp: Long,
+    @ColumnInfo(name = "value") val value: Double,
+    @ColumnInfo(name = "type") val type: TransactionType,
+    @ColumnInfo(name = "note") val note: String,
+    @ColumnInfo(name = "timestamp") val timestamp: Long,
 ) {
 
     @Ignore

@@ -1,35 +1,25 @@
 package com.emikhalets.myfinances.presentation.screens.main
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,20 +29,19 @@ import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Transaction
-import com.emikhalets.myfinances.presentation.core.AppIcon
+import com.emikhalets.myfinances.data.entity.TransactionEntity
+import com.emikhalets.myfinances.presentation.core.AppPager
 import com.emikhalets.myfinances.presentation.core.AppText
-import com.emikhalets.myfinances.presentation.core.AppTextButton
-import com.emikhalets.myfinances.presentation.core.AppTextMoney
-import com.emikhalets.myfinances.presentation.core.DateChooser
+import com.emikhalets.myfinances.presentation.core.MainToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
-import com.emikhalets.myfinances.presentation.core.TextFullScreen
+import com.emikhalets.myfinances.presentation.core.TextMaxSize
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
-import com.emikhalets.myfinances.utils.AnimateExpandCollapse
-import com.emikhalets.myfinances.utils.enums.MyIcons
 import com.emikhalets.myfinances.utils.enums.TransactionType
-import com.emikhalets.myfinances.utils.navigation.navigateToNewTransaction
-import com.emikhalets.myfinances.utils.navigation.navigateToTransactionDetails
+import com.emikhalets.myfinances.utils.navigation.navigateToTransaction
+import com.emikhalets.myfinances.utils.toDate
 import com.emikhalets.myfinances.utils.toast
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.rememberPagerState
 import java.util.*
 
 @Composable
@@ -65,166 +54,130 @@ fun MainScreen(
 
     LaunchedEffect(Unit) { viewModel.getTransactions() }
 
-    LaunchedEffect(state) {
-        if (state.error != null) toast(context, state.error)
-    }
+    LaunchedEffect(state.error) { toast(context, state.error) }
 
-    TransactionsScreen(
+    MainScreen(
         navController = navController,
-        transactions = state.transactions,
-        date = date,
-        onDateChange = {
-            date = it
-            viewModel.getTransactions(date, currentWalletId)
-        }
+        incomeList = state.incomeList,
+        expenseList = state.expenseList
     )
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TransactionsScreen(
+private fun MainScreen(
     navController: NavHostController,
-    transactions: List<TransactionWithCategory>,
-    date: Long,
-    onDateChange: (Long) -> Unit,
+    incomeList: List<TransactionEntity>,
+    expenseList: List<TransactionEntity>,
 ) {
-    ScreenScaffold(
-        navController = navController,
-        title = stringResource(R.string.title_transactions)
-    ) {
-        Column(Modifier.fillMaxSize()) {
-            DateChooser(date = date, onDateChange = onDateChange)
-            if (transactions.isEmpty()) {
-                TextFullScreen(
-                    text = stringResource(R.string.empty_transactions),
-                    modifier = Modifier.weight(1f)
-                )
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1f)
-                ) {
-                    items(transactions) { transaction ->
-                        TransactionsItem(
-                            transaction = transaction,
-                            onClick = { navController.navigateToTransactionDetails(it) }
-                        )
-                    }
+    val scope = rememberCoroutineScope()
+    val pagerState = rememberPagerState(pageCount = 2)
+
+    ScreenScaffold(toolbar = { MainToolbar(navController) }) {
+        Column(Modifier.fillMaxWidth()) {
+            AppPager(
+                scope = scope,
+                pagerState = pagerState,
+                tabs = listOf(stringResource(R.string.expenses), stringResource(R.string.incomes)),
+                modifier = Modifier.weight(1f)
+            ) { page ->
+                when (page) {
+                    0 -> TransactionsList(navController, expenseList)
+                    1 -> TransactionsList(navController, incomeList)
                 }
             }
         }
-        Column(
-            verticalArrangement = Arrangement.Bottom,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            AddButtonsLayout(navController)
+        AddButton(navController, pagerState.currentPage)
+    }
+}
+
+@Composable
+private fun TransactionsList(
+    navController: NavHostController,
+    transactions: List<TransactionEntity>,
+) {
+    if (transactions.isEmpty()) {
+        TextMaxSize(stringResource(R.string.empty_transactions))
+    } else {
+        LazyColumn(Modifier.fillMaxSize()) {
+            items(transactions) { transaction ->
+                TransactionsItem(navController, transaction)
+            }
         }
     }
 }
 
 @Composable
-fun TransactionsItem(transaction: TransactionWithCategory, onClick: (Long) -> Unit) {
-    var showNote by remember { mutableStateOf(false) }
-    val color = when (TransactionType.get(transaction.transaction.type)) {
-        TransactionType.Expense -> Color.Red.copy(alpha = 0.1f)
-        TransactionType.Income -> Color.Green.copy(alpha = 0.1f)
-        TransactionType.None -> Color.Transparent
-    }
-
+fun TransactionsItem(navController: NavHostController, entity: TransactionEntity) {
     Column(Modifier.fillMaxWidth()) {
         Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { showNote = !showNote }
-                .background(color)
-                .padding(vertical = 8.dp, horizontal = 16.dp)
+                .padding(8.dp, 16.dp)
+                .clickable { navController.navigateToTransaction(entity.transaction.id) }
         ) {
-            AppText(
-                text = transaction.category.name,
-                fontSize = 18.sp,
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-            )
-            AppTextMoney(
-                value = transaction.transaction.value,
-                type = TransactionType.get(transaction.transaction.type)
-            )
-        }
-        AnimateExpandCollapse(visible = showNote, duration = 200) {
-            Column(Modifier.fillMaxWidth()) {
-                if (transaction.transaction.note.isNotEmpty()) {
-                    AppText(
-                        text = transaction.transaction.note,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 52.dp, end = 32.dp)
-                    )
-                }
-                AppTextButton(
-                    text = stringResource(R.string.details),
-                    padding = PaddingValues(top = 4.dp, bottom = 4.dp),
-                    onClick = { onClick(transaction.transaction.transactionId) }
+            ) {
+                AppText(
+                    text = entity.category.name,
+                    fontSize = 18.sp,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                AppText(
+                    text = entity.transaction.timestamp.toDate(),
+                    fontSize = 14.sp,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                AppText(
+                    text = entity.transaction.note,
+                    fontSize = 14.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
+            AppText(
+                text = stringResource(R.string.app_money_value, entity.transaction.value),
+                fontSize = 20.sp,
+            )
         }
         Divider(color = MaterialTheme.colors.secondary)
     }
 }
 
 @Composable
-fun AddButtonsLayout(navController: NavHostController) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color.Transparent,
-                        MaterialTheme.colors.surface
-                    )
-                )
-            )
-            .padding(16.dp)
-            .fillMaxWidth()
-    ) {
-        AddTransactionButton(
-            icon = MyIcons.Minus.icon,
-            onClick = { navController.navigateToNewTransaction(TransactionType.Expense) }
-        )
-        Spacer(modifier = Modifier.width(50.dp))
-        AddTransactionButton(
-            icon = MyIcons.Plus.icon,
-            onClick = { navController.navigateToNewTransaction(TransactionType.Income) }
-        )
+fun AddButton(navController: NavHostController, page: Int) {
+    val type = when (page) {
+        0 -> TransactionType.Expense
+        else -> TransactionType.Income
     }
-}
 
-@Composable
-fun AddTransactionButton(icon: Int, onClick: () -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .size(80.dp, 40.dp)
-            .background(MaterialTheme.colors.primary, RoundedCornerShape(8.dp))
-            .clip(RoundedCornerShape(8.dp))
-            .clickable { onClick() }
+            .fillMaxWidth()
+            .clickable { /* TODO: add dialog new transaction */ }
     ) {
-        AppIcon(
-            drawable = icon,
-            color = MaterialTheme.colors.onPrimary,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp)
-        )
+        Surface(color = MaterialTheme.colors.background) {
+            AppText(
+                text = stringResource(R.string.add_transaction),
+                fontSize = 24.sp
+            )
+
+        }
     }
+
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
     MyFinancesTheme {
-        TransactionsScreen(
+        MainScreen(
             navController = rememberNavController(),
             transactions = listOf(
                 TransactionWithCategory(

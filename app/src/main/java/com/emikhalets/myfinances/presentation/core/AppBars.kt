@@ -3,39 +3,43 @@ package com.emikhalets.myfinances.presentation.core
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccountBalanceWallet
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Category
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.utils.enums.MyIcons
-import com.emikhalets.myfinances.utils.navigation.Screen
-import com.emikhalets.myfinances.utils.navigation.navigateAsStart
+import com.emikhalets.myfinances.utils.navigation.AppScreen
+import com.emikhalets.myfinances.utils.navigation.navigateToCategories
+import com.emikhalets.myfinances.utils.navigation.navigateToWallets
 
 @Composable
 fun ScreenScaffold(
-    navController: NavHostController,
-    title: String,
-    icon: Int = MyIcons.App.icon,
-    content: @Composable () -> Unit
+    toolbar: @Composable () -> Unit,
+    content: @Composable () -> Unit,
 ) {
     Scaffold(
-        topBar = { AppToolbar(navController = navController, title = title, icon = icon) },
+        topBar = { toolbar() },
         content = { Box(Modifier.padding(it)) { content() } }
     )
 }
 
 @Composable
-fun AppToolbar(
+fun AppBaseToolbar(
     navController: NavHostController,
     title: String,
-    icon: Int
+    icon: Int? = null,
+    actions: List<ImageVector> = listOf(),
 ) {
     TopAppBar(
         title = {
@@ -47,19 +51,21 @@ fun AppToolbar(
         },
         navigationIcon = {
             when (icon) {
-                R.drawable.ic_launcher_foreground -> {
-                    AppImage(icon)
-                }
-                else -> {
-                    AppIcon(
-                        drawable = icon,
-                        size = 0.dp,
-                        modifier = Modifier.clickable { navController.popBackStack() }
-                    )
-                }
+                null -> AppIcon(
+                    imageVector = Icons.Rounded.ArrowBack,
+                    modifier = Modifier.clickable { navController.popBackStack() }
+                )
+                else -> AppIcon(icon)
             }
         },
-        actions = {},
+        actions = {
+            actions.forEach { iconVector ->
+                AppIcon(
+                    imageVector = iconVector,
+                    modifier = Modifier.clickable { navController.navigate(iconVector) }
+                )
+            }
+        },
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = MaterialTheme.colors.onPrimary,
         elevation = 0.dp
@@ -67,46 +73,18 @@ fun AppToolbar(
 }
 
 @Composable
-fun AppBottomBar(
-    navController: NavHostController,
-    currentDestination: NavDestination?,
-    items: List<Screen>
-) {
-    BottomNavigation {
-        items.forEach { screen ->
-            val isSelected: Boolean = currentDestination?.hierarchy?.any {
-                it.route == screen.route
-            } ?: false
+fun MainToolbar(navController: NavHostController) {
+    AppBaseToolbar(
+        navController = navController,
+        title = stringResource(AppScreen.Main.title),
+        icon = R.mipmap.ic_launcher,
+        actions = listOf(Icons.Rounded.Category, Icons.Rounded.AccountBalanceWallet)
+    )
+}
 
-            val color = if (isSelected) {
-                MaterialTheme.colors.onPrimary
-            } else {
-                MaterialTheme.colors.onPrimary.copy(alpha = 0.6f)
-            }
-
-            BottomNavigationItem(
-                icon = {
-                    AppIcon(
-                        drawable = screen.icon,
-                        size = 20.dp,
-                        color = color
-                    )
-                },
-                label = {
-                    AppText(
-                        text = stringResource(screen.title),
-                        fontColor = color,
-                        fontSize = 12.sp,
-                        fontWeight = if (isSelected) {
-                            FontWeight.Medium
-                        } else {
-                            FontWeight.Normal
-                        }
-                    )
-                },
-                selected = isSelected,
-                onClick = { navController.navigateAsStart(screen.route) }
-            )
-        }
+private fun NavHostController.navigate(icon: ImageVector) {
+    when (icon) {
+        Icons.Rounded.Category -> navigateToCategories()
+        Icons.Rounded.AccountBalanceWallet -> navigateToWallets()
     }
 }

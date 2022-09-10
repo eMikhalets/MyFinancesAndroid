@@ -19,7 +19,6 @@ import com.emikhalets.myfinances.presentation.core.*
 import com.emikhalets.myfinances.presentation.screens.dialogs.AddWalletDialog
 import com.emikhalets.myfinances.utils.AnimateFadeInOut
 import com.emikhalets.myfinances.utils.Prefs
-import com.emikhalets.myfinances.utils.enums.MyIcons
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toast
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -133,7 +132,7 @@ fun WalletsList(
         )
         Divider(color = MaterialTheme.colors.secondary)
         if (list.isEmpty()) {
-            TextFullScreen(stringResource(R.string.empty_wallets))
+            TextMaxSize(stringResource(R.string.empty_wallets))
         } else {
             AppVerticalList(list) { wallet ->
                 WalletListItem(
@@ -195,7 +194,7 @@ fun CategoriesList(
         )
         Divider(color = MaterialTheme.colors.secondary)
         if (list.isEmpty()) {
-            TextFullScreen(stringResource(R.string.empty_categories))
+            TextMaxSize(stringResource(R.string.empty_categories))
         } else {
             AppVerticalList(list) { category ->
                 CategoryListItem(

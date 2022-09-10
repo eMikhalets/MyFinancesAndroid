@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.utils.CurrencyTransformation
-import com.emikhalets.myfinances.utils.enums.MyIcons
 
 @Composable
 fun ValueTextField(value: String, error: Boolean, onValueChange: (String) -> Unit) {

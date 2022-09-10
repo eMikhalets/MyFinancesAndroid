@@ -2,6 +2,7 @@ package com.emikhalets.myfinances.data
 
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Transaction
+import com.emikhalets.myfinances.data.entity.TransactionEntity
 import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import java.util.*
@@ -87,14 +88,23 @@ class TestRepositoryImpl @Inject constructor() : AppRepository {
         Transaction(20, 10, 1, 100.0, TransactionType.Income, "", Date().time),
     )
 
-    override suspend fun getTransactions(): Result<Flow<List<Transaction>>> {
-        return Result.success(flowOf(transactions))
+    override suspend fun getTransactions(): Result<Flow<List<TransactionEntity>>> {
+        val mappedList = transactions.mapNotNull { transaction ->
+            categories.find { it.id == transaction.categoryId }?.let { category ->
+                TransactionEntity(transaction, category)
+            }
+        }
+        return Result.success(flowOf(mappedList))
     }
 
-    override suspend fun getTransaction(id: Long): Result<Flow<Transaction>> {
-        val item = transactions.find { it.id == id }
-        return item?.let { Result.success(flowOf(item)) }
-            ?: Result.failure(Throwable("No transaction"))
+    override suspend fun getTransaction(id: Long): Result<Flow<TransactionEntity>> {
+        val transaction = transactions.find { it.id == id }
+        val category = categories.find { it.id == transaction?.categoryId }
+        return if (transaction != null && category != null) {
+            Result.success(flowOf(TransactionEntity(transaction, category)))
+        } else {
+            Result.failure(Throwable("No transaction"))
+        }
     }
 
     override suspend fun insertTransaction(transaction: Transaction): Result<Long> {

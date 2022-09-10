@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface WalletDao : BaseDao<Wallet> {
 
     @Query("SELECT * FROM wallets ORDER BY name ASC")
-    suspend fun getAllOrderByName(): Flow<List<Wallet>>
+    fun getAllOrderByName(): Flow<List<Wallet>>
 
     @Query("SELECT * FROM wallets WHERE id=:id")
     suspend fun getById(id: Long): Wallet

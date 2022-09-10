@@ -11,7 +11,7 @@ interface TransactionDao : BaseDao<Transaction> {
 
     @androidx.room.Transaction
     @Query("SELECT * FROM transactions WHERE wallet_id=:walletId ORDER BY timestamp DESC")
-    suspend fun getAllOrderByTime(walletId: Long): Flow<List<TransactionEntity>>
+    fun getAllOrderByTime(walletId: Long): Flow<List<TransactionEntity>>
 
     @Query("SELECT * FROM transactions WHERE wallet_id=:walletId AND category_id=:categoryId")
     suspend fun getAll(walletId: Long, categoryId: Long): List<Transaction>

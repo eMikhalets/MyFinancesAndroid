@@ -46,12 +46,7 @@ fun AppTextField(
     fontSize: Int = 16,
 ) {
     val error = errorEmpty || errorInvalid || errorSelecting
-    val errorMessage: String = when {
-        errorEmpty -> stringResource(R.string.error_required_field)
-        errorInvalid -> stringResource(R.string.error_invalid_value)
-        errorSelecting -> stringResource(R.string.error_selecting)
-        else -> stringResource(R.string.error)
-    }
+    val errorMessage = ""
 
     val labelText: @Composable (() -> Unit)? = if (label == null) {
         null
@@ -144,12 +139,7 @@ fun AppTextField(
     fontSize: Int = 16,
 ) {
     val error = errorEmpty || errorInvalid || errorSelecting
-    val errorMessage: String = when {
-        errorEmpty -> stringResource(R.string.error_required_field)
-        errorInvalid -> stringResource(R.string.error_invalid_value)
-        errorSelecting -> stringResource(R.string.error_selecting)
-        else -> stringResource(R.string.error)
-    }
+    val errorMessage = ""
 
     val labelText: @Composable (() -> Unit)? = if (labelRes == null) {
         null

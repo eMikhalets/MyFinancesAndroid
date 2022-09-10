@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface CategoryDao : BaseDao<Category> {
 
     @Query("SELECT * FROM categories WHERE type=:type ORDER BY name ASC")
-    suspend fun getAllOrderByName(type: TransactionType): Flow<List<Category>>
+    fun getAllOrderByName(type: TransactionType): Flow<List<Category>>
 
     @Query("SELECT * FROM categories WHERE id=:id")
     suspend fun getById(id: Long): Category

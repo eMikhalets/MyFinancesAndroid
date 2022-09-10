@@ -75,7 +75,7 @@ fun toast(context: Context, message: String) {
 }
 
 private fun String.errorOrDefault(context: Context): String {
-    return if (this == DEFAULT_ERROR) context.getString(R.string.app_default_error) else this
+    return if (this == DEFAULT_ERROR) context.getString(R.string.default_error) else this
 }
 
 @SuppressLint("UnnecessaryComposedModifier")

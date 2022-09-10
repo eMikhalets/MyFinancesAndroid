@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">MyFinances</string>
-    <string name="app_default_error">Произошла непредвиденная ошибка</string>
     <string name="app_money_value">%.2f ₽</string>
+
+    <string name="default_error">Произошла непредвиденная ошибка</string>
+    <string name="default_wallet_name">Основной</string>
+    <string name="default_category_name">Другое</string>
 
     <string name="title_main_screen">Транзакции</string>
     <string name="title_transaction_screen">Транзакция</string>
@@ -17,9 +20,8 @@
     <string name="expenses">Расходы</string>
     <string name="incomes">Доходы</string>
     <string name="add_transaction">Добавить</string>
-    <string name="default_category_name">Другое</string>
-    <string name="default_wallet_name">Основной</string>
     <string name="date_header">Дата: %s</string>
     <string name="save">Сохранить</string>
     <string name="delete">Удалить</string>
+    <string name="no_transactions">Нет транзакций</string>
 </resources>

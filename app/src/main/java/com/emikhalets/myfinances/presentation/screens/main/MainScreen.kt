@@ -94,7 +94,7 @@ private fun TransactionsList(
     transactions: List<TransactionEntity>,
 ) {
     if (transactions.isEmpty()) {
-        TextMaxSize(stringResource(R.string.empty_transactions))
+        TextMaxSize(stringResource(R.string.no_transactions))
     } else {
         LazyColumn(Modifier.fillMaxSize()) {
             items(transactions) { transaction ->

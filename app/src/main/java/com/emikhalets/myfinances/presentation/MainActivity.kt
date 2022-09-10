@@ -17,7 +17,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: MainVM by viewModels()
+    private val viewModel: SharedViewModel by viewModels()
 
     @Inject
     lateinit var prefs: Prefs
@@ -25,8 +25,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (prefs.currentWalletId == Prefs.DEFAULT_WALLET_ID) {
-            viewModel.createDefaultWallet(this, getString(R.string.default_wallet_name))
+        if (prefs.currentWalletId == Prefs.NO_WALLET_ID) {
+            viewModel.createDefaultWallet(getString(R.string.default_wallet_name))
         }
 
         setContent {

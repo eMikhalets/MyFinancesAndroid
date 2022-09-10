@@ -11,24 +11,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ButtonAdd(
-    text: String,
-    onClick: () -> Unit
-) {
-    TextWithIcon(
-        text = text,
-        icon = MyIcons.Plus.icon,
-        onClick = onClick
-    )
-}
-
-@Composable
 fun AppTextButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     textColor: Color = MaterialTheme.colors.primary,
-    padding: PaddingValues = PaddingValues(8.dp)
+    padding: PaddingValues = PaddingValues(8.dp),
 ) {
     TextButton(
         onClick = { onClick() },

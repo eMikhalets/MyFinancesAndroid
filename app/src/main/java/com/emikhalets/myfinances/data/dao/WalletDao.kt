@@ -12,7 +12,7 @@ interface WalletDao : BaseDao<Wallet> {
     suspend fun getAllOrderByName(): Flow<List<Wallet>>
 
     @Query("SELECT * FROM wallets WHERE id=:id")
-    suspend fun getById(id: Long): Flow<Wallet>
+    suspend fun getById(id: Long): Wallet
 
     @Query("SELECT EXISTS (SELECT * FROM wallets WHERE name=:name)")
     suspend fun isExist(name: String): Boolean

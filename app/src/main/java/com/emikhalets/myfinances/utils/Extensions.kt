@@ -82,3 +82,12 @@ private fun String.errorOrDefault(context: Context): String {
 fun Modifier.sectionBorder(): Modifier = composed {
     this.border(1.dp, MaterialTheme.colors.primary, RoundedCornerShape(4.dp))
 }
+
+fun String.safeToDouble(): Double {
+    return try {
+        this.toDouble()
+    } catch (ex: Exception) {
+        ex.printStackTrace()
+        0.0
+    }
+}

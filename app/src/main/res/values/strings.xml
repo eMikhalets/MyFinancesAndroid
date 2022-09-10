@@ -13,13 +13,14 @@
     <string name="expenses">Расходы</string>
     <string name="incomes">Доходы</string>
     <string name="add_transaction">Добавить</string>
+    <string name="default_category_name">Другое</string>
+    <string name="default_wallet_name">Основной</string>
+    <string name="date_header">Дата: %s</string>
+
 
     <string name="category_expense">Категории расходы</string>
     <string name="category_income">Категории доходы</string>
-    <string name="expense">Расход</string>
-    <string name="income">Доход</string>
     <string name="wallets">Кошельки</string>
-    <string name="default_wallet_name">Основной</string>
 
     <string name="empty_categories">Нет категорий</string>
     <string name="empty_transactions">Нет транзакций</string>

@@ -5,6 +5,7 @@ import com.emikhalets.myfinances.data.entity.Transaction
 import com.emikhalets.myfinances.data.entity.TransactionEntity
 import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.utils.enums.TransactionType
+import com.emikhalets.myfinances.utils.enums.TransactionType.Companion.getDefaultId
 import java.util.*
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -34,10 +35,9 @@ class TestRepositoryImpl @Inject constructor() : AppRepository {
         return Result.success(flowOf(list))
     }
 
-    override suspend fun getCategory(id: Long): Result<Flow<Category>> {
+    override suspend fun getCategory(id: Long): Result<Category> {
         val item = categories.find { it.id == id }
-        return item?.let { Result.success(flowOf(item)) }
-            ?: Result.failure(Throwable("No category"))
+        return item?.let { Result.success(item) } ?: Result.failure(Throwable("No category"))
     }
 
     override suspend fun insertCategory(category: Category): Result<Boolean> {
@@ -54,9 +54,10 @@ class TestRepositoryImpl @Inject constructor() : AppRepository {
     }
 
     override suspend fun deleteCategory(category: Category): Result<Int> {
+        val defaultId = category.type.getDefaultId()
         transactions
             .filter { it.categoryId == category.id }
-            .map { it.copy(categoryId = -1) }
+            .map { it.copy(categoryId = defaultId) }
         categories.remove(category)
         return Result.success(1)
     }
@@ -97,11 +98,11 @@ class TestRepositoryImpl @Inject constructor() : AppRepository {
         return Result.success(flowOf(mappedList))
     }
 
-    override suspend fun getTransaction(id: Long): Result<Flow<TransactionEntity>> {
+    override suspend fun getTransaction(id: Long): Result<TransactionEntity> {
         val transaction = transactions.find { it.id == id }
         val category = categories.find { it.id == transaction?.categoryId }
         return if (transaction != null && category != null) {
-            Result.success(flowOf(TransactionEntity(transaction, category)))
+            Result.success(TransactionEntity(transaction, category))
         } else {
             Result.failure(Throwable("No transaction"))
         }
@@ -138,10 +139,9 @@ class TestRepositoryImpl @Inject constructor() : AppRepository {
         return Result.success(flowOf(wallets))
     }
 
-    override suspend fun getWallet(id: Long): Result<Flow<Wallet>> {
+    override suspend fun getWallet(id: Long): Result<Wallet> {
         val item = wallets.find { it.id == id }
-        return item?.let { Result.success(flowOf(item)) }
-            ?: Result.failure(Throwable("No wallet"))
+        return item?.let { Result.success(item) } ?: Result.failure(Throwable("No wallet"))
     }
 
     override suspend fun insertWallet(wallet: Wallet): Result<Boolean> {

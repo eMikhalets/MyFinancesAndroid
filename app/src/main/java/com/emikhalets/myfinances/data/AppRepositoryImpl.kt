@@ -9,6 +9,7 @@ import com.emikhalets.myfinances.data.entity.TransactionEntity
 import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.utils.Prefs
 import com.emikhalets.myfinances.utils.enums.TransactionType
+import com.emikhalets.myfinances.utils.enums.TransactionType.Companion.getDefaultId
 import com.emikhalets.myfinances.utils.runDatabaseRequest
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -28,7 +29,7 @@ class AppRepositoryImpl @Inject constructor(
         return runDatabaseRequest { categoryDao.getAllOrderByName(type) }
     }
 
-    override suspend fun getCategory(id: Long): Result<Flow<Category>> {
+    override suspend fun getCategory(id: Long): Result<Category> {
         return runDatabaseRequest { categoryDao.getById(id) }
     }
 
@@ -43,7 +44,8 @@ class AppRepositoryImpl @Inject constructor(
     override suspend fun deleteCategory(category: Category): Result<Int> {
         return runDatabaseRequest {
             val transactions = transactionDao.getAll(prefs.currentWalletId, category.id)
-            transactions.map { it.copy(categoryId = -1) }
+            val defaultId = category.type.getDefaultId()
+            transactions.map { it.copy(categoryId = defaultId) }
             transactionDao.updateAll(transactions)
             categoryDao.delete(category)
         }
@@ -59,7 +61,7 @@ class AppRepositoryImpl @Inject constructor(
         return runDatabaseRequest { transactionDao.getAllOrderByTime(walletId) }
     }
 
-    override suspend fun getTransaction(id: Long): Result<Flow<TransactionEntity>> {
+    override suspend fun getTransaction(id: Long): Result<TransactionEntity> {
         return runDatabaseRequest { transactionDao.getById(id) }
     }
 
@@ -83,7 +85,7 @@ class AppRepositoryImpl @Inject constructor(
         return runDatabaseRequest { walletDao.getAllOrderByName() }
     }
 
-    override suspend fun getWallet(id: Long): Result<Flow<Wallet>> {
+    override suspend fun getWallet(id: Long): Result<Wallet> {
         return runDatabaseRequest { walletDao.getById(id) }
     }
 

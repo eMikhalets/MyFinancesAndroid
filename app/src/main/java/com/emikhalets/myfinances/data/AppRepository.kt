@@ -15,7 +15,7 @@ interface AppRepository {
 
     suspend fun getCategories(type: TransactionType): Result<Flow<List<Category>>>
 
-    suspend fun getCategory(id: Long): Result<Flow<Category>>
+    suspend fun getCategory(id: Long): Result<Category>
 
     suspend fun insertCategory(category: Category): Result<Boolean>
 
@@ -30,7 +30,7 @@ interface AppRepository {
 
     suspend fun getTransactions(): Result<Flow<List<TransactionEntity>>>
 
-    suspend fun getTransaction(id: Long): Result<Flow<TransactionEntity>>
+    suspend fun getTransaction(id: Long): Result<TransactionEntity>
 
     suspend fun insertTransaction(transaction: Transaction): Result<Long>
 
@@ -44,7 +44,7 @@ interface AppRepository {
 
     suspend fun getWallets(): Result<Flow<List<Wallet>>>
 
-    suspend fun getWallet(id: Long): Result<Flow<Wallet>>
+    suspend fun getWallet(id: Long): Result<Wallet>
 
     suspend fun insertWallet(wallet: Wallet): Result<Boolean>
 

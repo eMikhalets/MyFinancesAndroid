@@ -13,7 +13,7 @@ interface CategoryDao : BaseDao<Category> {
     suspend fun getAllOrderByName(type: TransactionType): Flow<List<Category>>
 
     @Query("SELECT * FROM categories WHERE id=:id")
-    suspend fun getById(id: Long): Flow<Category>
+    suspend fun getById(id: Long): Category
 
     @Query("SELECT EXISTS (SELECT * FROM categories WHERE name=:name)")
     suspend fun isExist(name: String): Boolean

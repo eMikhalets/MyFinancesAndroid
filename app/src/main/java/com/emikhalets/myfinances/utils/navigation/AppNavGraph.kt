@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.emikhalets.myfinances.presentation.screens.main.MainScreen
+import com.emikhalets.myfinances.presentation.screens.transaction.TransactionScreen
 
 private val transactionArgsRoute = "${AppScreen.Transaction.route}/{${AppNavArgs.TRANSACTION_ID}}"
 private val categoryArgsRoute = "${AppScreen.Category.route}/{${AppNavArgs.CATEGORY_ID}}"
@@ -16,13 +17,14 @@ private val walletArgsRoute = "${AppScreen.Wallet.route}/{${AppNavArgs.WALLET_ID
 fun AppNavGraph(navController: NavHostController) {
     NavHost(navController, AppScreen.Main.route) {
         composable(AppScreen.Main.route) {
-            MainScreen(navController = navController)
+            MainScreen(navController)
         }
         composable(
             transactionArgsRoute,
             listOf(navArgument(AppNavArgs.TRANSACTION_ID) { type = NavType.LongType })
         ) {
-            val transactionId = it.arguments?.getLong(AppNavArgs.TRANSACTION_ID) ?: -1
+            val transactionId = it.arguments?.getLong(AppNavArgs.TRANSACTION_ID) ?: -1L
+            TransactionScreen(navController, transactionId)
         }
         composable(AppScreen.Categories.route) {
         }

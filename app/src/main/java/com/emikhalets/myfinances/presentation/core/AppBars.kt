@@ -35,7 +35,7 @@ fun ScreenScaffold(
 }
 
 @Composable
-fun AppBaseToolbar(
+fun AppToolbar(
     navController: NavHostController,
     title: String,
     icon: Int? = null,
@@ -74,7 +74,7 @@ fun AppBaseToolbar(
 
 @Composable
 fun MainToolbar(navController: NavHostController) {
-    AppBaseToolbar(
+    AppToolbar(
         navController = navController,
         title = stringResource(AppScreen.Main.title),
         icon = R.mipmap.ic_launcher,

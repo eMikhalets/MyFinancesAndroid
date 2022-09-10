@@ -27,8 +27,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.data.entity.Category
-import com.emikhalets.myfinances.data.entity.Transaction
 import com.emikhalets.myfinances.data.entity.TransactionEntity
 import com.emikhalets.myfinances.presentation.core.AppPager
 import com.emikhalets.myfinances.presentation.core.AppText
@@ -36,13 +34,12 @@ import com.emikhalets.myfinances.presentation.core.MainToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
 import com.emikhalets.myfinances.presentation.core.TextMaxSize
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
-import com.emikhalets.myfinances.utils.enums.TransactionType
+import com.emikhalets.myfinances.utils.PreviewEntities
 import com.emikhalets.myfinances.utils.navigation.navigateToTransaction
 import com.emikhalets.myfinances.utils.toDate
 import com.emikhalets.myfinances.utils.toast
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
-import java.util.*
 
 @Composable
 fun MainScreen(
@@ -151,11 +148,6 @@ fun TransactionsItem(navController: NavHostController, entity: TransactionEntity
 
 @Composable
 fun AddButton(navController: NavHostController, page: Int) {
-    val type = when (page) {
-        0 -> TransactionType.Expense
-        else -> TransactionType.Income
-    }
-
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -179,86 +171,8 @@ private fun Preview() {
     MyFinancesTheme {
         MainScreen(
             navController = rememberNavController(),
-            transactions = listOf(
-                TransactionWithCategory(
-                    transaction = Transaction(value = 5355.43, type = 1),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 53555.43, type = 0),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 535.43, type = 1),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 55.43, type = 1),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 5355.43, type = 1),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 53555.43, type = 0),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 535.43, type = 1),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 55.43, type = 1),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 5355.43, type = 1),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 55.43, type = 1),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 5355.43, type = 1),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 53555.43, type = 0),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 535.43, type = 1),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 55.43, type = 1),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 5355.43, type = 1),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 55.43, type = 1),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 5355.43, type = 1),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 53555.43, type = 0),
-                    category = Category(name = "Category")
-                ),
-                TransactionWithCategory(
-                    transaction = Transaction(value = 535.43, type = 1),
-                    category = Category(name = "Category")
-                )
-            ),
-            date = Calendar.getInstance().timeInMillis,
-            onDateChange = {}
+            incomeList = PreviewEntities.getMainScreenIncomeList(),
+            expenseList = PreviewEntities.getMainScreenExpenseList()
         )
     }
 }

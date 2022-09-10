@@ -85,7 +85,7 @@ class TestRepositoryImpl @Inject constructor() : AppRepository {
         Transaction(17, 7, 1, 100.0, TransactionType.Income, "", Date().time),
         Transaction(18, 8, 1, 100.0, TransactionType.Income, "", Date().time),
         Transaction(19, 9, 1, 100.0, TransactionType.Income, "", Date().time),
-        Transaction(20, 10, 1, 100.0, TransactionType.Income, "", Date().time),
+        Transaction(20, 10, 1, 100.0, TransactionType.Income, "", Date().time)
     )
 
     override suspend fun getTransactions(): Result<Flow<List<TransactionEntity>>> {

@@ -1,20 +1,36 @@
 package com.emikhalets.myfinances.presentation.screens.transaction
 
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -22,9 +38,13 @@ import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.TransactionEntity
 import com.emikhalets.myfinances.data.entity.withDefault
-import com.emikhalets.myfinances.presentation.core.*
+import com.emikhalets.myfinances.presentation.core.AppText
+import com.emikhalets.myfinances.presentation.core.AppTextButton
+import com.emikhalets.myfinances.presentation.core.AppTextField
+import com.emikhalets.myfinances.presentation.core.AppToolbar
+import com.emikhalets.myfinances.presentation.core.ScreenScaffold
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
-import com.emikhalets.myfinances.utils.AnimateExpandCollapse
+import com.emikhalets.myfinances.utils.PreviewEntities
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.safeToDouble
 import com.emikhalets.myfinances.utils.toDate
@@ -121,38 +141,36 @@ private fun TransactionScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            AppText(
-                text = stringResource(R.string.date_header, entity.transaction.timestamp.toDate()),
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
+            DateText(entity.transaction.timestamp)
             Spacer(Modifier.height(16.dp))
 
             TransactionTypeChooser(type, onTypeChange)
             Spacer(Modifier.height(16.dp))
 
-            AppTextField(value.toString(), onValueChange)
+            CategoriesDropMenu(category, categories, onCategoryChange)
             Spacer(Modifier.height(16.dp))
 
-            NoteTextField(note = note, onNoteChange = onNoteChange)
+            AppTextField(value.toString(), onValueChange, labelRes = R.string.label_money_value)
             Spacer(Modifier.height(16.dp))
 
-            Keyboard(onClick = onValueChange)
+            AppTextField(note, onNoteChange, labelRes = R.string.label_note)
             Spacer(Modifier.height(16.dp))
 
-            CategoriesLayout(
-                selected = category,
-                categories = categories,
-                onCategoryClick = onCategoryClick
-            )
-            Spacer(Modifier.height(16.dp))
-
-            ControlButtons(onSaveClick = onSaveClick, onDeleteClick = onDeleteClick)
+            ControlButtons(onSaveClick, onDeleteClick)
             Spacer(Modifier.height(16.dp))
         }
     }
+}
+
+@Composable
+private fun DateText(timestamp: Long) {
+    AppText(
+        text = stringResource(R.string.date_header, timestamp.toDate()),
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    )
 }
 
 @Composable
@@ -195,51 +213,43 @@ private fun Modifier.borderTypeIncome(type: TransactionType) = when (type) {
 }
 
 @Composable
-fun CategoriesLayout(
-    selected: Category?,
-    categories: List<Category>,
-    onCategoryClick: (Category) -> Unit,
-) {
+fun CategoriesDropMenu(item: Category, list: List<Category>, onSelect: (Category) -> Unit) {
+    var selected by remember { mutableStateOf(item) }
     var expanded by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colors.primary, RoundedCornerShape(4.dp))
-    ) {
-        AppText(
-            text = selected?.name ?: stringResource(R.string.choose_category),
-            fontSize = 18.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { expanded = !expanded }
-                .clip(RoundedCornerShape(4.dp))
-                .padding(16.dp)
-        )
-        AnimateExpandCollapse(visible = expanded, duration = 300) {
-            Divider(
-                color = MaterialTheme.colors.secondary,
-                modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+    Box {
+        Column {
+            OutlinedTextField(
+                value = (selected.name),
+                onValueChange = { onSelect(selected) },
+                label = {
+                    Text(text = stringResource(R.string.label_category),
+                        color = MaterialTheme.colors.onPrimary)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                readOnly = true
             )
-            categories.forEach { category ->
-                AppText(
-                    text = category.name,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onCategoryClick(category) }
-                        .padding(16.dp)
-                )
+            DropdownMenu(
+                modifier = Modifier.fillMaxWidth(),
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
+                list.forEach { entry ->
+                    DropdownMenuItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            selected = entry
+                            expanded = false
+                            onSelect(selected)
+                        }
+                    ) {
+                        Text(
+                            text = (entry.name),
+                            modifier = Modifier.wrapContentWidth()
+                        )
+                    }
+                }
             }
-            AppText(
-                text = stringResource(R.string.new_category),
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {}
-                    .padding(16.dp)
-            )
         }
     }
 }
@@ -248,7 +258,7 @@ fun CategoriesLayout(
 fun ControlButtons(onSaveClick: () -> Unit, onDeleteClick: () -> Unit) {
     Row(Modifier.fillMaxWidth()) {
         AppTextButton(
-            text = stringResource(R.string.cancel),
+            text = stringResource(R.string.delete),
             onClick = onDeleteClick,
             modifier = Modifier.weight(1f)
         )
@@ -266,15 +276,16 @@ private fun TransactionDetailsPreview() {
     MyFinancesTheme {
         TransactionScreen(
             navController = rememberNavController(),
-            transactionType = TransactionType.Expense,
-            onTypeChange = {},
-            value = "120.03",
-            onValueChange = {},
-            note = "",
-            onNoteChange = {},
-            category = null,
+            entity = PreviewEntities.getTransactionScreenEntity(),
             categories = emptyList(),
-            onCategoryClick = {},
+            category = Category.getDefault(),
+            note = "Some text comment",
+            value = 120.03,
+            type = TransactionType.Expense,
+            onTypeChange = {},
+            onValueChange = {},
+            onNoteChange = {},
+            onCategoryChange = {},
             onSaveClick = {},
             onDeleteClick = {}
         )

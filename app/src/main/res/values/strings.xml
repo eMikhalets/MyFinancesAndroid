@@ -10,52 +10,16 @@
     <string name="title_wallets_screen">Кошельки</string>
     <string name="title_wallet_screen">Кошелек</string>
 
+    <string name="label_category">Категория</string>
+    <string name="label_money_value">Сумма</string>
+    <string name="label_note">Комментарий</string>
+
     <string name="expenses">Расходы</string>
     <string name="incomes">Доходы</string>
     <string name="add_transaction">Добавить</string>
     <string name="default_category_name">Другое</string>
     <string name="default_wallet_name">Основной</string>
     <string name="date_header">Дата: %s</string>
-
-
-    <string name="category_expense">Категории расходы</string>
-    <string name="category_income">Категории доходы</string>
-    <string name="wallets">Кошельки</string>
-
-    <string name="empty_categories">Нет категорий</string>
-    <string name="empty_transactions">Нет транзакций</string>
-    <string name="empty_wallets">Нет кошельков</string>
-
-    <string name="choose_wallet">Выберите кошелек</string>
-    <string name="choose_category">Выберите категорию</string>
-
-    <string name="new_transaction">Добавить транзакцию</string>
-    <string name="new_expense">Добавить расход</string>
-    <string name="new_income">Добавить доход</string>
-    <string name="new_category">Добавить категорию</string>
-    <string name="new_wallet">Добавить кошелек</string>
-
-    <string name="name">Название</string>
-    <string name="start_value">Начальная сумма</string>
-    <string name="value">Значение</string>
-    <string name="category">Категория</string>
-    <string name="wallet">Кошелек</string>
-    <string name="note">Заметка</string>
     <string name="save">Сохранить</string>
-    <string name="cancel">Отменить</string>
-    <string name="details">Подробнее</string>
-    <string name="transaction_details">Детали транзакции</string>
     <string name="delete">Удалить</string>
-    <string name="by_default">По умолчанию</string>
-    <string name="month">Месяц</string>
-    <string name="year">Год</string>
-    <string name="budget_on_month">Бюджет на месяц</string>
-    <string name="budget_balance">Баланс бюджета</string>
-    <string name="transactions_on_categories">Сумма транзакций по категориям</string>
-
-    <string name="error">Ошибка</string>
-    <string name="error_required_field">Необходимо заполнить</string>
-    <string name="error_invalid_value">Некорректное значение</string>
-    <string name="error_selecting">Необходимо выбрать</string>
-    <string name="error_selecting_category">Необходимо выбрать категорию</string>
 </resources>

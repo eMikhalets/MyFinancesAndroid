@@ -47,4 +47,11 @@ object PreviewEntities {
                 Category("Категория 6", TransactionType.Expense))
         )
     }
+
+    fun getTransactionScreenEntity(): TransactionEntity {
+        return TransactionEntity(
+            Transaction(1, 1, 100.0, TransactionType.Expense, "Комментарий", Date().time),
+            Category("Категория 1", TransactionType.Expense)
+        )
+    }
 }

@@ -273,7 +273,7 @@ fun ControlButtons(onSaveClick: () -> Unit, onDeleteClick: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-private fun TransactionDetailsPreview() {
+private fun Preview() {
     MyFinancesTheme {
         TransactionScreen(
             navController = rememberNavController(),

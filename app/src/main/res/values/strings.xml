@@ -28,6 +28,7 @@
     <string name="incomes">Доходы</string>
     <string name="add_transaction">Добавить</string>
     <string name="date_header">Дата: %s</string>
+    <string name="transaction_type_header">Тип: %s</string>
     <string name="save">Сохранить</string>
     <string name="delete">Удалить</string>
     <string name="no_transactions">Нет транзакций</string>

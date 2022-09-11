@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.screens.wallet
+package com.emikhalets.myfinances.presentation.screens.category
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,74 +24,79 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.data.entity.Wallet
+import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.AppTextButton
 import com.emikhalets.myfinances.presentation.core.AppTextField
 import com.emikhalets.myfinances.presentation.core.AppToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
+import com.emikhalets.myfinances.utils.enums.TransactionType
+import com.emikhalets.myfinances.utils.enums.TransactionType.Companion.getName
 import com.emikhalets.myfinances.utils.toast
 
 @Composable
-fun WalletScreen(
+fun CategoryScreen(
     navController: NavHostController,
-    walletId: Long,
-    viewModel: WalletViewModel = hiltViewModel(),
+    categoryId: Long,
+    viewModel: CategoryViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state
     val context = LocalContext.current
 
     var name by remember { mutableStateOf("") }
 
-    LaunchedEffect(Unit) { viewModel.getWallet(walletId) }
+    LaunchedEffect(Unit) { viewModel.getCategory(categoryId) }
 
-    LaunchedEffect(state.wallet) {
-        if (state.wallet != null) {
-            name = state.wallet.name
+    LaunchedEffect(state.category) {
+        if (state.category != null) {
+            name = state.category.name
         }
     }
 
-    LaunchedEffect(state.walletSaved) {
-        if (state.walletSaved) navController.popBackStack()
+    LaunchedEffect(state.categorySaved) {
+        if (state.categorySaved) navController.popBackStack()
     }
 
-    LaunchedEffect(state.walletDeleted) {
-        if (state.walletDeleted) navController.popBackStack()
+    LaunchedEffect(state.categoryDeleted) {
+        if (state.categoryDeleted) navController.popBackStack()
     }
 
     LaunchedEffect(state.error) { toast(context, state.error) }
 
-    WalletScreen(
+    CategoryScreen(
         navController = navController,
-        wallet = state.wallet,
+        category = state.category,
         name = name,
         value = 0.0,
         onNameChange = { name = it },
-        onSaveClick = { viewModel.saveWallet(name) },
-        onDeleteClick = viewModel::deleteWallet
+        onSaveClick = { viewModel.saveCategory(name) },
+        onDeleteClick = viewModel::deleteCategory
     )
 }
 
 @Composable
-private fun WalletScreen(
+private fun CategoryScreen(
     navController: NavHostController,
-    wallet: Wallet?,
+    category: Category?,
     name: String,
     value: Double,
     onNameChange: (String) -> Unit,
     onSaveClick: () -> Unit,
     onDeleteClick: () -> Unit,
 ) {
-    wallet ?: return
+    category ?: return
     ScreenScaffold({
-        AppToolbar(navController, stringResource(R.string.title_wallet_screen))
+        AppToolbar(navController, stringResource(R.string.title_category_screen))
     }) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
+            TypeText(category.type)
+            Spacer(Modifier.height(16.dp))
+
             AppTextField(name, onNameChange, labelRes = R.string.label_name)
             Spacer(Modifier.height(16.dp))
 
@@ -102,6 +107,18 @@ private fun WalletScreen(
             Spacer(Modifier.height(16.dp))
         }
     }
+}
+
+@Composable
+private fun TypeText(type: TransactionType) {
+    AppText(
+        text = stringResource(R.string.transaction_type_header, type.getName()),
+        fontSize = 18.sp,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    )
 }
 
 @Composable
@@ -136,10 +153,10 @@ fun ControlButtons(onSaveClick: () -> Unit, onDeleteClick: () -> Unit) {
 @Composable
 private fun Preview() {
     MyFinancesTheme {
-        WalletScreen(
+        CategoryScreen(
             navController = rememberNavController(),
-            wallet = Wallet("Preview wallet name"),
-            name = "Preview wallet name",
+            category = Category("Preview category name", TransactionType.Income),
+            name = "Preview category name",
             value = 656565.65,
             onNameChange = {},
             onSaveClick = {},

@@ -3,6 +3,7 @@ package com.emikhalets.myfinances.utils
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Transaction
 import com.emikhalets.myfinances.data.entity.TransactionEntity
+import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import java.util.*
 
@@ -72,6 +73,17 @@ object PreviewEntities {
             Category("Категория 4", TransactionType.Expense),
             Category("Категория 5", TransactionType.Expense),
             Category("Категория 6", TransactionType.Expense)
+        )
+    }
+
+    fun getWalletsScreenList(): List<Wallet> {
+        return listOf(
+            Wallet("Кошелек 1"),
+            Wallet("Кошелек 2"),
+            Wallet("Кошелек 3"),
+            Wallet("Кошелек 4"),
+            Wallet("Кошелек 5"),
+            Wallet("Кошелек 6")
         )
     }
 }

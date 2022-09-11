@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.utils.navigation.AppScreen
-import com.emikhalets.myfinances.utils.navigation.navigateToCategories
-import com.emikhalets.myfinances.utils.navigation.navigateToWallets
+import com.emikhalets.myfinances.presentation.AppScreen
+import com.emikhalets.myfinances.presentation.navigateToCategories
+import com.emikhalets.myfinances.presentation.navigateToWallets
 
 @Composable
 fun ScreenScaffold(

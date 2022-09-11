@@ -35,7 +35,7 @@ import com.emikhalets.myfinances.presentation.core.ScreenScaffold
 import com.emikhalets.myfinances.presentation.core.TextMaxSize
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
-import com.emikhalets.myfinances.utils.navigation.navigateToTransaction
+import com.emikhalets.myfinances.presentation.navigateToTransaction
 import com.emikhalets.myfinances.utils.toDate
 import com.emikhalets.myfinances.utils.toast
 import com.google.accompanist.pager.ExperimentalPagerApi

@@ -10,7 +10,6 @@ import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.Prefs
-import com.emikhalets.myfinances.utils.navigation.AppNavGraph
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.screens.categories
+package com.emikhalets.myfinances.presentation.screens.wallets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,7 +13,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,100 +24,77 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.data.entity.Category
-import com.emikhalets.myfinances.presentation.core.AppPager
+import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.AppToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
+import com.emikhalets.myfinances.presentation.navigateToTransaction
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
-import com.emikhalets.myfinances.presentation.navigateToTransaction
 import com.emikhalets.myfinances.utils.toast
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.rememberPagerState
 
 @Composable
-fun CategoriesScreen(
+fun WalletsScreen(
     navController: NavHostController,
-    viewModel: CategoriesViewModel = hiltViewModel(),
+    viewModel: WalletsViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) { viewModel.getCategories() }
+    LaunchedEffect(Unit) { viewModel.getWallets() }
 
     LaunchedEffect(state.error) { toast(context, state.error) }
 
-    CategoriesScreen(
+    WalletsScreen(
         navController = navController,
-        incomeList = state.incomeList,
-        expenseList = state.expenseList
+        wallets = state.wallets
     )
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
-private fun CategoriesScreen(
-    navController: NavHostController,
-    incomeList: List<Category>,
-    expenseList: List<Category>,
-) {
-    val scope = rememberCoroutineScope()
-    val pagerState = rememberPagerState(pageCount = 2)
-
+private fun WalletsScreen(navController: NavHostController, wallets: List<Wallet>) {
     ScreenScaffold({
-        AppToolbar(navController, stringResource(R.string.title_categories_screen))
+        AppToolbar(navController, stringResource(R.string.title_wallets_screen))
     }) {
         Column(Modifier.fillMaxWidth()) {
-            AppPager(
-                scope = scope,
-                pagerState = pagerState,
-                tabs = listOf(stringResource(R.string.expenses), stringResource(R.string.incomes)),
-                modifier = Modifier.weight(1f)
-            ) { page ->
-                when (page) {
-                    0 -> CategoriesList(navController, expenseList)
-                    1 -> CategoriesList(navController, incomeList)
-                }
-            }
-            AddButton(pagerState.currentPage)
+            WalletsList(navController, wallets)
+            AddButton()
         }
     }
 }
 
 @Composable
-private fun CategoriesList(navController: NavHostController, categories: List<Category>) {
-    val list = categories.toMutableList().apply { add(Category.getDefault()) }
+private fun WalletsList(navController: NavHostController, wallets: List<Wallet>) {
     LazyColumn(Modifier.fillMaxSize()) {
-        items(list) { category ->
-            CategoryItem(navController, category)
+        items(wallets) { wallet ->
+            WalletItem(navController, wallet)
         }
     }
 }
 
 @Composable
-private fun CategoryItem(navController: NavHostController, category: Category) {
+private fun WalletItem(navController: NavHostController, wallet: Wallet) {
     Column(Modifier.fillMaxWidth()) {
         AppText(
-            text = category.name,
+            text = wallet.name,
             fontSize = 18.sp,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .clickable { navController.navigateToTransaction(category.id) }
+                .clickable { navController.navigateToTransaction(wallet.id) }
         )
         Divider(color = MaterialTheme.colors.secondary)
     }
 }
 
 @Composable
-private fun AddButton(page: Int) {
+private fun AddButton() {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.primary)
-            .clickable { /* TODO: add dialog new category */ }
+            .clickable { /* TODO: add dialog new wallet */ }
             .padding(16.dp)
     ) {
         AppText(
@@ -132,10 +108,9 @@ private fun AddButton(page: Int) {
 @Composable
 private fun Preview() {
     MyFinancesTheme {
-        CategoriesScreen(
+        WalletsScreen(
             navController = rememberNavController(),
-            incomeList = PreviewEntities.getCategoriesScreenIncomeList(),
-            expenseList = PreviewEntities.getCategoriesScreenExpenseList()
+            wallets = PreviewEntities.getWalletsScreenList()
         )
     }
 }

@@ -55,14 +55,16 @@ fun AppToolbar(
                     imageVector = Icons.Rounded.ArrowBack,
                     modifier = Modifier.clickable { navController.popBackStack() }
                 )
-                else -> AppIcon(icon)
+                else -> AppIcon(icon, size = 0.dp)
             }
         },
         actions = {
             actions.forEach { iconVector ->
                 AppIcon(
                     imageVector = iconVector,
-                    modifier = Modifier.clickable { navController.navigate(iconVector) }
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clickable { navController.navigate(iconVector) }
                 )
             }
         },
@@ -77,7 +79,7 @@ fun MainToolbar(navController: NavHostController) {
     AppToolbar(
         navController = navController,
         title = stringResource(AppScreen.Main.title),
-        icon = R.mipmap.ic_launcher,
+        icon = R.drawable.ic_launcher_foreground,
         actions = listOf(Icons.Rounded.Category, Icons.Rounded.AccountBalanceWallet)
     )
 }

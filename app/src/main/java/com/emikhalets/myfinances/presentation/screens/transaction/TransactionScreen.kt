@@ -48,6 +48,7 @@ import com.emikhalets.myfinances.utils.PreviewEntities
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.safeToDouble
 import com.emikhalets.myfinances.utils.toDate
+import com.emikhalets.myfinances.utils.toLabelDate
 import com.emikhalets.myfinances.utils.toast
 
 @Composable
@@ -165,7 +166,7 @@ private fun TransactionScreen(
 @Composable
 private fun DateText(timestamp: Long) {
     AppText(
-        text = stringResource(R.string.date_header, timestamp.toDate()),
+        text = stringResource(R.string.date_header, timestamp.toLabelDate()),
         textAlign = TextAlign.Center,
         modifier = Modifier
             .fillMaxWidth()

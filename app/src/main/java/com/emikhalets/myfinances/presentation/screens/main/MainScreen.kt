@@ -1,5 +1,6 @@
 package com.emikhalets.myfinances.presentation.screens.main
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -83,8 +83,8 @@ private fun MainScreen(
                     1 -> TransactionsList(navController, incomeList)
                 }
             }
+            AddButton(navController, pagerState.currentPage)
         }
-        AddButton(navController, pagerState.currentPage)
     }
 }
 
@@ -111,7 +111,7 @@ fun TransactionsItem(navController: NavHostController, entity: TransactionEntity
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp, 16.dp)
+                .padding(8.dp)
                 .clickable { navController.navigateToTransaction(entity.transaction.id) }
         ) {
             Column(
@@ -152,15 +152,14 @@ fun AddButton(navController: NavHostController, page: Int) {
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
+            .background(MaterialTheme.colors.primary)
             .clickable { /* TODO: add dialog new transaction */ }
+            .padding(16.dp)
     ) {
-        Surface(color = MaterialTheme.colors.background) {
-            AppText(
-                text = stringResource(R.string.add_transaction),
-                fontSize = 24.sp
-            )
-
-        }
+        AppText(
+            text = stringResource(R.string.add_transaction),
+            fontSize = 24.sp
+        )
     }
 
 }

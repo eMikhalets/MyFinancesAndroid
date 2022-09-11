@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.screens.transaction
+package com.emikhalets.myfinances.presentation.screens.main
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,6 +41,7 @@ import com.emikhalets.myfinances.presentation.core.AppBaseDialog
 import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.AppTextButton
 import com.emikhalets.myfinances.presentation.core.AppTextField
+import com.emikhalets.myfinances.presentation.screens.main.TransactionInjector
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
 import com.emikhalets.myfinances.utils.enums.TransactionType

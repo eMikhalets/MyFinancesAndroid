@@ -37,7 +37,6 @@ import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.MainToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
 import com.emikhalets.myfinances.presentation.core.TextMaxSize
-import com.emikhalets.myfinances.presentation.screens.transaction.TransactionDialog
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
 import com.emikhalets.myfinances.utils.toDate

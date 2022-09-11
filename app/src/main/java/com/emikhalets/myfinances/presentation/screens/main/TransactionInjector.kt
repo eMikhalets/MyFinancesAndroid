@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.screens.transaction
+package com.emikhalets.myfinances.presentation.screens.main
 
 import androidx.lifecycle.ViewModel
 import com.emikhalets.myfinances.data.entity.Category

@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.emikhalets.myfinances.presentation.screens.categories.CategoriesScreen
 import com.emikhalets.myfinances.presentation.screens.main.MainScreen
 import com.emikhalets.myfinances.presentation.screens.transaction.TransactionScreen
 
@@ -27,6 +28,7 @@ fun AppNavGraph(navController: NavHostController) {
             TransactionScreen(navController, transactionId)
         }
         composable(AppScreen.Categories.route) {
+            CategoriesScreen(navController)
         }
         composable(
             categoryArgsRoute,

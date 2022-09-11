@@ -2,6 +2,7 @@ package com.emikhalets.myfinances.presentation.screens.transaction
 
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.TransactionEntity
+import com.emikhalets.myfinances.utils.DEFAULT_ERROR
 
 data class TransactionState(
     val categories: List<Category> = emptyList(),
@@ -27,7 +28,7 @@ data class TransactionState(
         return this.copy(transactionDeleted = true, error = "")
     }
 
-    fun setError(message: String): TransactionState {
-        return this.copy(error = message)
+    fun setError(message: String?): TransactionState {
+        return this.copy(error = message ?: DEFAULT_ERROR)
     }
 }

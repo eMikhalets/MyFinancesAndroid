@@ -1,6 +1,7 @@
 package com.emikhalets.myfinances.presentation.screens.main
 
 import com.emikhalets.myfinances.data.entity.TransactionEntity
+import com.emikhalets.myfinances.utils.DEFAULT_ERROR
 
 data class MainState(
     val incomeList: List<TransactionEntity> = emptyList(),
@@ -15,7 +16,7 @@ data class MainState(
         return this.copy(incomeList = incomeList, expenseList = expenseList, error = "")
     }
 
-    fun setError(message: String): MainState {
-        return this.copy(error = message)
+    fun setError(message: String?): MainState {
+        return this.copy(error = message ?: DEFAULT_ERROR)
     }
 }

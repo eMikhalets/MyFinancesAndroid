@@ -54,4 +54,24 @@ object PreviewEntities {
             Category("Категория 1", TransactionType.Expense)
         )
     }
+
+    fun getCategoriesScreenIncomeList(): List<Category> {
+        return listOf(
+            Category("Категория 7", TransactionType.Income),
+            Category("Категория 8", TransactionType.Income),
+            Category("Категория 9", TransactionType.Income),
+            Category("Категория 10", TransactionType.Income)
+        )
+    }
+
+    fun getCategoriesScreenExpenseList(): List<Category> {
+        return listOf(
+            Category("Категория 1", TransactionType.Expense),
+            Category("Категория 2", TransactionType.Expense),
+            Category("Категория 3", TransactionType.Expense),
+            Category("Категория 4", TransactionType.Expense),
+            Category("Категория 5", TransactionType.Expense),
+            Category("Категория 6", TransactionType.Expense)
+        )
+    }
 }

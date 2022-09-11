@@ -1,10 +1,9 @@
-package com.emikhalets.myfinances.presentation.screens.main
+package com.emikhalets.myfinances.presentation.screens.categories
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,33 +25,31 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.data.entity.TransactionEntity
+import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.presentation.core.AppPager
 import com.emikhalets.myfinances.presentation.core.AppText
-import com.emikhalets.myfinances.presentation.core.MainToolbar
+import com.emikhalets.myfinances.presentation.core.AppToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
-import com.emikhalets.myfinances.presentation.core.TextMaxSize
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
 import com.emikhalets.myfinances.utils.navigation.navigateToTransaction
-import com.emikhalets.myfinances.utils.toDate
 import com.emikhalets.myfinances.utils.toast
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 
 @Composable
-fun MainScreen(
+fun CategoriesScreen(
     navController: NavHostController,
-    viewModel: MainViewModel = hiltViewModel(),
+    viewModel: CategoriesViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) { viewModel.getTransactions() }
+    LaunchedEffect(Unit) { viewModel.getCategories() }
 
     LaunchedEffect(state.error) { toast(context, state.error) }
 
-    MainScreen(
+    CategoriesScreen(
         navController = navController,
         incomeList = state.incomeList,
         expenseList = state.expenseList
@@ -62,15 +58,17 @@ fun MainScreen(
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-private fun MainScreen(
+private fun CategoriesScreen(
     navController: NavHostController,
-    incomeList: List<TransactionEntity>,
-    expenseList: List<TransactionEntity>,
+    incomeList: List<Category>,
+    expenseList: List<Category>,
 ) {
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = 2)
 
-    ScreenScaffold(toolbar = { MainToolbar(navController) }) {
+    ScreenScaffold({
+        AppToolbar(navController, stringResource(R.string.title_categories_screen))
+    }) {
         Column(Modifier.fillMaxWidth()) {
             AppPager(
                 scope = scope,
@@ -79,8 +77,8 @@ private fun MainScreen(
                 modifier = Modifier.weight(1f)
             ) { page ->
                 when (page) {
-                    0 -> TransactionsList(navController, expenseList)
-                    1 -> TransactionsList(navController, incomeList)
+                    0 -> CategoriesList(navController, expenseList)
+                    1 -> CategoriesList(navController, incomeList)
                 }
             }
             AddButton(pagerState.currentPage)
@@ -89,59 +87,26 @@ private fun MainScreen(
 }
 
 @Composable
-private fun TransactionsList(
-    navController: NavHostController,
-    transactions: List<TransactionEntity>,
-) {
-    if (transactions.isEmpty()) {
-        TextMaxSize(stringResource(R.string.no_transactions))
-    } else {
-        LazyColumn(Modifier.fillMaxSize()) {
-            items(transactions) { transaction ->
-                TransactionsItem(navController, transaction)
-            }
+private fun CategoriesList(navController: NavHostController, categories: List<Category>) {
+    val list = categories.toMutableList().apply { add(Category.getDefault()) }
+    LazyColumn(Modifier.fillMaxSize()) {
+        items(list) { category ->
+            CategoryItem(navController, category)
         }
     }
 }
 
 @Composable
-private fun TransactionsItem(navController: NavHostController, entity: TransactionEntity) {
+private fun CategoryItem(navController: NavHostController, category: Category) {
     Column(Modifier.fillMaxWidth()) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        AppText(
+            text = category.name,
+            fontSize = 18.sp,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .clickable { navController.navigateToTransaction(entity.transaction.id) }
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                AppText(
-                    text = entity.category.name,
-                    fontSize = 18.sp,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                AppText(
-                    text = entity.transaction.timestamp.toDate(),
-                    fontSize = 14.sp,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                AppText(
-                    text = entity.transaction.note,
-                    fontSize = 14.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-            AppText(
-                text = stringResource(R.string.app_money_value, entity.transaction.value),
-                fontSize = 20.sp,
-            )
-        }
+                .clickable { navController.navigateToTransaction(category.id) }
+        )
         Divider(color = MaterialTheme.colors.secondary)
     }
 }
@@ -153,7 +118,7 @@ private fun AddButton(page: Int) {
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.primary)
-            .clickable { /* TODO: add dialog new transaction */ }
+            .clickable { /* TODO: add dialog new category */ }
             .padding(16.dp)
     ) {
         AppText(
@@ -167,10 +132,10 @@ private fun AddButton(page: Int) {
 @Composable
 private fun Preview() {
     MyFinancesTheme {
-        MainScreen(
+        CategoriesScreen(
             navController = rememberNavController(),
-            incomeList = PreviewEntities.getMainScreenIncomeList(),
-            expenseList = PreviewEntities.getMainScreenExpenseList()
+            incomeList = PreviewEntities.getCategoriesScreenIncomeList(),
+            expenseList = PreviewEntities.getCategoriesScreenExpenseList()
         )
     }
 }

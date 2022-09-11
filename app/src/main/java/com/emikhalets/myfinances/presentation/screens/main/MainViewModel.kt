@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.myfinances.data.AppRepository
+import com.emikhalets.myfinances.data.entity.Transaction
 import com.emikhalets.myfinances.data.entity.TransactionEntity
-import com.emikhalets.myfinances.utils.DEFAULT_ERROR
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -25,7 +25,7 @@ class MainViewModel @Inject constructor(private val repo: AppRepository) : ViewM
         viewModelScope.launch(Dispatchers.Default) {
             repo.getTransactions()
                 .onSuccess { setTransactionsState(it) }
-                .onFailure { state = state.setError(it.message ?: DEFAULT_ERROR) }
+                .onFailure { state = state.setError(it.message) }
         }
     }
 
@@ -34,6 +34,13 @@ class MainViewModel @Inject constructor(private val repo: AppRepository) : ViewM
             val expenseList = transactions.filter { it.transaction.type == TransactionType.Expense }
             val incomeList = transactions.filter { it.transaction.type == TransactionType.Income }
             state = state.setTransactions(incomeList, expenseList)
+        }
+    }
+
+    fun addTransaction(entity: Transaction) {
+        viewModelScope.launch(Dispatchers.Default) {
+            repo.insertTransaction(entity)
+                .onFailure { state = state.setError(it.message) }
         }
     }
 }

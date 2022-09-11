@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CategoryDao : BaseDao<Category> {
 
+    @Query("SELECT * FROM categories ORDER BY name ASC")
+    fun getAllOrderByName(): Flow<List<Category>>
+
     @Query("SELECT * FROM categories WHERE type=:type ORDER BY name ASC")
     fun getAllOrderByName(type: TransactionType): Flow<List<Category>>
 

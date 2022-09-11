@@ -30,6 +30,10 @@ class TestRepositoryImpl @Inject constructor() : AppRepository {
         Category(10, "Подработка", TransactionType.Income)
     )
 
+    override suspend fun getCategories(): Result<Flow<List<Category>>> {
+        return Result.success(flowOf(categories))
+    }
+
     override suspend fun getCategories(type: TransactionType): Result<Flow<List<Category>>> {
         val list = categories.filter { it.type == type }
         return Result.success(flowOf(list))

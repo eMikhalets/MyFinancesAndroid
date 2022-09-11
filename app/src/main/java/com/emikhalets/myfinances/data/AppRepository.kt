@@ -13,6 +13,8 @@ interface AppRepository {
      * Categories Dao
      */
 
+    suspend fun getCategories(): Result<Flow<List<Category>>>
+
     suspend fun getCategories(type: TransactionType): Result<Flow<List<Category>>>
 
     suspend fun getCategory(id: Long): Result<Category>

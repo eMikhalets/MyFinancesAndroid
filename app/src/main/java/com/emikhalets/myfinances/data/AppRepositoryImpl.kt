@@ -25,8 +25,12 @@ class AppRepositoryImpl @Inject constructor(
      * Categories Dao
      */
 
+    override suspend fun getCategories(): Result<Flow<List<Category>>> {
+        return runDatabaseRequest { categoryDao.getAllOrderByName() }
+    }
+
     override suspend fun getCategories(type: TransactionType): Result<Flow<List<Category>>> {
-        return runDatabaseRequest { categoryDao.getAllOrderByName(type) }
+        return runDatabaseRequest { categoryDao.getAllOrderByName() }
     }
 
     override suspend fun getCategory(id: Long): Result<Category> {

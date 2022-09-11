@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.myfinances.data.AppRepository
 import com.emikhalets.myfinances.data.entity.Category
-import com.emikhalets.myfinances.utils.DEFAULT_ERROR
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -24,7 +23,7 @@ class TransactionViewModel @Inject constructor(private val repo: AppRepository) 
         viewModelScope.launch(Dispatchers.Default) {
             repo.getTransaction(id)
                 .onSuccess { state = state.setTransaction(it) }
-                .onFailure { state = state.setError(it.message ?: DEFAULT_ERROR) }
+                .onFailure { state = state.setError(it.message) }
         }
     }
 
@@ -32,7 +31,7 @@ class TransactionViewModel @Inject constructor(private val repo: AppRepository) 
         viewModelScope.launch(Dispatchers.Default) {
             repo.getCategories(type)
                 .onSuccess { flow -> flow.collect { state = state.setCategories(it) } }
-                .onFailure { state = state.setError(it.message ?: DEFAULT_ERROR) }
+                .onFailure { state = state.setError(it.message) }
         }
     }
 
@@ -47,7 +46,7 @@ class TransactionViewModel @Inject constructor(private val repo: AppRepository) 
             transaction?.let {
                 repo.updateTransaction(transaction)
                     .onSuccess { state = state.setTransactionSaved() }
-                    .onFailure { state = state.setError(it.message ?: DEFAULT_ERROR) }
+                    .onFailure { state = state.setError(it.message) }
             }
         }
     }
@@ -57,7 +56,7 @@ class TransactionViewModel @Inject constructor(private val repo: AppRepository) 
             state.entity?.transaction?.let { transaction ->
                 repo.deleteTransaction(transaction)
                     .onSuccess { state = state.setTransactionDeleted() }
-                    .onFailure { state = state.setError(it.message ?: DEFAULT_ERROR) }
+                    .onFailure { state = state.setError(it.message) }
             }
         }
     }

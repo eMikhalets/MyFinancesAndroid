@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,10 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,7 +33,6 @@ import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.AppToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
-import com.emikhalets.myfinances.presentation.navigateToWallet
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
 import com.emikhalets.myfinances.utils.toast
@@ -41,39 +45,63 @@ fun WalletsScreen(
     val state = viewModel.state
     val context = LocalContext.current
 
+    var walletDialogVisible by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) { viewModel.getWallets() }
+
+    LaunchedEffect(state.wallet) { state.wallet?.let { walletDialogVisible = true } }
 
     LaunchedEffect(state.error) { toast(context, state.error) }
 
     WalletsScreen(
         navController = navController,
-        wallets = state.wallets
+        wallets = state.wallets,
+        onWalletClick = viewModel::getWallet,
+        onAddClick = { walletDialogVisible = true }
     )
+
+    if (walletDialogVisible) {
+        WalletDialog(
+            wallet = state.wallet,
+            onDismiss = { walletDialogVisible = false },
+            onSaveClick = viewModel::saveWallet,
+            onDeleteClick = viewModel::deleteWallet
+        )
+    }
 }
 
 @Composable
-private fun WalletsScreen(navController: NavHostController, wallets: List<Wallet>) {
+private fun WalletsScreen(
+    navController: NavHostController,
+    wallets: List<Wallet>,
+    onWalletClick: (Long) -> Unit,
+    onAddClick: () -> Unit,
+) {
     ScreenScaffold({
         AppToolbar(navController, stringResource(R.string.title_wallets_screen))
     }) {
         Column(Modifier.fillMaxWidth()) {
-            WalletsList(navController, wallets)
-            AddButton()
+            WalletsList(wallets, onWalletClick)
+            AddButton(onAddClick)
         }
     }
 }
 
 @Composable
-private fun WalletsList(navController: NavHostController, wallets: List<Wallet>) {
-    LazyColumn(Modifier.fillMaxSize()) {
+private fun ColumnScope.WalletsList(wallets: List<Wallet>, onWalletClick: (Long) -> Unit) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .weight(1f)
+    ) {
         items(wallets) { wallet ->
-            WalletItem(navController, wallet)
+            WalletItem(wallet, onWalletClick)
         }
     }
 }
 
 @Composable
-private fun WalletItem(navController: NavHostController, wallet: Wallet) {
+private fun WalletItem(wallet: Wallet, onWalletClick: (Long) -> Unit) {
     Column(Modifier.fillMaxWidth()) {
         AppText(
             text = wallet.name,
@@ -81,14 +109,14 @@ private fun WalletItem(navController: NavHostController, wallet: Wallet) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .clickable { navController.navigateToWallet(wallet.id) }
+                .clickable { onWalletClick(wallet.id) }
         )
         Divider(color = MaterialTheme.colors.secondary)
     }
 }
 
 @Composable
-private fun AddButton() {
+private fun AddButton(onAddClick: () -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -110,7 +138,9 @@ private fun Preview() {
     MyFinancesTheme {
         WalletsScreen(
             navController = rememberNavController(),
-            wallets = PreviewEntities.getWalletsScreenList()
+            wallets = PreviewEntities.getWalletsScreenList(),
+            onWalletClick = {},
+            onAddClick = {}
         )
     }
 }

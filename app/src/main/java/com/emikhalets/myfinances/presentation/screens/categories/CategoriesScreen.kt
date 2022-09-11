@@ -52,9 +52,7 @@ fun CategoriesScreen(
 
     LaunchedEffect(Unit) { viewModel.getCategories() }
 
-    LaunchedEffect(state.category) {
-        state.category?.let { categoryDialogVisible = true }
-    }
+    LaunchedEffect(state.category) { state.category?.let { categoryDialogVisible = true } }
 
     LaunchedEffect(state.error) { toast(context, state.error) }
 

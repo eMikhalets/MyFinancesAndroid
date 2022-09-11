@@ -5,11 +5,16 @@ import com.emikhalets.myfinances.utils.DEFAULT_ERROR
 
 data class WalletsState(
     val wallets: List<Wallet> = emptyList(),
+    val wallet: Wallet? = null,
     val error: String = "",
 ) {
 
     fun setWallets(wallets: List<Wallet>): WalletsState {
-        return this.copy(wallets = wallets, error = "")
+        return this.copy(wallets = wallets)
+    }
+
+    fun setWallet(wallet: Wallet): WalletsState {
+        return this.copy(wallet = wallet)
     }
 
     fun setError(message: String?): WalletsState {

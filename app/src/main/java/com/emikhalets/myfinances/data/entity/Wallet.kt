@@ -15,3 +15,7 @@ data class Wallet(
     @Ignore
     constructor(name: String) : this(0, name)
 }
+
+fun Wallet?.copyOrNew(name: String): Wallet {
+    return this?.copy(name = name) ?: Wallet(name)
+}

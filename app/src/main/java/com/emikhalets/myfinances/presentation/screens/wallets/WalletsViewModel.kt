@@ -40,4 +40,31 @@ class WalletsViewModel @Inject constructor(private val repo: AppRepository) : Vi
                 .onFailure { state = state.setError(it.message) }
         }
     }
+
+    fun getWallet(id: Long) {
+        viewModelScope.launch(Dispatchers.Default) {
+            repo.getWallet(id)
+                .onSuccess { state = state.setWallet(it) }
+                .onFailure { state = state.setError(it.message) }
+        }
+    }
+
+    fun saveWallet(wallet: Wallet) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val request = if (wallet.id == 0L) {
+                repo.insertWallet(wallet)
+            } else {
+                repo.updateWallet(wallet)
+            }
+            request
+                .onFailure { state = state.setError(it.message) }
+        }
+    }
+
+    fun deleteWallet(wallet: Wallet) {
+        viewModelScope.launch(Dispatchers.Default) {
+            repo.deleteWallet(wallet)
+                .onFailure { state = state.setError(it.message) }
+        }
+    }
 }

@@ -13,9 +13,16 @@
     <string name="title_wallets_screen">Кошельки</string>
     <string name="title_wallet_screen">Кошелек</string>
 
+    <string name="dialog_label_new_transaction">Новая транзакция</string>
+    <string name="dialog_label_new_category">Новая категория</string>
+    <string name="dialog_label_new_wallet">Новый кошелек</string>
+
+    <string name="error_empty_text_field">Обязательно для заполнения</string>
+
     <string name="label_category">Категория</string>
     <string name="label_money_value">Сумма</string>
     <string name="label_note">Комментарий</string>
+    <string name="label_name">Название</string>
 
     <string name="expenses">Расходы</string>
     <string name="incomes">Доходы</string>

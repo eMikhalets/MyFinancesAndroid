@@ -2,19 +2,10 @@ package com.emikhalets.myfinances.presentation.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.emikhalets.myfinances.R
-
-val Montserrat = FontFamily(
-    Font(R.font.montserrat),
-    Font(R.font.montserrat_bold, FontWeight.Bold)
-)
 
 val Typography = Typography(
-//    defaultFontFamily = Montserrat,
     h1 = TextStyle(
         fontWeight = FontWeight.Light,
         fontSize = 96.sp,

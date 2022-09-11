@@ -30,9 +30,9 @@ import com.emikhalets.myfinances.presentation.core.AppPager
 import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.AppToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
+import com.emikhalets.myfinances.presentation.navigateToCategory
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
-import com.emikhalets.myfinances.presentation.navigateToTransaction
 import com.emikhalets.myfinances.utils.toast
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
@@ -105,7 +105,7 @@ private fun CategoryItem(navController: NavHostController, category: Category) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .clickable { navController.navigateToTransaction(category.id) }
+                .clickable { navController.navigateToCategory(category.id) }
         )
         Divider(color = MaterialTheme.colors.secondary)
     }

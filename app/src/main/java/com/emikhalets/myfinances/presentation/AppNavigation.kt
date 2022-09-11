@@ -10,11 +10,9 @@ import androidx.navigation.navArgument
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.presentation.screens.categories.CategoriesScreen
 import com.emikhalets.myfinances.presentation.screens.main.MainScreen
-import com.emikhalets.myfinances.presentation.screens.transaction.TransactionScreen
 import com.emikhalets.myfinances.presentation.screens.wallet.WalletScreen
 import com.emikhalets.myfinances.presentation.screens.wallets.WalletsScreen
 
-private val transactionArgsRoute = "${AppScreen.Transaction.route}/{${AppNavArgs.TRANSACTION_ID}}"
 private val categoryArgsRoute = "${AppScreen.Category.route}/{${AppNavArgs.CATEGORY_ID}}"
 private val walletArgsRoute = "${AppScreen.Wallet.route}/{${AppNavArgs.WALLET_ID}}"
 
@@ -23,13 +21,6 @@ fun AppNavGraph(navController: NavHostController) {
     NavHost(navController, AppScreen.Main.route) {
         composable(AppScreen.Main.route) {
             MainScreen(navController)
-        }
-        composable(
-            transactionArgsRoute,
-            listOf(navArgument(AppNavArgs.TRANSACTION_ID) { type = NavType.LongType })
-        ) {
-            val transactionId = it.arguments?.getLong(AppNavArgs.TRANSACTION_ID) ?: -1L
-            TransactionScreen(navController, transactionId)
         }
         composable(AppScreen.Categories.route) {
             CategoriesScreen(navController)
@@ -51,10 +42,6 @@ fun AppNavGraph(navController: NavHostController) {
             WalletScreen(navController, walletId)
         }
     }
-}
-
-fun NavHostController.navigateToTransaction(id: Long) {
-    navigate("${AppScreen.Transaction.route}/$id")
 }
 
 fun NavHostController.navigateToCategories() {
@@ -81,7 +68,6 @@ object AppNavArgs {
 
 sealed class AppScreen(val route: String, @StringRes val title: Int) {
     object Main : AppScreen("main", R.string.title_main_screen)
-    object Transaction : AppScreen("transaction", R.string.title_categories_screen)
     object Categories : AppScreen("categories", R.string.title_category_screen)
     object Category : AppScreen("category", R.string.title_wallets_screen)
     object Wallets : AppScreen("wallets", R.string.title_wallets_screen)

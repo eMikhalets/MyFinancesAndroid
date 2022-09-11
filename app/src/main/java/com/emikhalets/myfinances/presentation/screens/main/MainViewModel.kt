@@ -37,9 +37,36 @@ class MainViewModel @Inject constructor(private val repo: AppRepository) : ViewM
         }
     }
 
-    fun addTransaction(entity: Transaction) {
+    fun getCategories() {
         viewModelScope.launch(Dispatchers.Default) {
-            repo.insertTransaction(entity)
+            repo.getCategories()
+                .onSuccess { flow -> flow.collect { state = state.setCategories(it) } }
+                .onFailure { state = state.setError(it.message) }
+        }
+    }
+
+    fun getTransaction(id: Long) {
+        viewModelScope.launch(Dispatchers.Default) {
+            repo.getTransaction(id)
+                .onSuccess { state = state.setTransaction(it) }
+                .onFailure { state = state.setError(it.message) }
+        }
+    }
+
+    fun saveTransaction(transaction: Transaction) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val request = if (transaction.id == 0L) {
+                repo.insertTransaction(transaction)
+            } else {
+                repo.updateTransaction(transaction)
+            }
+            request.onFailure { state = state.setError(it.message) }
+        }
+    }
+
+    fun deleteTransaction(transaction: Transaction) {
+        viewModelScope.launch(Dispatchers.Default) {
+            repo.deleteTransaction(transaction)
                 .onFailure { state = state.setError(it.message) }
         }
     }

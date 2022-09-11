@@ -28,7 +28,7 @@ import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.AppToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
-import com.emikhalets.myfinances.presentation.navigateToTransaction
+import com.emikhalets.myfinances.presentation.navigateToWallet
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
 import com.emikhalets.myfinances.utils.toast
@@ -81,7 +81,7 @@ private fun WalletItem(navController: NavHostController, wallet: Wallet) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .clickable { navController.navigateToTransaction(wallet.id) }
+                .clickable { navController.navigateToWallet(wallet.id) }
         )
         Divider(color = MaterialTheme.colors.secondary)
     }

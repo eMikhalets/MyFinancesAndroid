@@ -14,7 +14,11 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -33,9 +37,9 @@ import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.MainToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
 import com.emikhalets.myfinances.presentation.core.TextMaxSize
+import com.emikhalets.myfinances.presentation.screens.transaction.TransactionDialog
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
-import com.emikhalets.myfinances.presentation.navigateToTransaction
 import com.emikhalets.myfinances.utils.toDate
 import com.emikhalets.myfinances.utils.toast
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -49,15 +53,34 @@ fun MainScreen(
     val state = viewModel.state
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) { viewModel.getTransactions() }
+    var transactionDialogVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.getTransactions()
+        viewModel.getCategories()
+    }
+
+    LaunchedEffect(state.transaction) { transactionDialogVisible = true }
 
     LaunchedEffect(state.error) { toast(context, state.error) }
 
     MainScreen(
         navController = navController,
         incomeList = state.incomeList,
-        expenseList = state.expenseList
+        expenseList = state.expenseList,
+        onTransactionClick = viewModel::getTransaction,
+        onAddClick = { transactionDialogVisible = true }
     )
+
+    if (transactionDialogVisible) {
+        TransactionDialog(
+            entity = state.transaction,
+            categories = state.categories,
+            onDismiss = { transactionDialogVisible = false },
+            onSaveClick = viewModel::saveTransaction,
+            onDeleteClick = viewModel::deleteTransaction
+        )
+    }
 }
 
 @OptIn(ExperimentalPagerApi::class)
@@ -66,6 +89,8 @@ private fun MainScreen(
     navController: NavHostController,
     incomeList: List<TransactionEntity>,
     expenseList: List<TransactionEntity>,
+    onTransactionClick: (Long) -> Unit,
+    onAddClick: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = 2)
@@ -79,40 +104,40 @@ private fun MainScreen(
                 modifier = Modifier.weight(1f)
             ) { page ->
                 when (page) {
-                    0 -> TransactionsList(navController, expenseList)
-                    1 -> TransactionsList(navController, incomeList)
+                    0 -> TransactionsList(expenseList, onTransactionClick)
+                    1 -> TransactionsList(incomeList, onTransactionClick)
                 }
             }
-            AddButton(pagerState.currentPage)
+            AddButton(onAddClick)
         }
     }
 }
 
 @Composable
 private fun TransactionsList(
-    navController: NavHostController,
     transactions: List<TransactionEntity>,
+    onTransactionClick: (Long) -> Unit,
 ) {
     if (transactions.isEmpty()) {
         TextMaxSize(stringResource(R.string.no_transactions))
     } else {
         LazyColumn(Modifier.fillMaxSize()) {
             items(transactions) { transaction ->
-                TransactionsItem(navController, transaction)
+                TransactionsItem(transaction, onTransactionClick)
             }
         }
     }
 }
 
 @Composable
-private fun TransactionsItem(navController: NavHostController, entity: TransactionEntity) {
+private fun TransactionsItem(entity: TransactionEntity, onTransactionClick: (Long) -> Unit) {
     Column(Modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .clickable { navController.navigateToTransaction(entity.transaction.id) }
+                .clickable { onTransactionClick(entity.transaction.id) }
         ) {
             Column(
                 modifier = Modifier
@@ -147,13 +172,13 @@ private fun TransactionsItem(navController: NavHostController, entity: Transacti
 }
 
 @Composable
-private fun AddButton(page: Int) {
+private fun AddButton(onAddClick: () -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.primary)
-            .clickable { /* TODO: add dialog new transaction */ }
+            .clickable { onAddClick() }
             .padding(16.dp)
     ) {
         AppText(
@@ -170,7 +195,9 @@ private fun Preview() {
         MainScreen(
             navController = rememberNavController(),
             incomeList = PreviewEntities.getMainScreenIncomeList(),
-            expenseList = PreviewEntities.getMainScreenExpenseList()
+            expenseList = PreviewEntities.getMainScreenExpenseList(),
+            onTransactionClick = {},
+            onAddClick = { }
         )
     }
 }

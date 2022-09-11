@@ -148,10 +148,10 @@ class TestRepositoryImpl @Inject constructor() : AppRepository {
         return item?.let { Result.success(item) } ?: Result.failure(Throwable("No wallet"))
     }
 
-    override suspend fun insertWallet(wallet: Wallet): Result<Boolean> {
+    override suspend fun insertWallet(wallet: Wallet): Result<Long> {
         val lastId = wallets.lastOrNull()?.id ?: 0
         wallets.add(wallet.copy(id = lastId + 1))
-        return Result.success(true)
+        return Result.success(lastId + 1)
     }
 
     override suspend fun updateWallet(wallet: Wallet): Result<Int> {

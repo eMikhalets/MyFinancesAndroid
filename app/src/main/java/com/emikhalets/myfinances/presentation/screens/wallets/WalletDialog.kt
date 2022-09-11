@@ -28,6 +28,7 @@ fun WalletDialog(
     onDismiss: () -> Unit,
     onSaveClick: (Wallet) -> Unit,
     onDeleteClick: (Wallet) -> Unit,
+    cancelable: Boolean = false,
 ) {
     val isEdit by remember { mutableStateOf(wallet != null) }
 
@@ -36,7 +37,8 @@ fun WalletDialog(
     AppBaseDialog(
         label = stringResource(R.string.title_wallet_screen),
         onDismiss = { onDismiss() },
-        padding = 8.dp
+        padding = 8.dp,
+        cancelable = cancelable
     ) {
         DialogLayout(
             name = name,

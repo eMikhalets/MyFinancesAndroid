@@ -93,7 +93,7 @@ class AppRepositoryImpl @Inject constructor(
         return runDatabaseRequest { walletDao.getById(id) }
     }
 
-    override suspend fun insertWallet(wallet: Wallet): Result<Boolean> {
+    override suspend fun insertWallet(wallet: Wallet): Result<Long> {
         return runDatabaseRequest { walletDao.insertIfNotExist(wallet) }
     }
 

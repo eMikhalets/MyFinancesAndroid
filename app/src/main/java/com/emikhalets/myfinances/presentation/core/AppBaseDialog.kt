@@ -25,13 +25,14 @@ fun AppBaseDialog(
     onDismiss: () -> Unit,
     label: String = "",
     padding: Dp = 0.dp,
+    cancelable: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     Dialog(
         onDismissRequest = { onDismiss() },
         properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true
+            dismissOnBackPress = !cancelable,
+            dismissOnClickOutside = !cancelable
         )
     ) {
         DialogLayout(label, padding, content)

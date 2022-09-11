@@ -17,6 +17,6 @@ class Prefs @Inject constructor(@ApplicationContext context: Context) {
         private const val NAME = "MyFinances_Preferences"
         private const val CURRENT_WALLET_ID = "CURRENT_WALLET_ID"
 
-        const val NO_WALLET_ID = -1L
+        const val NO_WALLET_ID = 0L
     }
 }

@@ -1,12 +1,12 @@
 package com.emikhalets.myfinances.presentation
 
 data class MainActivityState(
-    val defaultWalletCreated: Boolean = false,
+    val createdWalletId: Long = 0,
     val error: String = "",
 ) {
 
-    fun setWalletCreated(): MainActivityState {
-        return this.copy(defaultWalletCreated = true, error = "")
+    fun setWalletCreated(id: Long): MainActivityState {
+        return this.copy(createdWalletId = id)
     }
 
     fun setError(message: String): MainActivityState {

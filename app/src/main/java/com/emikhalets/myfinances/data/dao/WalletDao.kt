@@ -17,12 +17,11 @@ interface WalletDao : BaseDao<Wallet> {
     @Query("SELECT EXISTS (SELECT * FROM wallets WHERE name=:name)")
     suspend fun isExist(name: String): Boolean
 
-    suspend fun insertIfNotExist(wallet: Wallet): Boolean {
+    suspend fun insertIfNotExist(wallet: Wallet): Long {
         return if (!isExist(wallet.name)) {
             insert(wallet)
-            true
         } else {
-            false
+            0
         }
     }
 }

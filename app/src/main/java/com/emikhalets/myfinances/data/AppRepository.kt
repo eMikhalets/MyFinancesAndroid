@@ -48,7 +48,7 @@ interface AppRepository {
 
     suspend fun getWallet(id: Long): Result<Wallet>
 
-    suspend fun insertWallet(wallet: Wallet): Result<Boolean>
+    suspend fun insertWallet(wallet: Wallet): Result<Long>
 
     suspend fun updateWallet(wallet: Wallet): Result<Int>
 

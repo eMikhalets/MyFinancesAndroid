@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.emikhalets.myfinances.data.AppRepository
 import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.utils.DEFAULT_ERROR
-import com.emikhalets.myfinances.utils.Prefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -16,19 +15,15 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class SharedViewModel @Inject constructor(
     private val repo: AppRepository,
-    private val prefs: Prefs,
 ) : ViewModel() {
 
     var state by mutableStateOf(MainActivityState())
         private set
 
-    fun createDefaultWallet(name: String) {
+    fun saveWallet(wallet: Wallet) {
         viewModelScope.launch {
-            repo.insertWallet(Wallet(name))
-                .onSuccess {
-                    if (it) prefs.currentWalletId = 1
-                    state = state.setWalletCreated()
-                }
+            repo.insertWallet(wallet)
+                .onSuccess { state = state.setWalletCreated(it) }
                 .onFailure { state = state.setError(it.message ?: DEFAULT_ERROR) }
         }
     }

@@ -53,3 +53,7 @@ fun List<Category>.withDefault(context: Context, type: TransactionType): List<Ca
     list.add(Category(type.getDefaultId(), name, type))
     return list
 }
+
+fun Category?.copyOrNew(name: String, type: TransactionType): Category {
+    return this?.copy(name = name) ?: Category(name, type)
+}

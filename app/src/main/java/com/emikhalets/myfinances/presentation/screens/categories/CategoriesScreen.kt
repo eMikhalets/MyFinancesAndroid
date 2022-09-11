@@ -13,7 +13,11 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,7 +34,6 @@ import com.emikhalets.myfinances.presentation.core.AppPager
 import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.AppToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
-import com.emikhalets.myfinances.presentation.navigateToCategory
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
 import com.emikhalets.myfinances.utils.toast
@@ -45,15 +48,32 @@ fun CategoriesScreen(
     val state = viewModel.state
     val context = LocalContext.current
 
+    var categoryDialogVisible by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) { viewModel.getCategories() }
+
+    LaunchedEffect(state.category) {
+        state.category?.let { categoryDialogVisible = true }
+    }
 
     LaunchedEffect(state.error) { toast(context, state.error) }
 
     CategoriesScreen(
         navController = navController,
         incomeList = state.incomeList,
-        expenseList = state.expenseList
+        expenseList = state.expenseList,
+        onCategoryClick = viewModel::getCategory,
+        onAddClick = { categoryDialogVisible = true }
     )
+
+    if (categoryDialogVisible) {
+        CategoryDialog(
+            category = state.category,
+            onDismiss = { categoryDialogVisible = false },
+            onSaveClick = viewModel::saveCategory,
+            onDeleteClick = viewModel::deleteCategory
+        )
+    }
 }
 
 @OptIn(ExperimentalPagerApi::class)
@@ -62,6 +82,8 @@ private fun CategoriesScreen(
     navController: NavHostController,
     incomeList: List<Category>,
     expenseList: List<Category>,
+    onCategoryClick: (Long) -> Unit,
+    onAddClick: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = 2)
@@ -77,27 +99,27 @@ private fun CategoriesScreen(
                 modifier = Modifier.weight(1f)
             ) { page ->
                 when (page) {
-                    0 -> CategoriesList(navController, expenseList)
-                    1 -> CategoriesList(navController, incomeList)
+                    0 -> CategoriesList(expenseList, onCategoryClick)
+                    1 -> CategoriesList(incomeList, onCategoryClick)
                 }
             }
-            AddButton(pagerState.currentPage)
+            AddButton(onAddClick)
         }
     }
 }
 
 @Composable
-private fun CategoriesList(navController: NavHostController, categories: List<Category>) {
+private fun CategoriesList(categories: List<Category>, onCategoryClick: (Long) -> Unit) {
     val list = categories.toMutableList().apply { add(Category.getDefaultOld()) }
     LazyColumn(Modifier.fillMaxSize()) {
         items(list) { category ->
-            CategoryItem(navController, category)
+            CategoryItem(category, onCategoryClick)
         }
     }
 }
 
 @Composable
-private fun CategoryItem(navController: NavHostController, category: Category) {
+private fun CategoryItem(category: Category, onCategoryClick: (Long) -> Unit) {
     Column(Modifier.fillMaxWidth()) {
         AppText(
             text = category.name,
@@ -105,20 +127,20 @@ private fun CategoryItem(navController: NavHostController, category: Category) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .clickable { navController.navigateToCategory(category.id) }
+                .clickable { onCategoryClick(category.id) }
         )
         Divider(color = MaterialTheme.colors.secondary)
     }
 }
 
 @Composable
-private fun AddButton(page: Int) {
+private fun AddButton(onAddClick: () -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.primary)
-            .clickable { /* TODO: add dialog new category */ }
+            .clickable { onAddClick() }
             .padding(16.dp)
     ) {
         AppText(
@@ -135,7 +157,9 @@ private fun Preview() {
         CategoriesScreen(
             navController = rememberNavController(),
             incomeList = PreviewEntities.getCategoriesScreenIncomeList(),
-            expenseList = PreviewEntities.getCategoriesScreenExpenseList()
+            expenseList = PreviewEntities.getCategoriesScreenExpenseList(),
+            onCategoryClick = {},
+            onAddClick = {}
         )
     }
 }

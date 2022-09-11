@@ -59,7 +59,9 @@ fun MainScreen(
         viewModel.getCategories()
     }
 
-    LaunchedEffect(state.transaction) { transactionDialogVisible = true }
+    LaunchedEffect(state.transaction) {
+        state.transaction?.let { transactionDialogVisible = true }
+    }
 
     LaunchedEffect(state.error) { toast(context, state.error) }
 

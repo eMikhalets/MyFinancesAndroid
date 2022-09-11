@@ -36,10 +36,29 @@ class CategoriesViewModel @Inject constructor(private val repo: AppRepository) :
         }
     }
 
-    fun addCategory(name: String, type: TransactionType) {
+    fun getCategory(id: Long) {
         viewModelScope.launch(Dispatchers.Default) {
-            val entity = Category(name, type)
-            repo.insertCategory(entity)
+            repo.getCategory(id)
+                .onSuccess { state = state.setCategory(it) }
+                .onFailure { state = state.setError(it.message) }
+        }
+    }
+
+    fun saveCategory(category: Category) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val request = if (category.id == 0L) {
+                repo.updateCategory(category)
+            } else {
+                repo.insertCategory(category)
+            }
+            request
+                .onFailure { state = state.setError(it.message) }
+        }
+    }
+
+    fun deleteCategory(category: Category) {
+        viewModelScope.launch(Dispatchers.Default) {
+            repo.deleteCategory(category)
                 .onFailure { state = state.setError(it.message) }
         }
     }

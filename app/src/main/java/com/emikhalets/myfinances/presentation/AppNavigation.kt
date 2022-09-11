@@ -13,7 +13,6 @@ import com.emikhalets.myfinances.presentation.screens.main.MainScreen
 import com.emikhalets.myfinances.presentation.screens.wallet.WalletScreen
 import com.emikhalets.myfinances.presentation.screens.wallets.WalletsScreen
 
-private val categoryArgsRoute = "${AppScreen.Category.route}/{${AppNavArgs.CATEGORY_ID}}"
 private val walletArgsRoute = "${AppScreen.Wallet.route}/{${AppNavArgs.WALLET_ID}}"
 
 @Composable
@@ -24,12 +23,6 @@ fun AppNavGraph(navController: NavHostController) {
         }
         composable(AppScreen.Categories.route) {
             CategoriesScreen(navController)
-        }
-        composable(
-            categoryArgsRoute,
-            listOf(navArgument(AppNavArgs.TRANSACTION_ID) { type = NavType.LongType })
-        ) {
-            val categoryId = it.arguments?.getLong(AppNavArgs.TRANSACTION_ID) ?: -1
         }
         composable(AppScreen.Wallets.route) {
             WalletsScreen(navController)
@@ -46,10 +39,6 @@ fun AppNavGraph(navController: NavHostController) {
 
 fun NavHostController.navigateToCategories() {
     navigate(AppScreen.Categories.route)
-}
-
-fun NavHostController.navigateToCategory(id: Long) {
-    navigate("${AppScreen.Category.route}/$id")
 }
 
 fun NavHostController.navigateToWallets() {
@@ -69,7 +58,6 @@ object AppNavArgs {
 sealed class AppScreen(val route: String, @StringRes val title: Int) {
     object Main : AppScreen("main", R.string.title_main_screen)
     object Categories : AppScreen("categories", R.string.title_category_screen)
-    object Category : AppScreen("category", R.string.title_wallets_screen)
     object Wallets : AppScreen("wallets", R.string.title_wallets_screen)
     object Wallet : AppScreen("wallet", R.string.title_wallet_screen)
 }

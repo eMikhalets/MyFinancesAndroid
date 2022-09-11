@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.myfinances.data.AppRepository
 import com.emikhalets.myfinances.data.entity.Wallet
+import com.emikhalets.myfinances.data.entity.WalletEntity
+import com.emikhalets.myfinances.utils.Prefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +16,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class WalletsViewModel @Inject constructor(private val repo: AppRepository) : ViewModel() {
+class WalletsViewModel @Inject constructor(
+    private val repo: AppRepository,
+    val prefs: Prefs,
+) : ViewModel() {
 
     var state by mutableStateOf(WalletsState())
         private set
@@ -27,17 +32,9 @@ class WalletsViewModel @Inject constructor(private val repo: AppRepository) : Vi
         }
     }
 
-    private suspend fun setWalletsState(flow: Flow<List<Wallet>>) {
+    private suspend fun setWalletsState(flow: Flow<List<WalletEntity>>) {
         flow.collect { wallets ->
             state = state.setWallets(wallets)
-        }
-    }
-
-    fun addWallet(name: String) {
-        viewModelScope.launch(Dispatchers.Default) {
-            val entity = Wallet(name)
-            repo.insertWallet(entity)
-                .onFailure { state = state.setError(it.message) }
         }
     }
 

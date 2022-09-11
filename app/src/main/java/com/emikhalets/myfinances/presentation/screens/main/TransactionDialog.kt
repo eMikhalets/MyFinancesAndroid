@@ -165,7 +165,6 @@ private fun DialogLayout(
         Spacer(Modifier.height(16.dp))
 
         ControlButtons(entity != null, onSaveClick, onDeleteClick)
-        Spacer(Modifier.height(16.dp))
     }
 }
 

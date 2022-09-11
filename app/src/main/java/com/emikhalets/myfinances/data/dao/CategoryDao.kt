@@ -18,6 +18,9 @@ interface CategoryDao : BaseDao<Category> {
     @Query("SELECT * FROM categories WHERE id=:id")
     suspend fun getById(id: Long): Category
 
+    @Query("SELECT type FROM categories WHERE id=:id")
+    suspend fun getTypeById(id: Long): TransactionType
+
     @Query("SELECT EXISTS (SELECT * FROM categories WHERE name=:name)")
     suspend fun isExist(name: String): Boolean
 

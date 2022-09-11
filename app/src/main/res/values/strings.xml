@@ -23,6 +23,7 @@
     <string name="label_money_value">Сумма</string>
     <string name="label_note">Комментарий</string>
     <string name="label_name">Название</string>
+    <string name="label_init_value">Начальная сумма</string>
 
     <string name="expenses">Расходы</string>
     <string name="incomes">Доходы</string>

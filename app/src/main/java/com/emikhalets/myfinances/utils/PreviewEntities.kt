@@ -4,6 +4,7 @@ import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Transaction
 import com.emikhalets.myfinances.data.entity.TransactionEntity
 import com.emikhalets.myfinances.data.entity.Wallet
+import com.emikhalets.myfinances.data.entity.WalletEntity
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import java.util.*
 
@@ -76,14 +77,14 @@ object PreviewEntities {
         )
     }
 
-    fun getWalletsScreenList(): List<Wallet> {
+    fun getWalletsScreenList(): List<WalletEntity> {
         return listOf(
-            Wallet("Кошелек 1"),
-            Wallet("Кошелек 2"),
-            Wallet("Кошелек 3"),
-            Wallet("Кошелек 4"),
-            Wallet("Кошелек 5"),
-            Wallet("Кошелек 6")
+            WalletEntity(Wallet("Кошелек 1", 100.00), 900.21),
+            WalletEntity(Wallet("Кошелек 2", 1_000.00), 900.20),
+            WalletEntity(Wallet("Кошелек 3", 10_000.00), 9000.20),
+            WalletEntity(Wallet("Кошелек 4", 100_000.00), 90000.20),
+            WalletEntity(Wallet("Кошелек 5", 1_000_000.00), 900000.20),
+            WalletEntity(Wallet("Кошелек 6", 10_000_000.00), 900.20)
         )
     }
 }

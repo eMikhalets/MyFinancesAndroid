@@ -21,6 +21,7 @@ import com.emikhalets.myfinances.presentation.core.AppBaseDialog
 import com.emikhalets.myfinances.presentation.core.AppTextButton
 import com.emikhalets.myfinances.presentation.core.AppTextField
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
+import com.emikhalets.myfinances.utils.safeToDouble
 
 @Composable
 fun WalletDialog(
@@ -33,6 +34,7 @@ fun WalletDialog(
     val isEdit by remember { mutableStateOf(wallet != null) }
 
     var name by remember { mutableStateOf(wallet?.name ?: "") }
+    var initValue by remember { mutableStateOf(wallet?.initValue ?: 0.0) }
 
     AppBaseDialog(
         label = stringResource(R.string.title_wallet_screen),
@@ -42,9 +44,11 @@ fun WalletDialog(
     ) {
         DialogLayout(
             name = name,
+            initValue = initValue,
             isEdit = isEdit,
             onNameChange = { name = it },
-            onSaveClick = { onSaveClick(wallet.copyOrNew(name)) },
+            onInitValueChange = { initValue = it },
+            onSaveClick = { onSaveClick(wallet.copyOrNew(name, initValue)) },
             onDeleteClick = { wallet?.let(onDeleteClick) }
         )
     }
@@ -53,8 +57,10 @@ fun WalletDialog(
 @Composable
 private fun DialogLayout(
     name: String,
+    initValue: Double,
     isEdit: Boolean,
     onNameChange: (String) -> Unit,
+    onInitValueChange: (Double) -> Unit,
     onSaveClick: () -> Unit,
     onDeleteClick: () -> Unit,
 ) {
@@ -64,8 +70,14 @@ private fun DialogLayout(
             onValueChange = onNameChange,
             labelRes = R.string.label_name
         )
-        ControlButtons(isEdit, onSaveClick, onDeleteClick)
         Spacer(Modifier.height(16.dp))
+        AppTextField(
+            value = initValue.toString(),
+            onValueChange = { onInitValueChange(it.safeToDouble()) },
+            labelRes = R.string.label_init_value
+        )
+        Spacer(Modifier.height(16.dp))
+        ControlButtons(isEdit, onSaveClick, onDeleteClick)
     }
 }
 
@@ -102,8 +114,10 @@ private fun DialogPreview() {
         ) {
             DialogLayout(
                 name = "Some name",
+                initValue = 223.87,
                 isEdit = true,
                 onNameChange = {},
+                onInitValueChange = {},
                 onSaveClick = {},
                 onDeleteClick = {}
             )
@@ -122,8 +136,10 @@ private fun DialogAddingPreview() {
         ) {
             DialogLayout(
                 name = "Some name",
+                initValue = 223.87,
                 isEdit = false,
                 onNameChange = {},
+                onInitValueChange = {},
                 onSaveClick = {},
                 onDeleteClick = {}
             )

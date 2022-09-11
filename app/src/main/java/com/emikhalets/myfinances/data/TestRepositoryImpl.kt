@@ -4,6 +4,7 @@ import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Transaction
 import com.emikhalets.myfinances.data.entity.TransactionEntity
 import com.emikhalets.myfinances.data.entity.Wallet
+import com.emikhalets.myfinances.data.entity.WalletEntity
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.enums.TransactionType.Companion.getDefaultId
 import java.util.*
@@ -135,12 +136,12 @@ class TestRepositoryImpl @Inject constructor() : AppRepository {
      */
 
     private val wallets = mutableListOf(
-        Wallet(1, "Основной"),
-        Wallet(2, "Второстепенный"),
+        Wallet(1, "Основной", 0.0),
+        Wallet(2, "Второстепенный", 0.0),
     )
 
-    override suspend fun getWallets(): Result<Flow<List<Wallet>>> {
-        return Result.success(flowOf(wallets))
+    override suspend fun getWallets(): Result<Flow<List<WalletEntity>>> {
+        return Result.success(flowOf(wallets.map { WalletEntity(it, 0.0) }))
     }
 
     override suspend fun getWallet(id: Long): Result<Wallet> {

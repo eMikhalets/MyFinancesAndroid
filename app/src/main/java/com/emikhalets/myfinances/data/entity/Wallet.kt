@@ -10,12 +10,13 @@ data class Wallet(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") val id: Long = 0,
     @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "init_value") val initValue: Double,
 ) {
 
     @Ignore
-    constructor(name: String) : this(0, name)
+    constructor(name: String, initValue: Double) : this(0, name, initValue)
 }
 
-fun Wallet?.copyOrNew(name: String): Wallet {
-    return this?.copy(name = name) ?: Wallet(name)
+fun Wallet?.copyOrNew(name: String, initValue: Double): Wallet {
+    return this?.copy(name = name, initValue = initValue) ?: Wallet(name, initValue)
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "0f804710aae90881691c1f6b6d278789",
+    "identityHash": "7e504c84cea4aa53c70a0d0f1c60d046",
     "entities": [
       {
         "tableName": "categories",
@@ -94,7 +94,7 @@
       },
       {
         "tableName": "wallets",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `init_value` REAL NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -106,6 +106,12 @@
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "initValue",
+            "columnName": "init_value",
+            "affinity": "REAL",
             "notNull": true
           }
         ],
@@ -122,7 +128,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0f804710aae90881691c1f6b6d278789')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7e504c84cea4aa53c70a0d0f1c60d046')"
     ]
   }
 }

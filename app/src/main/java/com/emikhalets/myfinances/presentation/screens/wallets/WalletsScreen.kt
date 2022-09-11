@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,7 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.data.entity.Wallet
+import com.emikhalets.myfinances.data.entity.WalletEntity
 import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.AppToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
@@ -56,6 +58,7 @@ fun WalletsScreen(
     WalletsScreen(
         navController = navController,
         wallets = state.wallets,
+        currentId = viewModel.prefs.currentWalletId,
         onWalletClick = viewModel::getWallet,
         onAddClick = { walletDialogVisible = true }
     )
@@ -73,7 +76,8 @@ fun WalletsScreen(
 @Composable
 private fun WalletsScreen(
     navController: NavHostController,
-    wallets: List<Wallet>,
+    wallets: List<WalletEntity>,
+    currentId: Long,
     onWalletClick: (Long) -> Unit,
     onAddClick: () -> Unit,
 ) {
@@ -81,36 +85,59 @@ private fun WalletsScreen(
         AppToolbar(navController, stringResource(R.string.title_wallets_screen))
     }) {
         Column(Modifier.fillMaxWidth()) {
-            WalletsList(wallets, onWalletClick)
+            WalletsList(wallets, currentId, onWalletClick)
             AddButton(onAddClick)
         }
     }
 }
 
 @Composable
-private fun ColumnScope.WalletsList(wallets: List<Wallet>, onWalletClick: (Long) -> Unit) {
+private fun ColumnScope.WalletsList(
+    wallets: List<WalletEntity>,
+    currentId: Long,
+    onWalletClick: (Long) -> Unit,
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .weight(1f)
     ) {
-        items(wallets) { wallet ->
-            WalletItem(wallet, onWalletClick)
+        items(wallets) { entity ->
+            WalletItem(entity, currentId, onWalletClick)
         }
     }
 }
 
 @Composable
-private fun WalletItem(wallet: Wallet, onWalletClick: (Long) -> Unit) {
+private fun WalletItem(entity: WalletEntity, currentId: Long, onWalletClick: (Long) -> Unit) {
+    val fontWeight = if (entity.wallet.id == currentId) {
+        FontWeight.Normal
+    } else {
+        FontWeight.Bold
+    }
+
     Column(Modifier.fillMaxWidth()) {
-        AppText(
-            text = wallet.name,
-            fontSize = 18.sp,
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
-                .clickable { onWalletClick(wallet.id) }
-        )
+                .clickable { onWalletClick(entity.wallet.id) }
+        ) {
+            AppText(
+                text = entity.wallet.name,
+                fontSize = 18.sp,
+                fontWeight = fontWeight,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(8.dp)
+            )
+            AppText(
+                text = entity.value.toString(),
+                fontSize = 20.sp,
+                fontWeight = fontWeight,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
         Divider(color = MaterialTheme.colors.secondary)
     }
 }
@@ -122,7 +149,7 @@ private fun AddButton(onAddClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.primary)
-            .clickable { /* TODO: add dialog new wallet */ }
+            .clickable { onAddClick() }
             .padding(16.dp)
     ) {
         AppText(
@@ -139,6 +166,7 @@ private fun Preview() {
         WalletsScreen(
             navController = rememberNavController(),
             wallets = PreviewEntities.getWalletsScreenList(),
+            currentId = 1,
             onWalletClick = {},
             onAddClick = {}
         )

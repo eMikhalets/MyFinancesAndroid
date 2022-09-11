@@ -7,12 +7,14 @@ import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Transaction
 import com.emikhalets.myfinances.data.entity.TransactionEntity
 import com.emikhalets.myfinances.data.entity.Wallet
+import com.emikhalets.myfinances.data.entity.WalletEntity
 import com.emikhalets.myfinances.utils.Prefs
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.enums.TransactionType.Companion.getDefaultId
 import com.emikhalets.myfinances.utils.runDatabaseRequest
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class AppRepositoryImpl @Inject constructor(
     private val categoryDao: CategoryDao,
@@ -85,8 +87,22 @@ class AppRepositoryImpl @Inject constructor(
      * Wallets Dao
      */
 
-    override suspend fun getWallets(): Result<Flow<List<Wallet>>> {
-        return runDatabaseRequest { walletDao.getAllOrderByName() }
+    override suspend fun getWallets(): Result<Flow<List<WalletEntity>>> {
+        return runDatabaseRequest {
+            walletDao.getAllOrderByName().map { list ->
+                list.map { wallet ->
+                    val sum = transactionDao.getAll(wallet.id)
+                        .map { transaction ->
+                            when (categoryDao.getTypeById(transaction.categoryId)) {
+                                TransactionType.Expense -> transaction.value * -1
+                                TransactionType.Income -> transaction.value
+                            }
+                        }
+                        .reduce { acc, value -> acc + value }
+                    WalletEntity(wallet, sum)
+                }
+            }
+        }
     }
 
     override suspend fun getWallet(id: Long): Result<Wallet> {

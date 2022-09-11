@@ -1,6 +1,5 @@
-package com.emikhalets.myfinances.presentation.screens.dialogs
+package com.emikhalets.myfinances.presentation.screens.category
 
-import AppBaseDialog
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emikhalets.myfinances.R
+import com.emikhalets.myfinances.presentation.core.AppBaseDialog
 import com.emikhalets.myfinances.presentation.core.AppTextButton
 import com.emikhalets.myfinances.presentation.core.AppTextField
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme

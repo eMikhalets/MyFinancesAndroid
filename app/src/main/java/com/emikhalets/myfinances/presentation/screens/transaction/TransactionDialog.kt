@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -32,140 +31,150 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
+import com.emikhalets.myfinances.data.entity.Transaction
 import com.emikhalets.myfinances.data.entity.TransactionEntity
+import com.emikhalets.myfinances.data.entity.copyTransactionOrNew
 import com.emikhalets.myfinances.data.entity.withDefault
+import com.emikhalets.myfinances.presentation.core.AppBaseDialog
 import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.AppTextButton
 import com.emikhalets.myfinances.presentation.core.AppTextField
-import com.emikhalets.myfinances.presentation.core.AppToolbar
-import com.emikhalets.myfinances.presentation.core.ScreenScaffold
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.safeToDouble
 import com.emikhalets.myfinances.utils.toLabelDate
-import com.emikhalets.myfinances.utils.toast
+import java.util.*
 
 @Composable
-fun TransactionScreen(
-    navController: NavHostController,
-    transactionId: Long,
-    viewModel: TransactionViewModel = hiltViewModel(),
+fun TransactionDialog(
+    entity: TransactionEntity?,
+    categories: List<Category>,
+    onDismiss: () -> Unit,
+    onSaveClick: (Transaction) -> Unit,
+    onDeleteClick: (Transaction) -> Unit,
+    injector: TransactionInjector = hiltViewModel(),
 ) {
-    val state = viewModel.state
     val context = LocalContext.current
-    val defCategory = Category.getDefaultOld()
 
-    val categories = remember { mutableListOf<Category>() }
+    val categoriesExpense = remember { mutableListOf<Category>() }
+    val categoriesIncome = remember { mutableListOf<Category>() }
 
-    var note by remember { mutableStateOf("") }
-    var value by remember { mutableStateOf(0.0) }
-    var type by remember { mutableStateOf(TransactionType.Expense) }
-    var category by remember { mutableStateOf(defCategory) }
-
-    LaunchedEffect(Unit) { viewModel.getTransaction(transactionId) }
-
-    LaunchedEffect(state.entity) {
-        if (state.entity != null) {
-            note = state.entity.transaction.note
-            value = state.entity.transaction.value
-            type = state.entity.transaction.type
-            category = state.entity.category
-            viewModel.getCategories(state.entity.transaction.type)
-        }
+    var type by remember {
+        mutableStateOf(entity?.category?.type ?: TransactionType.Expense)
+    }
+    var category by remember {
+        mutableStateOf(entity?.category ?: injector.getDefCategory(type))
+    }
+    var value by remember {
+        mutableStateOf(entity?.transaction?.value ?: 0.0)
+    }
+    var note by remember {
+        mutableStateOf(entity?.transaction?.note ?: "")
     }
 
-    LaunchedEffect(state.categories) {
-        categories.clear()
-        categories.addAll(state.categories.withDefault(context, type))
+    val currentCategories = when (type) {
+        TransactionType.Expense -> categoriesExpense
+        TransactionType.Income -> categoriesIncome
     }
 
-    LaunchedEffect(state.transactionSaved) {
-        if (state.transactionSaved) navController.popBackStack()
+    LaunchedEffect(categories) {
+        categoriesExpense.clear()
+        categoriesIncome.clear()
+        categoriesExpense.addAll(
+            categories
+                .filter { it.type == TransactionType.Expense }
+                .withDefault(context, TransactionType.Expense)
+        )
+        categoriesIncome.addAll(
+            categories
+                .filter { it.type == TransactionType.Income }
+                .withDefault(context, TransactionType.Income)
+        )
     }
 
-    LaunchedEffect(state.transactionDeleted) {
-        if (state.transactionDeleted) navController.popBackStack()
+    AppBaseDialog(
+        label = stringResource(R.string.title_category_screen),
+        onDismiss = { onDismiss() },
+        padding = 8.dp
+    ) {
+        DialogLayout(
+            entity = entity,
+            categories = currentCategories,
+            type = type,
+            category = category,
+            value = value,
+            note = note,
+            onTypeChange = {
+                type = it
+                category = Category.getDefaultOld(context, type)
+            },
+            onCategoryChange = { category = it },
+            onValueChange = { value = it.safeToDouble() },
+            onNoteChange = { note = it },
+            onSaveClick = {
+                val savingEntity = entity.copyTransactionOrNew(
+                    categoryId = category.id,
+                    walletId = injector.prefs.currentWalletId,
+                    value = value,
+                    type = type,
+                    note = note
+                )
+                onSaveClick(savingEntity)
+            },
+            onDeleteClick = { entity?.transaction?.let(onDeleteClick) }
+        )
     }
-
-    LaunchedEffect(state.error) { toast(context, state.error) }
-
-    TransactionScreen(
-        navController = navController,
-        entity = state.entity,
-        categories = categories,
-        category = category,
-        note = note,
-        value = value,
-        type = type,
-        onTypeChange = {
-            type = it
-            category = Category.getDefaultOld(context, type)
-            viewModel.getCategories(type)
-        },
-        onValueChange = { value = it.safeToDouble() },
-        onNoteChange = { note = it },
-        onCategoryChange = { category = it },
-        onSaveClick = { viewModel.saveTransaction(category, value, type, note) },
-        onDeleteClick = viewModel::deleteTransaction
-    )
 }
 
 @Composable
-private fun TransactionScreen(
-    navController: NavHostController,
+private fun DialogLayout(
     entity: TransactionEntity?,
     categories: List<Category>,
-    category: Category,
-    note: String,
-    value: Double,
     type: TransactionType,
+    category: Category,
+    value: Double,
+    note: String,
     onTypeChange: (TransactionType) -> Unit,
+    onCategoryChange: (Category) -> Unit,
     onValueChange: (String) -> Unit,
     onNoteChange: (String) -> Unit,
-    onCategoryChange: (Category) -> Unit,
     onSaveClick: () -> Unit,
     onDeleteClick: () -> Unit,
 ) {
-    entity ?: return
-    ScreenScaffold({
-        AppToolbar(navController, stringResource(R.string.title_transaction_screen))
-    }) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            DateText(entity.transaction.timestamp)
-            Spacer(Modifier.height(16.dp))
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        DateText(entity?.transaction?.timestamp)
+        Spacer(Modifier.height(16.dp))
 
-            TransactionTypeChooser(type, onTypeChange)
-            Spacer(Modifier.height(16.dp))
+        TransactionTypeChooser(type, onTypeChange)
+        Spacer(Modifier.height(16.dp))
 
-            CategoriesDropMenu(category, categories, onCategoryChange)
-            Spacer(Modifier.height(16.dp))
+        CategoriesDropMenu(category, categories, onCategoryChange)
+        Spacer(Modifier.height(16.dp))
 
-            AppTextField(value.toString(), onValueChange, labelRes = R.string.label_money_value)
-            Spacer(Modifier.height(16.dp))
+        AppTextField(value.toString(), onValueChange, labelRes = R.string.label_money_value)
+        Spacer(Modifier.height(16.dp))
 
-            AppTextField(note, onNoteChange, labelRes = R.string.label_note)
-            Spacer(Modifier.height(16.dp))
+        AppTextField(note, onNoteChange, labelRes = R.string.label_note)
+        Spacer(Modifier.height(16.dp))
 
-            ControlButtons(onSaveClick, onDeleteClick)
-            Spacer(Modifier.height(16.dp))
-        }
+        ControlButtons(entity != null, onSaveClick, onDeleteClick)
+        Spacer(Modifier.height(16.dp))
     }
 }
 
 @Composable
-private fun DateText(timestamp: Long) {
+private fun DateText(timestamp: Long?) {
+    val date = (timestamp ?: Date().time).toLabelDate()
     AppText(
-        text = stringResource(R.string.date_header, timestamp.toLabelDate()),
+        text = stringResource(R.string.date_header, date),
         textAlign = TextAlign.Center,
         modifier = Modifier
             .fillMaxWidth()
@@ -255,13 +264,19 @@ private fun CategoriesDropMenu(item: Category, list: List<Category>, onSelect: (
 }
 
 @Composable
-private fun ControlButtons(onSaveClick: () -> Unit, onDeleteClick: () -> Unit) {
+private fun ControlButtons(
+    showDelete: Boolean,
+    onSaveClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+) {
     Row(Modifier.fillMaxWidth()) {
-        AppTextButton(
-            text = stringResource(R.string.delete),
-            onClick = onDeleteClick,
-            modifier = Modifier.weight(1f)
-        )
+        if (showDelete) {
+            AppTextButton(
+                text = stringResource(R.string.delete),
+                onClick = onDeleteClick,
+                modifier = Modifier.weight(1f)
+            )
+        }
         AppTextButton(
             text = stringResource(R.string.save),
             onClick = onSaveClick,
@@ -272,22 +287,27 @@ private fun ControlButtons(onSaveClick: () -> Unit, onDeleteClick: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-private fun Preview() {
+private fun DialogPreview() {
     MyFinancesTheme {
-        TransactionScreen(
-            navController = rememberNavController(),
-            entity = PreviewEntities.getTransactionScreenEntity(),
-            categories = emptyList(),
-            category = Category.getDefaultOld(),
-            note = "Some text comment",
-            value = 120.03,
-            type = TransactionType.Expense,
-            onTypeChange = {},
-            onValueChange = {},
-            onNoteChange = {},
-            onCategoryChange = {},
-            onSaveClick = {},
-            onDeleteClick = {}
-        )
+        AppBaseDialog(
+            label = "Preview label",
+            onDismiss = {},
+            padding = 8.dp
+        ) {
+            DialogLayout(
+                entity = PreviewEntities.getTransactionScreenEntity(),
+                categories = emptyList(),
+                type = TransactionType.Expense,
+                category = Category.getDefaultOld(),
+                value = 120.03,
+                note = "Some text comment",
+                onTypeChange = {},
+                onCategoryChange = {},
+                onValueChange = {},
+                onNoteChange = {},
+                onSaveClick = {},
+                onDeleteClick = {}
+            )
+        }
     }
 }

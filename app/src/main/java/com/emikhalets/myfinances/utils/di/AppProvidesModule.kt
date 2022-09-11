@@ -1,0 +1,21 @@
+package com.emikhalets.myfinances.utils.di
+
+import android.content.Context
+import com.emikhalets.myfinances.utils.ContextProvider
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@InstallIn(SingletonComponent::class)
+@Module
+object AppProvidesModule {
+
+    @Singleton
+    @Provides
+    fun providesContextProvider(@ApplicationContext context: Context): ContextProvider {
+        return ContextProvider(context)
+    }
+}

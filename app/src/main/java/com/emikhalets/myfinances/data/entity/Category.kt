@@ -25,18 +25,24 @@ data class Category(
     companion object {
 
         @Composable
-        fun getDefault(type: TransactionType? = null): Category {
+        fun getDefaultOld(type: TransactionType? = null): Category {
             val name = stringResource(R.string.default_category_name)
             val typeNotNull = type ?: TransactionType.Expense
             val id = typeNotNull.getDefaultId()
             return Category(id, name, typeNotNull)
         }
 
-        fun getDefault(context: Context, type: TransactionType? = null): Category {
+        fun getDefaultOld(context: Context, type: TransactionType? = null): Category {
             val name = context.getString(R.string.default_category_name)
             val typeNotNull = type ?: TransactionType.Expense
             val id = typeNotNull.getDefaultId()
             return Category(id, name, typeNotNull)
+        }
+
+        fun getDefault(context: Context, type: TransactionType): Category {
+            val id = type.getDefaultId()
+            val name = context.getString(R.string.default_category_name)
+            return Category(id, name, type)
         }
     }
 }

@@ -88,7 +88,7 @@ private fun CategoriesScreen(
 
 @Composable
 private fun CategoriesList(navController: NavHostController, categories: List<Category>) {
-    val list = categories.toMutableList().apply { add(Category.getDefault()) }
+    val list = categories.toMutableList().apply { add(Category.getDefaultOld()) }
     LazyColumn(Modifier.fillMaxSize()) {
         items(list) { category ->
             CategoryItem(navController, category)

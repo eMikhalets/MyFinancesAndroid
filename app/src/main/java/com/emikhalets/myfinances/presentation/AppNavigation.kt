@@ -11,6 +11,7 @@ import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.presentation.screens.categories.CategoriesScreen
 import com.emikhalets.myfinances.presentation.screens.main.MainScreen
 import com.emikhalets.myfinances.presentation.screens.transaction.TransactionScreen
+import com.emikhalets.myfinances.presentation.screens.wallet.WalletScreen
 import com.emikhalets.myfinances.presentation.screens.wallets.WalletsScreen
 
 private val transactionArgsRoute = "${AppScreen.Transaction.route}/{${AppNavArgs.TRANSACTION_ID}}"
@@ -47,6 +48,7 @@ fun AppNavGraph(navController: NavHostController) {
             listOf(navArgument(AppNavArgs.TRANSACTION_ID) { type = NavType.LongType })
         ) {
             val walletId = it.arguments?.getLong(AppNavArgs.TRANSACTION_ID) ?: -1
+            WalletScreen(navController, walletId)
         }
     }
 }

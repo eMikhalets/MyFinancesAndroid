@@ -8,7 +8,6 @@ data class MainState(
     val incomeList: List<TransactionEntity> = emptyList(),
     val expenseList: List<TransactionEntity> = emptyList(),
     val categories: List<Category> = emptyList(),
-    val transaction: TransactionEntity? = null,
     val error: String = "",
 ) {
 
@@ -17,10 +16,6 @@ data class MainState(
         expenseList: List<TransactionEntity>,
     ): MainState {
         return this.copy(incomeList = incomeList, expenseList = expenseList)
-    }
-
-    fun setTransaction(transaction: TransactionEntity): MainState {
-        return this.copy(transaction = transaction)
     }
 
     fun setCategories(categories: List<Category>): MainState {

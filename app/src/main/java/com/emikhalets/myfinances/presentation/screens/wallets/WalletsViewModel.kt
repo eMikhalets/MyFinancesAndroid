@@ -38,14 +38,6 @@ class WalletsViewModel @Inject constructor(
         }
     }
 
-    fun getWallet(id: Long) {
-        viewModelScope.launch(Dispatchers.Default) {
-            repo.getWallet(id)
-                .onSuccess { state = state.setWallet(it) }
-                .onFailure { state = state.setError(it.message) }
-        }
-    }
-
     fun saveWallet(wallet: Wallet) {
         viewModelScope.launch(Dispatchers.Default) {
             val request = if (wallet.id == 0L) {

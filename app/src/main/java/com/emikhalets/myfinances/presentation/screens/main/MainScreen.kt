@@ -39,6 +39,7 @@ import com.emikhalets.myfinances.presentation.core.ScreenScaffold
 import com.emikhalets.myfinances.presentation.core.TextMaxSize
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
+import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toDate
 import com.emikhalets.myfinances.utils.toast
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -53,14 +54,23 @@ fun MainScreen(
     val context = LocalContext.current
 
     var transactionDialogVisible by remember { mutableStateOf(false) }
+    var entity by remember { mutableStateOf<TransactionEntity?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.getTransactions()
         viewModel.getCategories()
     }
 
-    LaunchedEffect(state.transaction) {
-        state.transaction?.let { transactionDialogVisible = true }
+    LaunchedEffect(state.expenseList) {
+        if (entity?.transaction?.type == TransactionType.Expense) {
+            entity = state.expenseList.find { it.transaction.id == entity?.transaction?.id }
+        }
+    }
+
+    LaunchedEffect(state.incomeList) {
+        if (entity?.transaction?.type == TransactionType.Income) {
+            entity = state.incomeList.find { it.transaction.id == entity?.transaction?.id }
+        }
     }
 
     LaunchedEffect(state.error) { toast(context, state.error) }
@@ -69,13 +79,19 @@ fun MainScreen(
         navController = navController,
         incomeList = state.incomeList,
         expenseList = state.expenseList,
-        onTransactionClick = viewModel::getTransaction,
-        onAddClick = { transactionDialogVisible = true }
+        onTransactionClick = {
+            entity = it
+            transactionDialogVisible = true
+        },
+        onAddClick = {
+            entity = null
+            transactionDialogVisible = true
+        }
     )
 
     if (transactionDialogVisible) {
         TransactionDialog(
-            entity = state.transaction,
+            entity = entity,
             categories = state.categories,
             onDismiss = { transactionDialogVisible = false },
             onSaveClick = viewModel::saveTransaction,
@@ -90,7 +106,7 @@ private fun MainScreen(
     navController: NavHostController,
     incomeList: List<TransactionEntity>,
     expenseList: List<TransactionEntity>,
-    onTransactionClick: (Long) -> Unit,
+    onTransactionClick: (TransactionEntity) -> Unit,
     onAddClick: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -117,7 +133,7 @@ private fun MainScreen(
 @Composable
 private fun TransactionsList(
     transactions: List<TransactionEntity>,
-    onTransactionClick: (Long) -> Unit,
+    onTransactionClick: (TransactionEntity) -> Unit,
 ) {
     if (transactions.isEmpty()) {
         TextMaxSize(stringResource(R.string.no_transactions))
@@ -131,14 +147,17 @@ private fun TransactionsList(
 }
 
 @Composable
-private fun TransactionsItem(entity: TransactionEntity, onTransactionClick: (Long) -> Unit) {
+private fun TransactionsItem(
+    entity: TransactionEntity,
+    onTransactionClick: (TransactionEntity) -> Unit,
+) {
     Column(Modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable { onTransactionClick(entity) }
                 .padding(8.dp)
-                .clickable { onTransactionClick(entity.transaction.id) }
         ) {
             Column(
                 modifier = Modifier

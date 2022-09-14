@@ -36,6 +36,7 @@ import com.emikhalets.myfinances.presentation.core.AppToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
 import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
+import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toast
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
@@ -49,10 +50,21 @@ fun CategoriesScreen(
     val context = LocalContext.current
 
     var categoryDialogVisible by remember { mutableStateOf(false) }
+    var category by remember { mutableStateOf<Category?>(null) }
 
     LaunchedEffect(Unit) { viewModel.getCategories() }
 
-    LaunchedEffect(state.category) { state.category?.let { categoryDialogVisible = true } }
+    LaunchedEffect(state.expenseList) {
+        if (category?.type == TransactionType.Expense) {
+            category = state.expenseList.find { it.id == category?.id }
+        }
+    }
+
+    LaunchedEffect(state.incomeList) {
+        if (category?.type == TransactionType.Income) {
+            category = state.incomeList.find { it.id == category?.id }
+        }
+    }
 
     LaunchedEffect(state.error) { toast(context, state.error) }
 
@@ -60,13 +72,19 @@ fun CategoriesScreen(
         navController = navController,
         incomeList = state.incomeList,
         expenseList = state.expenseList,
-        onCategoryClick = viewModel::getCategory,
-        onAddClick = { categoryDialogVisible = true }
+        onCategoryClick = {
+            category = it
+            categoryDialogVisible = true
+        },
+        onAddClick = {
+            category = null
+            categoryDialogVisible = true
+        }
     )
 
     if (categoryDialogVisible) {
         CategoryDialog(
-            category = state.category,
+            category = category,
             onDismiss = { categoryDialogVisible = false },
             onSaveClick = viewModel::saveCategory,
             onDeleteClick = viewModel::deleteCategory
@@ -80,7 +98,7 @@ private fun CategoriesScreen(
     navController: NavHostController,
     incomeList: List<Category>,
     expenseList: List<Category>,
-    onCategoryClick: (Long) -> Unit,
+    onCategoryClick: (Category) -> Unit,
     onAddClick: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -107,7 +125,7 @@ private fun CategoriesScreen(
 }
 
 @Composable
-private fun CategoriesList(categories: List<Category>, onCategoryClick: (Long) -> Unit) {
+private fun CategoriesList(categories: List<Category>, onCategoryClick: (Category) -> Unit) {
     val list = categories.toMutableList().apply { add(Category.getDefaultOld()) }
     LazyColumn(Modifier.fillMaxSize()) {
         items(list) { category ->
@@ -117,15 +135,15 @@ private fun CategoriesList(categories: List<Category>, onCategoryClick: (Long) -
 }
 
 @Composable
-private fun CategoryItem(category: Category, onCategoryClick: (Long) -> Unit) {
+private fun CategoryItem(category: Category, onCategoryClick: (Category) -> Unit) {
     Column(Modifier.fillMaxWidth()) {
         AppText(
             text = category.name,
             fontSize = 18.sp,
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable { onCategoryClick(category) }
                 .padding(8.dp)
-                .clickable { onCategoryClick(category.id) }
         )
         Divider(color = MaterialTheme.colors.secondary)
     }

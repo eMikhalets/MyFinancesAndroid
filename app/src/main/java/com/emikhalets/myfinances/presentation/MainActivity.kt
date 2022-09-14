@@ -38,8 +38,8 @@ class MainActivity : AppCompatActivity() {
                 mutableStateOf(prefs.currentWalletId != Prefs.NO_WALLET_ID)
             }
 
-            LaunchedEffect(state) {
-                prefs.currentWalletId = state.createdWalletId
+            LaunchedEffect(state.createdWalletId) {
+                if (state.createdWalletId != 0L) prefs.currentWalletId = state.createdWalletId
                 visibleAppScreens = prefs.currentWalletId != Prefs.NO_WALLET_ID
             }
 

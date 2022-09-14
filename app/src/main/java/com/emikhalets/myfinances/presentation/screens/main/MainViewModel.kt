@@ -45,14 +45,6 @@ class MainViewModel @Inject constructor(private val repo: AppRepository) : ViewM
         }
     }
 
-    fun getTransaction(id: Long) {
-        viewModelScope.launch(Dispatchers.Default) {
-            repo.getTransaction(id)
-                .onSuccess { state = state.setTransaction(it) }
-                .onFailure { state = state.setError(it.message) }
-        }
-    }
-
     fun saveTransaction(transaction: Transaction) {
         viewModelScope.launch(Dispatchers.Default) {
             val request = if (transaction.id == 0L) {

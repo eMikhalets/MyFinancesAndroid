@@ -36,14 +36,6 @@ class CategoriesViewModel @Inject constructor(private val repo: AppRepository) :
         }
     }
 
-    fun getCategory(id: Long) {
-        viewModelScope.launch(Dispatchers.Default) {
-            repo.getCategory(id)
-                .onSuccess { state = state.setCategory(it) }
-                .onFailure { state = state.setError(it.message) }
-        }
-    }
-
     fun saveCategory(category: Category) {
         viewModelScope.launch(Dispatchers.Default) {
             val request = if (category.id == 0L) {

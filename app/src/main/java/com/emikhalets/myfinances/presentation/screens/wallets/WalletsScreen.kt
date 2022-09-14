@@ -31,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
+import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.data.entity.WalletEntity
 import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.AppToolbar
@@ -48,10 +49,15 @@ fun WalletsScreen(
     val context = LocalContext.current
 
     var walletDialogVisible by remember { mutableStateOf(false) }
+    var wallet by remember { mutableStateOf<Wallet?>(null) }
 
     LaunchedEffect(Unit) { viewModel.getWallets() }
 
-    LaunchedEffect(state.wallet) { state.wallet?.let { walletDialogVisible = true } }
+    LaunchedEffect(state.wallets) {
+        if (wallet != null) {
+            wallet = state.wallets.find { it.wallet.id == wallet?.id }?.wallet
+        }
+    }
 
     LaunchedEffect(state.error) { toast(context, state.error) }
 
@@ -59,13 +65,19 @@ fun WalletsScreen(
         navController = navController,
         wallets = state.wallets,
         currentId = viewModel.prefs.currentWalletId,
-        onWalletClick = viewModel::getWallet,
-        onAddClick = { walletDialogVisible = true }
+        onWalletClick = {
+            wallet = it
+            walletDialogVisible = true
+        },
+        onAddClick = {
+            wallet = null
+            walletDialogVisible = true
+        }
     )
 
     if (walletDialogVisible) {
         WalletDialog(
-            wallet = state.wallet,
+            wallet = wallet,
             onDismiss = { walletDialogVisible = false },
             onSaveClick = viewModel::saveWallet,
             onDeleteClick = viewModel::deleteWallet
@@ -78,7 +90,7 @@ private fun WalletsScreen(
     navController: NavHostController,
     wallets: List<WalletEntity>,
     currentId: Long,
-    onWalletClick: (Long) -> Unit,
+    onWalletClick: (Wallet) -> Unit,
     onAddClick: () -> Unit,
 ) {
     ScreenScaffold({
@@ -95,7 +107,7 @@ private fun WalletsScreen(
 private fun ColumnScope.WalletsList(
     wallets: List<WalletEntity>,
     currentId: Long,
-    onWalletClick: (Long) -> Unit,
+    onWalletClick: (Wallet) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -109,7 +121,7 @@ private fun ColumnScope.WalletsList(
 }
 
 @Composable
-private fun WalletItem(entity: WalletEntity, currentId: Long, onWalletClick: (Long) -> Unit) {
+private fun WalletItem(entity: WalletEntity, currentId: Long, onWalletClick: (Wallet) -> Unit) {
     val fontWeight = if (entity.wallet.id == currentId) {
         FontWeight.Normal
     } else {
@@ -120,7 +132,7 @@ private fun WalletItem(entity: WalletEntity, currentId: Long, onWalletClick: (Lo
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onWalletClick(entity.wallet.id) }
+                .clickable { onWalletClick(entity.wallet) }
         ) {
             AppText(
                 text = entity.wallet.name,

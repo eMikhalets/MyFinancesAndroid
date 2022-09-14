@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.emikhalets.myfinances.presentation.theme.textError
 import com.emikhalets.myfinances.presentation.theme.textPrimary
+import com.emikhalets.myfinances.presentation.theme.textSecondary
 
 @Composable
 fun TextPrimary(
@@ -74,6 +75,28 @@ fun TextPrimaryFillWidth(
         fontWeight = fontWeight,
         textAlign = TextAlign.Center,
         modifier = modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+fun TextSecondary(
+    text: String,
+    modifier: Modifier = Modifier,
+    size: TextUnit = 16.sp,
+    fontWeight: FontWeight = FontWeight.Normal,
+    textAlign: TextAlign = TextAlign.Start,
+    overflow: TextOverflow = TextOverflow.Clip,
+    maxLines: Int = Int.MAX_VALUE,
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        color = MaterialTheme.colors.textSecondary,
+        fontSize = size,
+        fontWeight = fontWeight,
+        textAlign = textAlign,
+        overflow = overflow,
+        maxLines = maxLines
     )
 }
 

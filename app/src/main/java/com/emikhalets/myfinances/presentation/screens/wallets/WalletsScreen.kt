@@ -33,10 +33,12 @@ import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.data.entity.WalletEntity
-import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.AppToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
+import com.emikhalets.myfinances.presentation.core.TextPrimary
 import com.emikhalets.myfinances.presentation.theme.AppTheme
+import com.emikhalets.myfinances.presentation.theme.boxBackground
+import com.emikhalets.myfinances.presentation.theme.textSecondary
 import com.emikhalets.myfinances.utils.PreviewEntities
 import com.emikhalets.myfinances.utils.toast
 
@@ -122,7 +124,7 @@ private fun ColumnScope.WalletsList(
 
 @Composable
 private fun WalletItem(entity: WalletEntity, currentId: Long, onWalletClick: (Wallet) -> Unit) {
-    val fontWeight = if (entity.wallet.id == currentId) {
+    val fontWeight = if (entity.wallet.id != currentId) {
         FontWeight.Normal
     } else {
         FontWeight.Bold
@@ -134,23 +136,23 @@ private fun WalletItem(entity: WalletEntity, currentId: Long, onWalletClick: (Wa
                 .fillMaxWidth()
                 .clickable { onWalletClick(entity.wallet) }
         ) {
-            AppText(
+            TextPrimary(
                 text = entity.wallet.name,
-                fontSize = 18.sp,
+                size = 18.sp,
                 fontWeight = fontWeight,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
                     .padding(8.dp)
             )
-            AppText(
+            TextPrimary(
                 text = entity.value.toString(),
-                fontSize = 20.sp,
+                size = 20.sp,
                 fontWeight = fontWeight,
                 modifier = Modifier.padding(8.dp)
             )
         }
-        Divider(color = MaterialTheme.colors.secondary)
+        Divider(color = MaterialTheme.colors.textSecondary)
     }
 }
 
@@ -160,13 +162,13 @@ private fun AddButton(onAddClick: () -> Unit) {
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.primary)
+            .background(MaterialTheme.colors.boxBackground)
             .clickable { onAddClick() }
             .padding(16.dp)
     ) {
-        AppText(
+        TextPrimary(
             text = stringResource(R.string.add_transaction),
-            fontSize = 24.sp
+            size = 20.sp
         )
     }
 }
@@ -178,7 +180,7 @@ private fun Preview() {
         WalletsScreen(
             navController = rememberNavController(),
             wallets = PreviewEntities.getWalletsScreenList(),
-            currentId = 1,
+            currentId = 2,
             onWalletClick = {},
             onAddClick = {}
         )

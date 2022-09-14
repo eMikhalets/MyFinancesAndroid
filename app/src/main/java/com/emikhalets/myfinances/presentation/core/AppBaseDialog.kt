@@ -21,7 +21,7 @@ import com.emikhalets.myfinances.presentation.theme.appBackground
 fun AppBaseDialog(
     onDismiss: () -> Unit,
     label: String = "",
-    padding: Dp = 0.dp,
+    padding: Dp = 16.dp,
     cancelable: Boolean = false,
     content: @Composable () -> Unit,
 ) {

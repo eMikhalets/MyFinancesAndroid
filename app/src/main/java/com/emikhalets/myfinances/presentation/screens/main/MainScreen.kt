@@ -33,11 +33,14 @@ import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.TransactionEntity
 import com.emikhalets.myfinances.presentation.core.AppPager
-import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.MainToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
+import com.emikhalets.myfinances.presentation.core.TextPrimary
 import com.emikhalets.myfinances.presentation.core.TextPrimaryFillSize
+import com.emikhalets.myfinances.presentation.core.TextSecondary
 import com.emikhalets.myfinances.presentation.theme.AppTheme
+import com.emikhalets.myfinances.presentation.theme.boxBackground
+import com.emikhalets.myfinances.presentation.theme.textSecondary
 import com.emikhalets.myfinances.utils.PreviewEntities
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toDate
@@ -164,30 +167,30 @@ private fun TransactionsItem(
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-                AppText(
+                TextPrimary(
                     text = entity.category.name,
-                    fontSize = 18.sp,
+                    size = 18.sp,
                     modifier = Modifier.fillMaxWidth()
                 )
-                AppText(
+                TextSecondary(
                     text = entity.transaction.timestamp.toDate(),
-                    fontSize = 14.sp,
+                    size = 14.sp,
                     modifier = Modifier.fillMaxWidth()
                 )
-                AppText(
+                TextSecondary(
                     text = entity.transaction.note,
-                    fontSize = 14.sp,
+                    size = 14.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            AppText(
+            TextPrimary(
                 text = stringResource(R.string.app_money_value, entity.transaction.value),
-                fontSize = 20.sp,
+                size = 20.sp,
             )
         }
-        Divider(color = MaterialTheme.colors.secondary)
+        Divider(color = MaterialTheme.colors.textSecondary)
     }
 }
 
@@ -197,13 +200,13 @@ private fun AddButton(onAddClick: () -> Unit) {
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.primary)
+            .background(MaterialTheme.colors.boxBackground)
             .clickable { onAddClick() }
             .padding(16.dp)
     ) {
-        AppText(
+        TextPrimary(
             text = stringResource(R.string.add_transaction),
-            fontSize = 24.sp
+            size = 20.sp
         )
     }
 }

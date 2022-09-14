@@ -69,16 +69,18 @@ private fun DialogLayout(
         AppTextField(
             value = name,
             onValueChange = onNameChange,
-            labelRes = R.string.label_name
+            label = stringResource(R.string.label_name),
+            modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(16.dp))
         AppTextField(
             value = initValue.toString(),
             onValueChange = { onInitValueChange(it.safeToDouble()) },
-            labelRes = R.string.label_init_value,
-            type = KeyboardType.Companion.Decimal
+            label = stringResource(R.string.label_init_value),
+            keyboardType = KeyboardType.Companion.Decimal,
+            modifier = Modifier.fillMaxWidth()
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(32.dp))
         ControlButtons(isEdit, onSaveClick, onDeleteClick)
     }
 }

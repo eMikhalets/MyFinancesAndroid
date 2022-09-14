@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -97,8 +98,7 @@ fun TransactionDialog(
 
     AppBaseDialog(
         label = stringResource(R.string.title_category_screen),
-        onDismiss = { onDismiss() },
-        padding = 8.dp
+        onDismiss = { onDismiss() }
     ) {
         DialogLayout(
             entity = entity,
@@ -158,11 +158,22 @@ private fun DialogLayout(
         CategoriesDropMenu(category, categories, onCategoryChange)
         Spacer(Modifier.height(16.dp))
 
-        AppTextField(value.toString(), onValueChange, labelRes = R.string.label_money_value)
+        AppTextField(
+            value = value.toString(),
+            onValueChange = onValueChange,
+            label = stringResource(R.string.label_money_value),
+            keyboardType = KeyboardType.Companion.Decimal,
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(Modifier.height(16.dp))
 
-        AppTextField(note, onNoteChange, labelRes = R.string.label_note)
-        Spacer(Modifier.height(16.dp))
+        AppTextField(
+            value = note,
+            onValueChange = onNoteChange,
+            label = stringResource(R.string.label_note),
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(Modifier.height(32.dp))
 
         ControlButtons(entity != null, onSaveClick, onDeleteClick)
     }
@@ -289,8 +300,7 @@ private fun DialogPreview() {
     AppTheme {
         AppBaseDialog(
             label = "Preview label",
-            onDismiss = {},
-            padding = 8.dp
+            onDismiss = {}
         ) {
             DialogLayout(
                 entity = PreviewEntities.getTransactionScreenEntity(),

@@ -79,12 +79,12 @@ object PreviewEntities {
 
     fun getWalletsScreenList(): List<WalletEntity> {
         return listOf(
-            WalletEntity(Wallet("Кошелек 1", 100.00), 900.21),
-            WalletEntity(Wallet("Кошелек 2", 1_000.00), 900.20),
-            WalletEntity(Wallet("Кошелек 3", 10_000.00), 9000.20),
-            WalletEntity(Wallet("Кошелек 4", 100_000.00), 90000.20),
-            WalletEntity(Wallet("Кошелек 5", 1_000_000.00), 900000.20),
-            WalletEntity(Wallet("Кошелек 6", 10_000_000.00), 900.20)
+            WalletEntity(Wallet(1, "Кошелек 1", 100.00), 900.21),
+            WalletEntity(Wallet(2, "Кошелек 2", 1_000.00), 900.20),
+            WalletEntity(Wallet(3, "Кошелек 3", 10_000.00), 9000.20),
+            WalletEntity(Wallet(4, "Кошелек 4", 100_000.00), 90000.20),
+            WalletEntity(Wallet(5, "Кошелек 5", 1_000_000.00), 900000.20),
+            WalletEntity(Wallet(6, "Кошелек 6", 10_000_000.00), 900.20)
         )
     }
 }

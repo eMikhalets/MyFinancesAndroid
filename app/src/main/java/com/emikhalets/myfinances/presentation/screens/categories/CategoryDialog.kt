@@ -44,8 +44,7 @@ fun CategoryDialog(
 
     AppBaseDialog(
         label = stringResource(R.string.dialog_label_new_category),
-        onDismiss = { onDismiss() },
-        padding = 8.dp
+        onDismiss = { onDismiss() }
     ) {
         DialogLayout(
             name = name,
@@ -77,9 +76,10 @@ private fun DialogLayout(
         AppTextField(
             value = name,
             onValueChange = onNameChange,
-            labelRes = R.string.label_name
+            label = stringResource(R.string.label_name),
+            modifier = Modifier.fillMaxWidth()
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(32.dp))
         ControlButtons(isEdit, onSaveClick, onDeleteClick)
     }
 }
@@ -151,8 +151,7 @@ private fun DialogPreview() {
     AppTheme {
         AppBaseDialog(
             label = "Preview label",
-            onDismiss = {},
-            padding = 8.dp
+            onDismiss = {}
         ) {
             DialogLayout(
                 name = "Some name",
@@ -173,8 +172,7 @@ private fun DialogAddingPreview() {
     AppTheme {
         AppBaseDialog(
             label = "Preview label",
-            onDismiss = {},
-            padding = 8.dp
+            onDismiss = {}
         ) {
             DialogLayout(
                 name = "Some name",

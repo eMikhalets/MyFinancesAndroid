@@ -27,7 +27,7 @@ import com.emikhalets.myfinances.presentation.core.AppBaseDialog
 import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.AppTextButton
 import com.emikhalets.myfinances.presentation.core.AppTextField
-import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
+import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.enums.TransactionType
 
 @Composable
@@ -148,7 +148,7 @@ private fun ControlButtons(
 @Preview(showBackground = true)
 @Composable
 private fun DialogPreview() {
-    MyFinancesTheme {
+    AppTheme {
         AppBaseDialog(
             label = "Preview label",
             onDismiss = {},
@@ -170,7 +170,7 @@ private fun DialogPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun DialogAddingPreview() {
-    MyFinancesTheme {
+    AppTheme {
         AppBaseDialog(
             label = "Preview label",
             onDismiss = {},

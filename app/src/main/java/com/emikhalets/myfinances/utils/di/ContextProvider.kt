@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.utils
+package com.emikhalets.myfinances.utils.di
 
 import android.content.Context
 import javax.inject.Inject

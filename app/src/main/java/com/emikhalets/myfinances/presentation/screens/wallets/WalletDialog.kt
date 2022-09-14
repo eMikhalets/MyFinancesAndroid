@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emikhalets.myfinances.R
@@ -20,7 +21,7 @@ import com.emikhalets.myfinances.data.entity.copyOrNew
 import com.emikhalets.myfinances.presentation.core.AppBaseDialog
 import com.emikhalets.myfinances.presentation.core.AppTextButton
 import com.emikhalets.myfinances.presentation.core.AppTextField
-import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
+import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.safeToDouble
 
 @Composable
@@ -74,7 +75,8 @@ private fun DialogLayout(
         AppTextField(
             value = initValue.toString(),
             onValueChange = { onInitValueChange(it.safeToDouble()) },
-            labelRes = R.string.label_init_value
+            labelRes = R.string.label_init_value,
+            type = KeyboardType.Companion.Decimal
         )
         Spacer(Modifier.height(16.dp))
         ControlButtons(isEdit, onSaveClick, onDeleteClick)
@@ -106,7 +108,7 @@ private fun ControlButtons(
 @Preview(showBackground = true)
 @Composable
 private fun DialogPreview() {
-    MyFinancesTheme {
+    AppTheme {
         AppBaseDialog(
             label = "Preview label",
             onDismiss = {},
@@ -128,7 +130,7 @@ private fun DialogPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun DialogAddingPreview() {
-    MyFinancesTheme {
+    AppTheme {
         AppBaseDialog(
             label = "Preview label",
             onDismiss = {},

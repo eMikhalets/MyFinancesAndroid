@@ -1,7 +1,6 @@
 package com.emikhalets.myfinances.utils.di
 
 import android.content.Context
-import com.emikhalets.myfinances.utils.ContextProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

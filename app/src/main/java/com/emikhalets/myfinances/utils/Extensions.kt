@@ -9,7 +9,13 @@ import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+// ========================================
+// Global constants
+
 const val DEFAULT_ERROR = "null"
+
+// ========================================
+// Global constants
 
 suspend inline fun <T : Any> runDatabaseRequest(crossinline block: suspend () -> T): Result<T> {
     return withContext(Dispatchers.Default) {
@@ -22,13 +28,28 @@ suspend inline fun <T : Any> runDatabaseRequest(crossinline block: suspend () ->
     }
 }
 
+// ========================================
+// Primitive conversion
+
 fun Double.toValue(): String {
     return try {
         "$this ₽"
     } catch (ex: NumberFormatException) {
-        "- ₽"
+        "0.00 ₽"
     }
 }
+
+fun String.safeToDouble(): Double {
+    return try {
+        this.toDouble()
+    } catch (ex: Exception) {
+        ex.printStackTrace()
+        0.00
+    }
+}
+
+// ========================================
+// Date formatting
 
 fun Long?.toDate(): String {
     if (this == null) return "no date"
@@ -44,6 +65,9 @@ fun Long?.toLabelDate(): String {
     return formatter.format(date)
 }
 
+// ========================================
+// Toasts and snackBars
+
 fun toast(context: Context, @StringRes res: Int) {
     Toast.makeText(context, res, Toast.LENGTH_SHORT).show()
 }
@@ -55,13 +79,4 @@ fun toast(context: Context, message: String) {
 
 private fun String.errorOrDefault(context: Context): String {
     return if (this == DEFAULT_ERROR) context.getString(R.string.default_error) else this
-}
-
-fun String.safeToDouble(): Double {
-    return try {
-        this.toDouble()
-    } catch (ex: Exception) {
-        ex.printStackTrace()
-        0.0
-    }
 }

@@ -2,7 +2,7 @@ package com.emikhalets.myfinances.presentation.screens.main
 
 import androidx.lifecycle.ViewModel
 import com.emikhalets.myfinances.data.entity.Category
-import com.emikhalets.myfinances.utils.ContextProvider
+import com.emikhalets.myfinances.utils.di.ContextProvider
 import com.emikhalets.myfinances.utils.Prefs
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import dagger.hilt.android.lifecycle.HiltViewModel

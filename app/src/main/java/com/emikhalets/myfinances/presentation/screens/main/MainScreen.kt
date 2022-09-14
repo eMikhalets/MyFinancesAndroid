@@ -36,8 +36,8 @@ import com.emikhalets.myfinances.presentation.core.AppPager
 import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.MainToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
-import com.emikhalets.myfinances.presentation.core.TextMaxSize
-import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
+import com.emikhalets.myfinances.presentation.core.TextPrimaryFillSize
+import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toDate
@@ -136,7 +136,7 @@ private fun TransactionsList(
     onTransactionClick: (TransactionEntity) -> Unit,
 ) {
     if (transactions.isEmpty()) {
-        TextMaxSize(stringResource(R.string.no_transactions))
+        TextPrimaryFillSize(stringResource(R.string.no_transactions))
     } else {
         LazyColumn(Modifier.fillMaxSize()) {
             items(transactions) { transaction ->
@@ -211,7 +211,7 @@ private fun AddButton(onAddClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
-    MyFinancesTheme {
+    AppTheme {
         MainScreen(
             navController = rememberNavController(),
             incomeList = PreviewEntities.getMainScreenIncomeList(),

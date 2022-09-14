@@ -36,7 +36,7 @@ import com.emikhalets.myfinances.data.entity.WalletEntity
 import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.AppToolbar
 import com.emikhalets.myfinances.presentation.core.ScreenScaffold
-import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
+import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
 import com.emikhalets.myfinances.utils.toast
 
@@ -174,7 +174,7 @@ private fun AddButton(onAddClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
-    MyFinancesTheme {
+    AppTheme {
         WalletsScreen(
             navController = rememberNavController(),
             wallets = PreviewEntities.getWalletsScreenList(),

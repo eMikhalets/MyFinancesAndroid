@@ -14,7 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.presentation.screens.wallets.WalletDialog
-import com.emikhalets.myfinances.presentation.theme.MyFinancesTheme
+import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.Prefs
 import com.emikhalets.myfinances.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
             LaunchedEffect(state.error) { toast(context, state.error) }
 
-            MyFinancesTheme {
+            AppTheme {
                 Surface(color = MaterialTheme.colors.surface) {
                     if (visibleAppScreens) {
                         AppNavGraph(navController = navController)

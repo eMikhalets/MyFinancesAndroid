@@ -1,7 +1,8 @@
 package com.emikhalets.myfinances.presentation.core
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -14,20 +15,38 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.utils.enums.TransactionType
-import com.emikhalets.myfinances.utils.toValue
+import com.emikhalets.myfinances.presentation.theme.textError
+import com.emikhalets.myfinances.presentation.theme.textPrimary
 
 @Composable
-fun TextMaxSize(
+fun TextPrimary(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colors.onPrimary,
-    fontSize: TextUnit = MaterialTheme.typography.body1.fontSize,
+    size: TextUnit = 16.sp,
+    fontWeight: FontWeight = FontWeight.Normal,
+    textAlign: TextAlign = TextAlign.Start,
+    overflow: TextOverflow = TextOverflow.Clip,
+    maxLines: Int = Int.MAX_VALUE,
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        color = MaterialTheme.colors.textPrimary,
+        fontSize = size,
+        fontWeight = fontWeight,
+        textAlign = textAlign,
+        overflow = overflow,
+        maxLines = maxLines
+    )
+}
+
+@Composable
+fun TextPrimaryFillSize(
+    text: String,
+    modifier: Modifier = Modifier,
+    size: TextUnit = 16.sp,
     fontWeight: FontWeight = FontWeight.Normal,
 ) {
     Box(
@@ -36,100 +55,48 @@ fun TextMaxSize(
     ) {
         AppText(
             text = text,
-            fontColor = color,
-            fontSize = fontSize,
+            fontSize = size,
             fontWeight = fontWeight
         )
     }
 }
 
 @Composable
-fun TextWithIcon(
+fun TextPrimaryFillWidth(
     text: String,
-    icon: Int,
-    onClick: () -> Unit = {},
-    iconSize: Dp = 24.dp,
-    padding: PaddingValues = PaddingValues(16.dp),
-    color: Color = MaterialTheme.colors.onPrimary,
-    fontSize: TextUnit = MaterialTheme.typography.body1.fontSize,
+    modifier: Modifier = Modifier,
+    size: TextUnit = 16.sp,
     fontWeight: FontWeight = FontWeight.Normal,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .clickable { onClick() }
-            .padding(padding)
-            .fillMaxWidth()
-    ) {
-        AppIcon(
-            drawable = icon,
-            size = iconSize
-        )
-        Spacer(Modifier.width(16.dp))
-        AppText(
-            text = text,
-            fontColor = color,
-            fontSize = fontSize,
-            fontWeight = fontWeight
-        )
-    }
-}
-
-@Composable
-fun AppTextMoney(
-    value: Double,
-    modifier: Modifier = Modifier,
-    type: TransactionType? = null,
-    fontSize: TextUnit = 18.sp,
-    fontColor: Color = MaterialTheme.colors.onSurface
-) {
-    val icon = when (type) {
-        TransactionType.Expense -> R.drawable.ic_minus
-        TransactionType.Income -> R.drawable.ic_plus
-        else -> null
-    }
-
-    AppTextWithIcon(
-        text = value.toValue(),
-        drawable = icon,
-        drawablePadding = 16.dp,
-        drawableSize = 18.dp,
-        fontSize = fontSize,
-        fontColor = fontColor,
-        modifier = modifier
+    TextPrimary(
+        text = text,
+        size = size,
+        fontWeight = fontWeight,
+        textAlign = TextAlign.Center,
+        modifier = modifier.fillMaxWidth()
     )
 }
 
 @Composable
-fun AppTextWithIcon(
+fun TextError(
     text: String,
     modifier: Modifier = Modifier,
-    drawable: Int? = null,
-    drawablePadding: Dp = 0.dp,
-    drawableColor: Color = MaterialTheme.colors.onSurface,
-    drawableSize: Dp = 24.dp,
-    fontSize: TextUnit = MaterialTheme.typography.body1.fontSize,
-    fontColor: Color = MaterialTheme.colors.onSurface,
+    size: TextUnit = 16.sp,
+    fontWeight: FontWeight = FontWeight.Normal,
+    textAlign: TextAlign = TextAlign.Start,
+    overflow: TextOverflow = TextOverflow.Clip,
+    maxLines: Int = Int.MAX_VALUE,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-        modifier = modifier
-    ) {
-        if (drawable != null) {
-            AppIcon(
-                drawable = drawable,
-                color = drawableColor,
-                size = drawableSize
-            )
-            Spacer(modifier = Modifier.width(drawablePadding))
-        }
-        AppText(
-            text = text,
-            fontSize = fontSize,
-            fontColor = fontColor
-        )
-    }
+    Text(
+        text = text,
+        modifier = modifier,
+        color = MaterialTheme.colors.textError,
+        fontSize = size,
+        fontWeight = fontWeight,
+        textAlign = textAlign,
+        overflow = overflow,
+        maxLines = maxLines
+    )
 }
 
 @Composable
@@ -146,7 +113,7 @@ fun AppText(
     textAlign: TextAlign? = TextAlign.Start,
     lineHeight: TextUnit = MaterialTheme.typography.body1.lineHeight,
     overflow: TextOverflow = TextOverflow.Clip,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE,
 ) {
     Text(
         text = text,

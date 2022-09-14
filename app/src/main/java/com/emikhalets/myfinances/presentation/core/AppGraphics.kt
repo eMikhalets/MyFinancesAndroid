@@ -12,7 +12,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.emikhalets.myfinances.presentation.theme.textPrimary
 
+@Deprecated("")
 @Composable
 fun AppIcon(
     @DrawableRes drawable: Int?,
@@ -38,36 +40,28 @@ fun AppIcon(
 fun AppIcon(
     imageVector: ImageVector,
     modifier: Modifier = Modifier,
-    size: Dp = 24.dp,
-    color: Color = MaterialTheme.colors.onPrimary,
+    color: Color = MaterialTheme.colors.textPrimary,
 ) {
     Icon(
         imageVector = imageVector,
         contentDescription = "",
         tint = color,
-        modifier = if (size > 0.dp) {
-            modifier.size(size)
-        } else {
-            modifier
-        }
+        modifier = modifier
     )
 }
 
 @Composable
-fun AppImage(
+fun AppIcon(
     @DrawableRes drawable: Int?,
     modifier: Modifier = Modifier,
-    size: Dp = 0.dp,
+    color: Color = MaterialTheme.colors.onPrimary,
 ) {
     if (drawable == null) return
 
-    Image(
+    Icon(
         painter = painterResource(drawable),
         contentDescription = "",
-        modifier = if (size > 0.dp) {
-            modifier.size(size)
-        } else {
-            modifier
-        }
+        tint = color,
+        modifier = modifier
     )
 }

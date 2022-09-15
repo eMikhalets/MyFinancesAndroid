@@ -48,24 +48,15 @@ fun TransactionDialog(
     onDeleteClick: (Transaction) -> Unit,
     injector: TransactionInjector = hiltViewModel(),
 ) {
-    var type by remember {
-        mutableStateOf(entity?.category?.type ?: TransactionType.Expense)
-    }
-    var category by remember {
-        mutableStateOf(entity?.category ?: Category("None", TransactionType.Expense))
-    }
-    var value by remember {
-        mutableStateOf(entity?.transaction?.value ?: 0.0)
-    }
-    var note by remember {
-        mutableStateOf(entity?.transaction?.note ?: "")
-    }
+    var type by remember { mutableStateOf(entity?.category?.type ?: TransactionType.Expense) }
+    var value by remember { mutableStateOf(entity?.transaction?.value ?: 0.0) }
+    var note by remember { mutableStateOf(entity?.transaction?.note ?: "") }
 
     var currentCategories by remember { mutableStateOf(categories.filter { it.type == type }) }
+    var category by remember { mutableStateOf(entity?.category ?: currentCategories.first()) }
 
     LaunchedEffect(type) {
-        val newList = categories.filter { it.type == type }
-        currentCategories = newList
+        currentCategories = categories.filter { it.type == type }
         category = if (entity?.category?.type == type) {
             entity.category
         } else {

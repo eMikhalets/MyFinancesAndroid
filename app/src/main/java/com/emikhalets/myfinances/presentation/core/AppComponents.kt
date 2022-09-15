@@ -1,11 +1,15 @@
 package com.emikhalets.myfinances.presentation.core
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
@@ -14,8 +18,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +33,10 @@ import androidx.compose.ui.unit.dp
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.presentation.theme.AppTheme
+import com.emikhalets.myfinances.presentation.theme.appBackground
+import com.emikhalets.myfinances.presentation.theme.boxBackground
+import com.emikhalets.myfinances.presentation.theme.textPrimary
+import com.emikhalets.myfinances.presentation.theme.textSecondary
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -48,23 +56,28 @@ fun AppPager(
 ) {
     TabRow(
         selectedTabIndex = pagerState.currentPage,
-        backgroundColor = MaterialTheme.colors.surface,
-        contentColor = MaterialTheme.colors.onSurface,
+        backgroundColor = MaterialTheme.colors.appBackground,
+        contentColor = MaterialTheme.colors.textPrimary,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
+                color = MaterialTheme.colors.boxBackground
             )
         }
     ) {
         tabs.forEachIndexed { index, name ->
             Tab(
                 selected = pagerState.currentPage == index,
-                text = { Text(name) },
-                onClick = { scope.launch { pagerState.scrollToPage(index) } }
+                text = { TextPrimary(name) },
+                onClick = { scope.launch { pagerState.scrollToPage(index) } },
+                modifier = Modifier.background(
+                    if (pagerState.currentPage == index) MaterialTheme.colors.boxBackground
+                    else MaterialTheme.colors.appBackground
+                )
             )
         }
     }
-    Divider()
+    Divider(color = MaterialTheme.colors.textSecondary)
     HorizontalPager(
         state = pagerState,
         modifier = modifier.fillMaxSize(),
@@ -81,14 +94,20 @@ fun CategoriesDropMenu(
     var selected by remember { mutableStateOf(item) }
     var expanded by remember { mutableStateOf(false) }
 
-    Box {
+    LaunchedEffect(item) { selected = item }
+
+    Column {
         AppTextField(
             value = selected.name,
             onValueChange = {},
             label = stringResource(R.string.label_category),
             readOnly = true,
-            modifier = Modifier.fillMaxWidth()
+            enabled = false,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded = true }
         )
+        Spacer(modifier = Modifier.height(8.dp))
         DropdownMenu(
             modifier = Modifier.fillMaxWidth(),
             expanded = expanded,
@@ -153,11 +172,13 @@ private fun Modifier.borderTypeIncome(type: TransactionType) = when (type) {
 @Composable
 private fun CategoriesDropMenuPreview() {
     AppTheme {
-        CategoriesDropMenu(
-            item = Category("Some category", TransactionType.Expense),
-            list = emptyList(),
-            onSelect = {}
-        )
+        Box(Modifier.padding(8.dp)) {
+            CategoriesDropMenu(
+                item = Category("Some category", TransactionType.Expense),
+                list = emptyList(),
+                onSelect = {}
+            )
+        }
     }
 }
 
@@ -165,9 +186,11 @@ private fun CategoriesDropMenuPreview() {
 @Composable
 private fun TransactionTypeChooserPreview() {
     AppTheme {
-        TransactionTypeChooser(
-            type = TransactionType.Expense,
-            onTypeSelect = {}
-        )
+        Box(Modifier.padding(8.dp)) {
+            TransactionTypeChooser(
+                type = TransactionType.Expense,
+                onTypeSelect = {}
+            )
+        }
     }
 }

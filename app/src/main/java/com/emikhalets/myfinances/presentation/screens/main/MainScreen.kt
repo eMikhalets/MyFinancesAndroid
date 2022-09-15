@@ -178,13 +178,15 @@ private fun TransactionsItem(
                     size = 14.sp,
                     modifier = Modifier.fillMaxWidth()
                 )
-                TextSecondary(
-                    text = entity.transaction.note,
-                    size = 14.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                if (entity.transaction.note.isNotEmpty()) {
+                    TextSecondary(
+                        text = entity.transaction.note,
+                        size = 14.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
             TextPrimary(
                 text = stringResource(R.string.app_money_value, entity.transaction.value),

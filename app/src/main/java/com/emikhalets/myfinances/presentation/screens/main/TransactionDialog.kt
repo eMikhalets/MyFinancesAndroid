@@ -1,22 +1,13 @@
 package com.emikhalets.myfinances.presentation.screens.main
 
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,8 +15,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -37,11 +26,12 @@ import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.data.entity.Transaction
 import com.emikhalets.myfinances.data.entity.TransactionEntity
 import com.emikhalets.myfinances.data.entity.copyTransactionOrNew
-import com.emikhalets.myfinances.data.entity.withDefault
 import com.emikhalets.myfinances.presentation.core.AppBaseDialog
 import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.AppTextButton
 import com.emikhalets.myfinances.presentation.core.AppTextField
+import com.emikhalets.myfinances.presentation.core.CategoriesDropMenu
+import com.emikhalets.myfinances.presentation.core.TransactionTypeChooser
 import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
 import com.emikhalets.myfinances.utils.enums.TransactionType
@@ -58,16 +48,11 @@ fun TransactionDialog(
     onDeleteClick: (Transaction) -> Unit,
     injector: TransactionInjector = hiltViewModel(),
 ) {
-    val context = LocalContext.current
-
-    val categoriesExpense = remember { mutableListOf<Category>() }
-    val categoriesIncome = remember { mutableListOf<Category>() }
-
     var type by remember {
         mutableStateOf(entity?.category?.type ?: TransactionType.Expense)
     }
     var category by remember {
-        mutableStateOf(entity?.category ?: injector.getDefCategory(type))
+        mutableStateOf(entity?.category ?: Category("None", TransactionType.Expense))
     }
     var value by remember {
         mutableStateOf(entity?.transaction?.value ?: 0.0)
@@ -76,24 +61,16 @@ fun TransactionDialog(
         mutableStateOf(entity?.transaction?.note ?: "")
     }
 
-    val currentCategories = when (type) {
-        TransactionType.Expense -> categoriesExpense
-        TransactionType.Income -> categoriesIncome
-    }
+    var currentCategories by remember { mutableStateOf(categories.filter { it.type == type }) }
 
-    LaunchedEffect(categories) {
-        categoriesExpense.clear()
-        categoriesIncome.clear()
-        categoriesExpense.addAll(
-            categories
-                .filter { it.type == TransactionType.Expense }
-                .withDefault(context, TransactionType.Expense)
-        )
-        categoriesIncome.addAll(
-            categories
-                .filter { it.type == TransactionType.Income }
-                .withDefault(context, TransactionType.Income)
-        )
+    LaunchedEffect(type) {
+        val newList = categories.filter { it.type == type }
+        currentCategories = newList
+        category = if (entity?.category?.type == type) {
+            entity.category
+        } else {
+            currentCategories.first()
+        }
     }
 
     AppBaseDialog(
@@ -109,7 +86,7 @@ fun TransactionDialog(
             note = note,
             onTypeChange = {
                 type = it
-                category = Category.getDefaultOld(context, type)
+                category = currentCategories.first()
             },
             onCategoryChange = { category = it },
             onValueChange = { value = it.safeToDouble() },
@@ -123,8 +100,12 @@ fun TransactionDialog(
                     note = note
                 )
                 onSaveClick(savingEntity)
+                onDismiss()
             },
-            onDeleteClick = { entity?.transaction?.let(onDeleteClick) }
+            onDeleteClick = {
+                entity?.transaction?.let(onDeleteClick)
+                onDismiss()
+            }
         )
     }
 }
@@ -192,87 +173,6 @@ private fun DateText(timestamp: Long?) {
 }
 
 @Composable
-private fun TransactionTypeChooser(
-    type: TransactionType,
-    onSelectType: (TransactionType) -> Unit,
-) {
-    Row(Modifier.fillMaxWidth()) {
-        AppText(
-            text = stringResource(R.string.expenses),
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .weight(1f)
-                .clickable { onSelectType(TransactionType.Expense) }
-                .borderTypeExpense(type)
-                .padding(8.dp)
-        )
-        AppText(
-            text = stringResource(R.string.incomes),
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .weight(1f)
-                .clickable { onSelectType(TransactionType.Income) }
-                .borderTypeIncome(type)
-                .padding(8.dp)
-        )
-    }
-}
-
-@Composable
-private fun Modifier.borderTypeExpense(type: TransactionType) = when (type) {
-    TransactionType.Expense -> border(1.dp, Color.Black)
-    else -> border(0.dp, MaterialTheme.colors.surface)
-}
-
-@Composable
-private fun Modifier.borderTypeIncome(type: TransactionType) = when (type) {
-    TransactionType.Income -> border(1.dp, Color.Black)
-    else -> border(0.dp, MaterialTheme.colors.surface)
-}
-
-@Composable
-private fun CategoriesDropMenu(item: Category, list: List<Category>, onSelect: (Category) -> Unit) {
-    var selected by remember { mutableStateOf(item) }
-    var expanded by remember { mutableStateOf(false) }
-
-    Box {
-        Column {
-            OutlinedTextField(
-                value = (selected.name),
-                onValueChange = { onSelect(selected) },
-                label = {
-                    Text(text = stringResource(R.string.label_category),
-                        color = MaterialTheme.colors.onPrimary)
-                },
-                modifier = Modifier.fillMaxWidth(),
-                readOnly = true
-            )
-            DropdownMenu(
-                modifier = Modifier.fillMaxWidth(),
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                list.forEach { entry ->
-                    DropdownMenuItem(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = {
-                            selected = entry
-                            expanded = false
-                            onSelect(selected)
-                        }
-                    ) {
-                        Text(
-                            text = (entry.name),
-                            modifier = Modifier.wrapContentWidth()
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
 private fun ControlButtons(
     showDelete: Boolean,
     onSaveClick: () -> Unit,
@@ -306,7 +206,7 @@ private fun DialogPreview() {
                 entity = PreviewEntities.getTransactionScreenEntity(),
                 categories = emptyList(),
                 type = TransactionType.Expense,
-                category = Category.getDefaultOld(),
+                category = Category("Default", TransactionType.Expense),
                 value = 120.03,
                 note = "Some text comment",
                 onTypeChange = {},

@@ -21,11 +21,11 @@ interface CategoryDao : BaseDao<Category> {
     @Query("SELECT type FROM categories WHERE id=:id")
     suspend fun getTypeById(id: Long): TransactionType
 
-    @Query("SELECT EXISTS (SELECT * FROM categories WHERE name=:name)")
-    suspend fun isExist(name: String): Boolean
+    @Query("SELECT EXISTS (SELECT * FROM categories WHERE name=:name AND type=:type)")
+    suspend fun isExist(name: String, type: TransactionType): Boolean
 
     suspend fun insertIfNotExist(category: Category): Boolean {
-        return if (!isExist(category.name)) {
+        return if (!isExist(category.name, category.type)) {
             insert(category)
             true
         } else {

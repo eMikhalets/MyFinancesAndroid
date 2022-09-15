@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
+import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.presentation.screens.wallets.WalletDialog
 import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.Prefs
@@ -53,7 +54,12 @@ class MainActivity : AppCompatActivity() {
                         WalletDialog(
                             wallet = null,
                             cancelable = false,
-                            onSaveClick = viewModel::saveWallet,
+                            onSaveClick = { wallet ->
+                                viewModel.saveWallet(
+                                    wallet,
+                                    context.getString(R.string.default_category_name)
+                                )
+                            },
                             onDismiss = {},
                             onDeleteClick = {}
                         )

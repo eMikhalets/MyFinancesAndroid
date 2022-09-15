@@ -49,8 +49,14 @@ fun WalletDialog(
             isEdit = isEdit,
             onNameChange = { name = it },
             onInitValueChange = { initValue = it },
-            onSaveClick = { onSaveClick(wallet.copyOrNew(name, initValue)) },
-            onDeleteClick = { wallet?.let(onDeleteClick) }
+            onSaveClick = {
+                onSaveClick(wallet.copyOrNew(name, initValue))
+                onDismiss()
+            },
+            onDeleteClick = {
+                wallet?.let(onDeleteClick)
+                onDismiss()
+            }
         )
     }
 }

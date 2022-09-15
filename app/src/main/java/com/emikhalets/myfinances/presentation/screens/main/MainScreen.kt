@@ -62,6 +62,7 @@ fun MainScreen(
     LaunchedEffect(Unit) {
         viewModel.getTransactions()
         viewModel.getCategories()
+        transactionDialogVisible = false
     }
 
     LaunchedEffect(state.expenseList) {

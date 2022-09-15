@@ -57,7 +57,9 @@ fun AppToolbar(
             {
                 AppIcon(
                     imageVector = icon,
-                    modifier = Modifier.clickable { navController.popBackStack() }
+                    modifier = Modifier
+                        .clickable { navController.popBackStack() }
+                        .padding(16.dp)
                 )
             }
         } ?: run { null },
@@ -67,7 +69,7 @@ fun AppToolbar(
                     imageVector = iconVector,
                     modifier = Modifier
                         .clickable { navController.navigate(iconVector) }
-                        .padding(start = 16.dp)
+                        .padding(16.dp)
                 )
             }
         },

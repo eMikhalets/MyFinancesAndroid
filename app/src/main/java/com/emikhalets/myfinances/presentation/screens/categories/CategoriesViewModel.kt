@@ -39,9 +39,9 @@ class CategoriesViewModel @Inject constructor(private val repo: AppRepository) :
     fun saveCategory(category: Category) {
         viewModelScope.launch(Dispatchers.Default) {
             val request = if (category.id == 0L) {
-                repo.updateCategory(category)
-            } else {
                 repo.insertCategory(category)
+            } else {
+                repo.updateCategory(category)
             }
             request
                 .onFailure { state = state.setError(it.message) }

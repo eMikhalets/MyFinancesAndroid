@@ -128,9 +128,8 @@ private fun CategoriesScreen(
 
 @Composable
 private fun CategoriesList(categories: List<Category>, onCategoryClick: (Category) -> Unit) {
-    val list = categories.toMutableList().apply { add(Category.getDefaultOld()) }
     LazyColumn(Modifier.fillMaxSize()) {
-        items(list) { category ->
+        items(categories) { category ->
             CategoryItem(category, onCategoryClick)
         }
     }

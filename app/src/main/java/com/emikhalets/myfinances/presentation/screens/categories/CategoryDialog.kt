@@ -36,6 +36,8 @@ fun CategoryDialog(
     var name by remember { mutableStateOf(category?.name ?: "") }
     var type by remember { mutableStateOf(category?.type ?: TransactionType.Expense) }
 
+    var nameEmpty by remember { mutableStateOf(false) }
+
     AppBaseDialog(
         label = stringResource(R.string.dialog_label_new_category),
         onDismiss = { onDismiss() }
@@ -44,11 +46,19 @@ fun CategoryDialog(
             name = name,
             type = type,
             isEdit = isEdit,
-            onNameChange = { name = it },
+            nameEmpty = nameEmpty,
+            onNameChange = {
+                name = it
+                nameEmpty = false
+            },
             onTypeSelect = { type = it },
             onSaveClick = {
-                onSaveClick(category.copyOrNew(name, type))
-                onDismiss()
+                if (name.isEmpty() || name.isBlank()) {
+                    nameEmpty = true
+                } else {
+                    onSaveClick(category.copyOrNew(name, type))
+                    onDismiss()
+                }
             },
             onDeleteClick = {
                 category?.let(onDeleteClick)
@@ -63,6 +73,7 @@ private fun DialogLayout(
     name: String,
     type: TransactionType,
     isEdit: Boolean,
+    nameEmpty: Boolean,
     onNameChange: (String) -> Unit,
     onTypeSelect: (TransactionType) -> Unit,
     onSaveClick: () -> Unit,
@@ -77,6 +88,7 @@ private fun DialogLayout(
             value = name,
             onValueChange = onNameChange,
             label = stringResource(R.string.label_name),
+            error = if (nameEmpty) stringResource(R.string.error_empty_field) else null,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(32.dp))
@@ -118,6 +130,7 @@ private fun DialogPreview() {
                 name = "Some name",
                 type = TransactionType.Expense,
                 isEdit = true,
+                nameEmpty = false,
                 onNameChange = {},
                 onTypeSelect = {},
                 onSaveClick = {},
@@ -139,6 +152,7 @@ private fun DialogAddingPreview() {
                 name = "Some name",
                 type = TransactionType.Income,
                 isEdit = false,
+                nameEmpty = true,
                 onNameChange = {},
                 onTypeSelect = {},
                 onSaveClick = {},

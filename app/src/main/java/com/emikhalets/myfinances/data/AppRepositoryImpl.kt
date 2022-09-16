@@ -15,7 +15,6 @@ import com.emikhalets.myfinances.utils.runDatabaseRequest
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 
 class AppRepositoryImpl @Inject constructor(
     private val categoryDao: CategoryDao,
@@ -90,19 +89,22 @@ class AppRepositoryImpl @Inject constructor(
 
     override suspend fun getWallets(): Result<Flow<List<WalletEntity>>> {
         return runDatabaseRequest {
-            walletDao.getAllOrderByName().mapNotNull { list ->
+            walletDao.getAllOrderByName().map { list ->
                 list.map { wallet ->
                     val sum = transactionDao.getAll(wallet.id)
-                        .map { transaction ->
-                            when (categoryDao.getTypeById(transaction.categoryId)) {
-                                TransactionType.Expense -> transaction.value * -1
-                                TransactionType.Income -> transaction.value
-                            }
-                        }
-                        .reduce { acc, value -> acc + value }
+                        .map { transaction -> defineValue(transaction) }
+                        .reduceOrNull { acc, value -> acc + value } ?: 0
+                        .plus(wallet.initValue)
                     WalletEntity(wallet, sum)
                 }
             }
+        }
+    }
+
+    private suspend fun defineValue(transaction: Transaction): Double {
+        return when (categoryDao.getTypeById(transaction.categoryId)) {
+            TransactionType.Expense -> transaction.value * -1
+            TransactionType.Income -> transaction.value
         }
     }
 

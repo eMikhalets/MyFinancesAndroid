@@ -75,8 +75,12 @@ fun CategoriesScreen(
         incomeList = state.incomeList,
         expenseList = state.expenseList,
         onCategoryClick = {
-            category = it
-            categoryDialogVisible = true
+            if (it.name == context.getString(R.string.default_category_name)) {
+                toast(context, R.string.error_no_edit_category)
+            } else {
+                category = it
+                categoryDialogVisible = true
+            }
         },
         onAddClick = {
             category = null

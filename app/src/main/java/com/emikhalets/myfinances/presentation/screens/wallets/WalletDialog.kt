@@ -41,9 +41,10 @@ fun WalletDialog(
     val isEdit by remember { mutableStateOf(wallet != null) }
 
     var name by remember { mutableStateOf(wallet?.name ?: "") }
-    var initValue by remember { mutableStateOf(wallet?.initValue ?: 0.0) }
+    var initValue by remember { mutableStateOf(wallet?.initValue?.toString() ?: "0.0") }
 
     var nameEmpty by remember { mutableStateOf(false) }
+    var valueError by remember { mutableStateOf(false) }
 
     AppBaseDialog(
         label = stringResource(R.string.title_wallet_screen),
@@ -56,14 +57,21 @@ fun WalletDialog(
             initValue = initValue,
             isEdit = isEdit,
             nameEmpty = nameEmpty,
+            valueError = valueError,
             onNameChange = { name = it },
-            onInitValueChange = { initValue = it },
+            onInitValueChange = {
+                valueError = false
+                initValue = it
+            },
             onSaveClick = {
+                val valueSum = initValue.safeToDouble { valueError = true }
                 if (name.isEmpty() || name.isBlank()) {
                     nameEmpty = true
                 } else {
-                    onSaveClick(wallet.copyOrNew(name, initValue))
-                    onDismiss()
+                    valueSum?.let {
+                        onSaveClick(wallet.copyOrNew(name, valueSum))
+                        onDismiss()
+                    }
                 }
             },
             onDeleteClick = {
@@ -81,11 +89,12 @@ fun WalletDialog(
 @Composable
 private fun DialogLayout(
     name: String,
-    initValue: Double,
+    initValue: String,
     isEdit: Boolean,
     nameEmpty: Boolean,
+    valueError: Boolean,
     onNameChange: (String) -> Unit,
-    onInitValueChange: (Double) -> Unit,
+    onInitValueChange: (String) -> Unit,
     onSaveClick: () -> Unit,
     onDeleteClick: () -> Unit,
 ) {
@@ -99,9 +108,10 @@ private fun DialogLayout(
         )
         Spacer(Modifier.height(16.dp))
         AppTextField(
-            value = initValue.toString(),
-            onValueChange = { onInitValueChange(it.safeToDouble()) },
+            value = initValue,
+            onValueChange = onInitValueChange,
             label = stringResource(R.string.label_init_value),
+            error = if (valueError) stringResource(R.string.error_invalid_value) else null,
             keyboardType = KeyboardType.Companion.Decimal,
             modifier = Modifier.fillMaxWidth()
         )
@@ -143,9 +153,10 @@ private fun DialogPreview() {
         ) {
             DialogLayout(
                 name = "Some name",
-                initValue = 223.87,
+                initValue = "223.87",
                 isEdit = true,
                 nameEmpty = false,
+                valueError = false,
                 onNameChange = {},
                 onInitValueChange = {},
                 onSaveClick = {},
@@ -166,9 +177,10 @@ private fun DialogAddingPreview() {
         ) {
             DialogLayout(
                 name = "Some name",
-                initValue = 223.87,
+                initValue = "223.87",
                 isEdit = false,
                 nameEmpty = true,
+                valueError = true,
                 onNameChange = {},
                 onInitValueChange = {},
                 onSaveClick = {},

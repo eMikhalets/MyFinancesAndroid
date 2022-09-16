@@ -31,20 +31,13 @@ suspend inline fun <T : Any> runDatabaseRequest(crossinline block: suspend () ->
 // ========================================
 // Primitive conversion
 
-fun Double.toValue(): String {
-    return try {
-        "$this ₽"
-    } catch (ex: NumberFormatException) {
-        "0.00 ₽"
-    }
-}
-
-fun String.safeToDouble(): Double {
+inline fun String.safeToDouble(crossinline onError: () -> Unit = {}): Double? {
     return try {
         this.toDouble()
     } catch (ex: Exception) {
         ex.printStackTrace()
-        0.00
+        onError()
+        null
     }
 }
 

@@ -1,5 +1,6 @@
 package com.emikhalets.myfinances.presentation.screens.main
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -49,11 +50,13 @@ fun TransactionDialog(
     injector: TransactionInjector = hiltViewModel(),
 ) {
     var type by remember { mutableStateOf(entity?.category?.type ?: TransactionType.Expense) }
-    var value by remember { mutableStateOf(entity?.transaction?.value ?: 0.0) }
+    var value by remember { mutableStateOf(entity?.transaction?.value?.toString() ?: "0.0") }
     var note by remember { mutableStateOf(entity?.transaction?.note ?: "") }
 
     var currentCategories by remember { mutableStateOf(categories.filter { it.type == type }) }
     var category by remember { mutableStateOf(entity?.category ?: currentCategories.first()) }
+
+    var valueError by remember { mutableStateOf(false) }
 
     LaunchedEffect(type) {
         currentCategories = categories.filter { it.type == type }
@@ -75,23 +78,31 @@ fun TransactionDialog(
             category = category,
             value = value,
             note = note,
+            valueError = valueError,
             onTypeChange = {
                 type = it
                 category = currentCategories.first()
             },
             onCategoryChange = { category = it },
-            onValueChange = { value = it.safeToDouble() },
+            onValueChange = {
+                Log.d("TAG", "TransactionDialog value change: $it")
+                valueError = false
+                value = it
+            },
             onNoteChange = { note = it },
             onSaveClick = {
-                val savingEntity = entity.copyTransactionOrNew(
-                    categoryId = category.id,
-                    walletId = injector.prefs.currentWalletId,
-                    value = value,
-                    type = type,
-                    note = note
-                )
-                onSaveClick(savingEntity)
-                onDismiss()
+                val valueSum = value.safeToDouble { valueError = true }
+                valueSum?.let {
+                    val savingEntity = entity.copyTransactionOrNew(
+                        categoryId = category.id,
+                        walletId = injector.prefs.currentWalletId,
+                        value = valueSum,
+                        type = type,
+                        note = note
+                    )
+                    onSaveClick(savingEntity)
+                    onDismiss()
+                }
             },
             onDeleteClick = {
                 entity?.transaction?.let(onDeleteClick)
@@ -107,8 +118,9 @@ private fun DialogLayout(
     categories: List<Category>,
     type: TransactionType,
     category: Category,
-    value: Double,
+    value: String,
     note: String,
+    valueError: Boolean,
     onTypeChange: (TransactionType) -> Unit,
     onCategoryChange: (Category) -> Unit,
     onValueChange: (String) -> Unit,
@@ -116,6 +128,7 @@ private fun DialogLayout(
     onSaveClick: () -> Unit,
     onDeleteClick: () -> Unit,
 ) {
+    Log.d("TAG", "TransactionDialog value: $value")
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -131,9 +144,10 @@ private fun DialogLayout(
         Spacer(Modifier.height(16.dp))
 
         AppTextField(
-            value = value.toString(),
+            value = value,
             onValueChange = onValueChange,
             label = stringResource(R.string.label_money_value),
+            error = if (valueError) stringResource(R.string.error_invalid_value) else null,
             keyboardType = KeyboardType.Companion.Decimal,
             modifier = Modifier.fillMaxWidth()
         )
@@ -198,8 +212,9 @@ private fun DialogPreview() {
                 categories = emptyList(),
                 type = TransactionType.Expense,
                 category = Category("Default", TransactionType.Expense),
-                value = 120.03,
+                value = "120.03",
                 note = "Some text comment",
+                valueError = true,
                 onTypeChange = {},
                 onCategoryChange = {},
                 onValueChange = {},

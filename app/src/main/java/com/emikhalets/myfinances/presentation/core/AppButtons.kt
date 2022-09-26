@@ -3,6 +3,8 @@ package com.emikhalets.myfinances.presentation.core
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -11,7 +13,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emikhalets.myfinances.presentation.theme.AppTheme
+import com.emikhalets.myfinances.presentation.theme.boxBackground
 import com.emikhalets.myfinances.presentation.theme.textButton
+import com.emikhalets.myfinances.presentation.theme.textPrimary
 
 @Composable
 fun AppTextButton(
@@ -33,11 +37,47 @@ fun AppTextButton(
     }
 }
 
+@Composable
+fun AppButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    padding: PaddingValues = PaddingValues(8.dp),
+) {
+    Button(
+        onClick = { onClick() },
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.boxBackground,
+            contentColor = MaterialTheme.colors.textPrimary
+        ),
+        modifier = modifier
+    ) {
+        AppText(
+            text = text,
+            modifier = Modifier.padding(padding)
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun AppTextButtonPreview() {
     AppTheme {
         AppTextButton(
+            text = "Some text",
+            onClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AppButtonPreview() {
+    AppTheme {
+        AppButton(
             text = "Some text",
             onClick = {},
             modifier = Modifier

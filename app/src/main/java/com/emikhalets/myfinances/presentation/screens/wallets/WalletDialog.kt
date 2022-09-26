@@ -1,5 +1,6 @@
 package com.emikhalets.myfinances.presentation.screens.wallets
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,10 +22,14 @@ import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Wallet
 import com.emikhalets.myfinances.data.entity.copyOrNew
 import com.emikhalets.myfinances.presentation.core.AppBaseDialog
+import com.emikhalets.myfinances.presentation.core.AppKeyboard
 import com.emikhalets.myfinances.presentation.core.AppTextButton
 import com.emikhalets.myfinances.presentation.core.AppTextField
 import com.emikhalets.myfinances.presentation.theme.AppTheme
+import com.emikhalets.myfinances.utils.MoneyValueTransformation
+import com.emikhalets.myfinances.utils.appKeyboardInput
 import com.emikhalets.myfinances.utils.safeToDouble
+import com.emikhalets.myfinances.utils.toMoney
 import com.emikhalets.myfinances.utils.toast
 
 @Composable
@@ -41,10 +46,9 @@ fun WalletDialog(
     val isEdit by remember { mutableStateOf(wallet != null) }
 
     var name by remember { mutableStateOf(wallet?.name ?: "") }
-    var initValue by remember { mutableStateOf(wallet?.initValue?.toString() ?: "0.0") }
+    var initValue by remember { mutableStateOf(wallet?.initValue?.toString() ?: "") }
 
     var nameEmpty by remember { mutableStateOf(false) }
-    var valueError by remember { mutableStateOf(false) }
 
     AppBaseDialog(
         label = stringResource(R.string.title_wallet_screen),
@@ -57,21 +61,21 @@ fun WalletDialog(
             initValue = initValue,
             isEdit = isEdit,
             nameEmpty = nameEmpty,
-            valueError = valueError,
-            onNameChange = { name = it },
+            onNameChange = {
+                name = it
+                nameEmpty = false
+            },
             onInitValueChange = {
-                valueError = false
+                Log.d("TAG", "New value $it")
                 initValue = it
             },
             onSaveClick = {
-                val valueSum = initValue.safeToDouble { valueError = true }
+                val valueSum = initValue.safeToDouble()
                 if (name.isEmpty() || name.isBlank()) {
                     nameEmpty = true
                 } else {
-                    valueSum?.let {
-                        onSaveClick(wallet.copyOrNew(name, valueSum))
-                        onDismiss()
-                    }
+                    onSaveClick(wallet.copyOrNew(name, valueSum))
+                    onDismiss()
                 }
             },
             onDeleteClick = {
@@ -92,7 +96,6 @@ private fun DialogLayout(
     initValue: String,
     isEdit: Boolean,
     nameEmpty: Boolean,
-    valueError: Boolean,
     onNameChange: (String) -> Unit,
     onInitValueChange: (String) -> Unit,
     onSaveClick: () -> Unit,
@@ -107,15 +110,21 @@ private fun DialogLayout(
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(16.dp))
+
         AppTextField(
-            value = initValue,
+            value = initValue.toMoney(),
             onValueChange = onInitValueChange,
             label = stringResource(R.string.label_init_value),
-            error = if (valueError) stringResource(R.string.error_invalid_value) else null,
+            readOnly = true,
             keyboardType = KeyboardType.Companion.Decimal,
+            visualTransformation = MoneyValueTransformation(),
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(Modifier.height(32.dp))
+        Spacer(Modifier.height(16.dp))
+
+        AppKeyboard { onInitValueChange(it.appKeyboardInput(initValue)) }
+        Spacer(Modifier.height(16.dp))
+
         ControlButtons(isEdit, onSaveClick, onDeleteClick)
     }
 }
@@ -153,10 +162,9 @@ private fun DialogPreview() {
         ) {
             DialogLayout(
                 name = "Some name",
-                initValue = "223.87",
+                initValue = "",
                 isEdit = true,
                 nameEmpty = false,
-                valueError = false,
                 onNameChange = {},
                 onInitValueChange = {},
                 onSaveClick = {},
@@ -177,10 +185,9 @@ private fun DialogAddingPreview() {
         ) {
             DialogLayout(
                 name = "Some name",
-                initValue = "223.87",
+                initValue = "",
                 isEdit = false,
                 nameEmpty = true,
-                valueError = true,
                 onNameChange = {},
                 onInitValueChange = {},
                 onSaveClick = {},

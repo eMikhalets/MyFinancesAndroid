@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_money_value">%.2f ₽</string>
+    <string name="app_money_value">₽ %s</string>
 
     <string name="default_error">Произошла непредвиденная ошибка</string>
     <string name="default_wallet_name">Основной</string>
@@ -20,7 +20,6 @@
     <string name="error_no_edit_category">Нельзя редактировать категорию по-умолчанию</string>
     <string name="error_no_delete_wallet">Нельзя удалять текущий колешек</string>
     <string name="error_empty_field">Обязательно для заполнения</string>
-    <string name="error_invalid_value">Ошибка ввода суммы</string>
 
     <string name="label_category">Категория</string>
     <string name="label_money_value">Сумма</string>

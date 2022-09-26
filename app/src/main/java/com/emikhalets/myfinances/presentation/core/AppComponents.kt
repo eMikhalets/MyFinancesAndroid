@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -30,6 +31,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ChainStyle
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.data.entity.Category
 import com.emikhalets.myfinances.presentation.theme.AppTheme
@@ -168,6 +171,135 @@ private fun Modifier.borderTypeIncome(type: TransactionType) = when (type) {
     else -> border(0.dp, MaterialTheme.colors.surface)
 }
 
+@Composable
+fun AppKeyboard(onClick: (String) -> Unit) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp)
+    ) {
+        val (
+            oneRef, twoRef, threeRef,
+            fourRef, fiveRef, sixRef,
+            sevenRef, eightRef, nineRef,
+            zeroRef, delRef,
+        ) = createRefs()
+
+        val chainOne = createHorizontalChain(oneRef, twoRef, threeRef,
+            chainStyle = ChainStyle.Packed)
+
+        val chainTwo = createHorizontalChain(fourRef, fiveRef, sixRef,
+            chainStyle = ChainStyle.Packed)
+
+        val chainThree = createHorizontalChain(sevenRef, eightRef, nineRef,
+            chainStyle = ChainStyle.Packed)
+
+        val chainBottom = createHorizontalChain(zeroRef, delRef,
+            chainStyle = ChainStyle.Packed)
+
+        AppButton(
+            text = "1",
+            onClick = { onClick("1") },
+            modifier = Modifier
+                .padding(4.dp)
+                .size(56.dp)
+                .constrainAs(oneRef) { top.linkTo(parent.top) }
+        )
+
+        AppButton(
+            text = "2",
+            onClick = { onClick("2") },
+            modifier = Modifier
+                .padding(4.dp)
+                .size(56.dp)
+                .constrainAs(twoRef) { top.linkTo(parent.top) }
+        )
+
+        AppButton(
+            text = "3",
+            onClick = { onClick("3") },
+            modifier = Modifier
+                .padding(4.dp)
+                .size(56.dp)
+                .constrainAs(threeRef) { top.linkTo(parent.top) }
+        )
+
+        AppButton(
+            text = "4",
+            onClick = { onClick("4") },
+            modifier = Modifier
+                .padding(4.dp)
+                .size(56.dp)
+                .constrainAs(fourRef) { top.linkTo(oneRef.bottom) }
+        )
+
+        AppButton(
+            text = "5",
+            onClick = { onClick("5") },
+            modifier = Modifier
+                .padding(4.dp)
+                .size(56.dp)
+                .constrainAs(fiveRef) { top.linkTo(oneRef.bottom) }
+        )
+
+        AppButton(
+            text = "6",
+            onClick = { onClick("6") },
+            modifier = Modifier
+                .padding(4.dp)
+                .size(56.dp)
+                .constrainAs(sixRef) { top.linkTo(oneRef.bottom) }
+        )
+
+        AppButton(
+            text = "7",
+            onClick = { onClick("7") },
+            modifier = Modifier
+                .padding(4.dp)
+                .size(56.dp)
+                .constrainAs(sevenRef) { top.linkTo(fourRef.bottom) }
+        )
+
+        AppButton(
+            text = "8",
+            onClick = { onClick("8") },
+            modifier = Modifier
+                .padding(4.dp)
+                .size(56.dp)
+                .constrainAs(eightRef) { top.linkTo(fourRef.bottom) }
+        )
+
+        AppButton(
+            text = "9",
+            onClick = { onClick("9") },
+            modifier = Modifier
+                .padding(4.dp)
+                .size(56.dp)
+                .constrainAs(nineRef) { top.linkTo(fourRef.bottom) }
+        )
+
+        AppButton(
+            text = "0",
+            onClick = { onClick("0") },
+            modifier = Modifier
+                .padding(4.dp)
+                .size((56 * 2 + 8).dp, 56.dp)
+                .constrainAs(zeroRef) {
+                    top.linkTo(sevenRef.bottom)
+                }
+        )
+
+        AppButton(
+            text = "X",
+            onClick = { onClick("X") },
+            modifier = Modifier
+                .padding(4.dp)
+                .size(56.dp)
+                .constrainAs(delRef) { top.linkTo(sevenRef.bottom) }
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun CategoriesDropMenuPreview() {
@@ -192,5 +324,13 @@ private fun TransactionTypeChooserPreview() {
                 onTypeSelect = {}
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AppKeyboardPreview() {
+    AppTheme {
+        AppKeyboard {}
     }
 }

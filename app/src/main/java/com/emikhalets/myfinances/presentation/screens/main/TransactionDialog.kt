@@ -28,6 +28,7 @@ import com.emikhalets.myfinances.data.entity.Transaction
 import com.emikhalets.myfinances.data.entity.TransactionEntity
 import com.emikhalets.myfinances.data.entity.copyTransactionOrNew
 import com.emikhalets.myfinances.presentation.core.AppBaseDialog
+import com.emikhalets.myfinances.presentation.core.AppKeyboard
 import com.emikhalets.myfinances.presentation.core.AppText
 import com.emikhalets.myfinances.presentation.core.AppTextButton
 import com.emikhalets.myfinances.presentation.core.AppTextField
@@ -35,6 +36,7 @@ import com.emikhalets.myfinances.presentation.core.CategoriesDropMenu
 import com.emikhalets.myfinances.presentation.core.TransactionTypeChooser
 import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.PreviewEntities
+import com.emikhalets.myfinances.utils.appKeyboardInput
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.safeToDouble
 import com.emikhalets.myfinances.utils.toLabelDate
@@ -56,8 +58,6 @@ fun TransactionDialog(
     var currentCategories by remember { mutableStateOf(categories.filter { it.type == type }) }
     var category by remember { mutableStateOf(entity?.category ?: currentCategories.first()) }
 
-    var valueError by remember { mutableStateOf(false) }
-
     LaunchedEffect(type) {
         currentCategories = categories.filter { it.type == type }
         category = if (entity?.category?.type == type) {
@@ -78,31 +78,24 @@ fun TransactionDialog(
             category = category,
             value = value,
             note = note,
-            valueError = valueError,
             onTypeChange = {
                 type = it
                 category = currentCategories.first()
             },
             onCategoryChange = { category = it },
-            onValueChange = {
-                Log.d("TAG", "TransactionDialog value change: $it")
-                valueError = false
-                value = it
-            },
+            onValueChange = { value = it },
             onNoteChange = { note = it },
             onSaveClick = {
-                val valueSum = value.safeToDouble { valueError = true }
-                valueSum?.let {
-                    val savingEntity = entity.copyTransactionOrNew(
-                        categoryId = category.id,
-                        walletId = injector.prefs.currentWalletId,
-                        value = valueSum,
-                        type = type,
-                        note = note
-                    )
-                    onSaveClick(savingEntity)
-                    onDismiss()
-                }
+                val valueSum = value.safeToDouble()
+                val savingEntity = entity.copyTransactionOrNew(
+                    categoryId = category.id,
+                    walletId = injector.prefs.currentWalletId,
+                    value = valueSum,
+                    type = type,
+                    note = note
+                )
+                onSaveClick(savingEntity)
+                onDismiss()
             },
             onDeleteClick = {
                 entity?.transaction?.let(onDeleteClick)
@@ -120,7 +113,6 @@ private fun DialogLayout(
     category: Category,
     value: String,
     note: String,
-    valueError: Boolean,
     onTypeChange: (TransactionType) -> Unit,
     onCategoryChange: (Category) -> Unit,
     onValueChange: (String) -> Unit,
@@ -147,7 +139,6 @@ private fun DialogLayout(
             value = value,
             onValueChange = onValueChange,
             label = stringResource(R.string.label_money_value),
-            error = if (valueError) stringResource(R.string.error_invalid_value) else null,
             keyboardType = KeyboardType.Companion.Decimal,
             modifier = Modifier.fillMaxWidth()
         )
@@ -159,7 +150,10 @@ private fun DialogLayout(
             label = stringResource(R.string.label_note),
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(Modifier.height(32.dp))
+        Spacer(Modifier.height(16.dp))
+
+        AppKeyboard { onValueChange(it.appKeyboardInput(value)) }
+        Spacer(Modifier.height(16.dp))
 
         ControlButtons(entity != null, onSaveClick, onDeleteClick)
     }
@@ -214,7 +208,6 @@ private fun DialogPreview() {
                 category = Category("Default", TransactionType.Expense),
                 value = "120.03",
                 note = "Some text comment",
-                valueError = true,
                 onTypeChange = {},
                 onCategoryChange = {},
                 onValueChange = {},

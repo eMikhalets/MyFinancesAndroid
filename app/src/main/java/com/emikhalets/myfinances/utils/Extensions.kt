@@ -3,6 +3,8 @@ package com.emikhalets.myfinances.utils
 import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.emikhalets.myfinances.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,13 +33,29 @@ suspend inline fun <T : Any> runDatabaseRequest(crossinline block: suspend () ->
 // ========================================
 // Primitive conversion
 
-inline fun String.safeToDouble(crossinline onError: () -> Unit = {}): Double? {
+inline fun String.safeToDouble(crossinline onError: () -> Unit = {}): Double {
+    if (this.isEmpty() || this.isBlank()) return 0.0
     return try {
-        this.toDouble()
+        val converted: Double = this.toDouble()
+        converted / 100
     } catch (ex: Exception) {
         ex.printStackTrace()
         onError()
-        null
+        0.0
+    }
+}
+
+fun Double.toMoney(): String {
+    return (this * 100).toInt().toString()
+}
+
+fun String.toMoney(): String {
+    return try {
+        val converted: Double = this.toDouble()
+        (converted * 100).toInt().toString()
+    } catch (ex: Exception) {
+        ex.printStackTrace()
+        ""
     }
 }
 
@@ -72,4 +90,22 @@ fun toast(context: Context, message: String) {
 
 private fun String.errorOrDefault(context: Context): String {
     return if (this == DEFAULT_ERROR) context.getString(R.string.default_error) else this
+}
+
+// ========================================
+// Compose
+
+@Composable
+fun String.formatValue(): String {
+    val thousandsString = this
+    val resourceString = stringResource(R.string.app_money_value, thousandsString)
+    return this
+}
+
+fun String.appKeyboardInput(oldValue: String): String {
+    return if (this == "X") {
+        ""
+    } else {
+        oldValue + this
+    }
 }

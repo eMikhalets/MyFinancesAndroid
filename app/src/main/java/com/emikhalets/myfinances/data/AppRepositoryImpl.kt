@@ -93,8 +93,8 @@ class AppRepositoryImpl @Inject constructor(
                 list.map { wallet ->
                     val sum = transactionDao.getAll(wallet.id)
                         .map { transaction -> defineValue(transaction) }
-                        .reduceOrNull { acc, value -> acc + value } ?: 0
-                        .plus(wallet.initValue)
+                        .reduceOrNull { acc, value -> acc + value }
+                        ?.plus(wallet.initValue) ?: 0.0
                     WalletEntity(wallet, sum)
                 }
             }

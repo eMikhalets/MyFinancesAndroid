@@ -62,9 +62,8 @@ class AppRepositoryImpl @Inject constructor(
      * Transactions Dao
      */
 
-    override suspend fun getTransactions(): Result<Flow<List<TransactionEntity>>> {
-        val walletId = prefs.currentWalletId
-        return runDatabaseRequest { transactionDao.getAllOrderByTime(walletId) }
+    override suspend fun getTransactions(): Result<Flow<List<Transaction>>> {
+        return runDatabaseRequest { transactionDao.getAll() }
     }
 
     override suspend fun getTransaction(id: Long): Result<TransactionEntity> {
@@ -91,11 +90,11 @@ class AppRepositoryImpl @Inject constructor(
         return runDatabaseRequest {
             walletDao.getAllOrderByName().map { list ->
                 list.map { wallet ->
-                    val sum = transactionDao.getAll(wallet.id)
-                        .map { transaction -> defineValue(transaction) }
-                        .reduceOrNull { acc, value -> acc + value }
-                        ?.plus(wallet.initValue) ?: 0.0
-                    WalletEntity(wallet, sum)
+//                    val sum = transactionDao.getAll(wallet.id)
+//                        .map { transaction -> defineValue(transaction) }
+//                        .reduceOrNull { acc, value -> acc + value }
+//                        ?.plus(wallet.initValue) ?: 0.0
+                    WalletEntity(wallet, 0.0)
                 }
             }
         }

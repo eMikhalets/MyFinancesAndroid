@@ -1,65 +1,62 @@
 package com.emikhalets.myfinances.presentation.screens.main
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.myfinances.data.AppRepository
 import com.emikhalets.myfinances.data.entity.Transaction
-import com.emikhalets.myfinances.data.entity.TransactionEntity
+import com.emikhalets.myfinances.utils.DEFAULT_ERROR
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repo: AppRepository) : ViewModel() {
 
-    var state by mutableStateOf(MainState())
-        private set
+    private val _state = MutableStateFlow(MainState())
+    val state = _state.asStateFlow()
 
-    fun getTransactions() {
+    fun getAllTransactions() {
         viewModelScope.launch(Dispatchers.Default) {
             repo.getTransactions()
-                .onSuccess { setTransactionsState(it) }
-                .onFailure { state = state.setError(it.message) }
+                .onSuccess { flow -> setTransactionsState(flow) }
+                .onFailure { throwable -> setErrorState(throwable) }
         }
     }
 
-    private suspend fun setTransactionsState(flow: Flow<List<TransactionEntity>>) {
+    private suspend fun setTransactionsState(flow: Flow<List<Transaction>>) {
         flow.collect { transactions ->
-            val expenseList = transactions.filter { it.transaction.type == TransactionType.Expense }
-            val incomeList = transactions.filter { it.transaction.type == TransactionType.Income }
-            state = state.setTransactions(incomeList, expenseList)
+            val incomes = transactions
+                .filter { it.type == TransactionType.Income }
+                .sumOf { it.value }
+            val expenses = transactions
+                .filter { it.type == TransactionType.Expense }
+                .sumOf { it.value }
+            _state.update { _state.value.setTransactions(incomes, expenses) }
         }
     }
 
-    fun getCategories() {
-        viewModelScope.launch(Dispatchers.Default) {
-            repo.getCategories()
-                .onSuccess { flow -> flow.collect { state = state.setCategories(it) } }
-                .onFailure { state = state.setError(it.message) }
-        }
+    private fun setErrorState(throwable: Throwable) {
+        _state.update { _state.value.setError(throwable.message) }
     }
 
-    fun saveTransaction(transaction: Transaction) {
-        viewModelScope.launch(Dispatchers.Default) {
-            val request = if (transaction.id == 0L) {
-                repo.insertTransaction(transaction)
-            } else {
-                repo.updateTransaction(transaction)
-            }
-            request.onFailure { state = state.setError(it.message) }
-        }
-    }
+    data class MainState(
+        val incomeValue: Double = 0.0,
+        val expenseValue: Double = 0.0,
+        val error: String = "",
+    ) {
 
-    fun deleteTransaction(transaction: Transaction) {
-        viewModelScope.launch(Dispatchers.Default) {
-            repo.deleteTransaction(transaction)
-                .onFailure { state = state.setError(it.message) }
+        fun setTransactions(incomeValue: Double, expenseValue: Double): MainState {
+            return this.copy(incomeValue = incomeValue, expenseValue = expenseValue)
+        }
+
+        fun setError(message: String?): MainState {
+            return this.copy(error = message ?: DEFAULT_ERROR)
         }
     }
 }

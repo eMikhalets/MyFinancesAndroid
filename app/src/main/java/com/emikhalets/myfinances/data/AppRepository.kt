@@ -31,7 +31,7 @@ interface AppRepository {
      * Transactions Dao
      */
 
-    suspend fun getTransactions(): Result<Flow<List<TransactionEntity>>>
+    suspend fun getTransactions(): Result<Flow<List<Transaction>>>
 
     suspend fun getTransaction(id: Long): Result<TransactionEntity>
 

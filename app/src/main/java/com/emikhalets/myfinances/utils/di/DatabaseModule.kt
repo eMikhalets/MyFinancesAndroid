@@ -1,7 +1,7 @@
 package com.emikhalets.myfinances.utils.di
 
 import android.content.Context
-import com.emikhalets.myfinances.data.AppDatabase
+import com.emikhalets.myfinances.data.database.AppDatabase
 import com.emikhalets.myfinances.data.dao.CategoryDao
 import com.emikhalets.myfinances.data.dao.TransactionDao
 import com.emikhalets.myfinances.data.dao.WalletDao

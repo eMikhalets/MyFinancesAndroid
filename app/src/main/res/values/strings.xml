@@ -1,6 +1,19 @@
 <resources>
-    <string name="app_money_value">₽ %s</string>
+    <string name="app_name">MyFinances</string>
+    <string name="app_name_title">My Finances</string>
 
+    <string name="app_plus">+</string>
+    <string name="app_minus">-</string>
+    <string name="app_categories">Categories</string>
+    <string name="app_charts">Charts</string>
+    <string name="app_budget">Budget</string>
+
+    <string name="app_incomes">Incomes</string>
+    <string name="app_expenses">Expenses</string>
+    <string name="app_add_expense">Add Expense</string>
+    <string name="app_add_income">Add Income</string>
+
+    <string name="app_money_value">₽ %s</string>
     <string name="default_error">Произошла непредвиденная ошибка</string>
     <string name="default_wallet_name">Основной</string>
     <string name="default_category_name">Другое</string>

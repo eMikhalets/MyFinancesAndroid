@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.data
+package com.emikhalets.myfinances.data.database
 
 import android.content.Context
 import androidx.room.Database
@@ -36,6 +36,6 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private fun buildDatabase(context: Context) =
-            Room.databaseBuilder(context, AppDatabase::class.java, "MyFinances").build()
+            Room.databaseBuilder(context, AppDatabase::class.java, "MyFinances.db").build()
     }
 }

@@ -94,13 +94,8 @@ class TestRepositoryImpl @Inject constructor() : AppRepository {
         Transaction(20, 10, 1, 100.0, TransactionType.Income, "", Date().time)
     )
 
-    override suspend fun getTransactions(): Result<Flow<List<TransactionEntity>>> {
-        val mappedList = transactions.mapNotNull { transaction ->
-            categories.find { it.id == transaction.categoryId }?.let { category ->
-                TransactionEntity(transaction, category)
-            }
-        }
-        return Result.success(flowOf(mappedList))
+    override suspend fun getTransactions(): Result<Flow<List<Transaction>>> {
+        return Result.success(flowOf(transactions))
     }
 
     override suspend fun getTransaction(id: Long): Result<TransactionEntity> {

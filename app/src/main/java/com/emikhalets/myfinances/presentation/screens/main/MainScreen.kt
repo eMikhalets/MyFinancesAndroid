@@ -41,6 +41,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.presentation.core.AppScaffold
+import com.emikhalets.myfinances.presentation.navigation.AppScreen
 import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.enums.TransactionType
 
@@ -59,6 +60,8 @@ fun MainScreen(
         MainScreen(
             incomeValue = state.incomeValue,
             expenseValue = state.expenseValue,
+            onExpensesClick = { navController.navigate(AppScreen.EXPENSES.route) },
+            onIncomesClick = { navController.navigate(AppScreen.INCOMES.route) },
             onAddExpenseClick = {},
             onAddIncomeClick = {},
             onCategoriesClick = {},
@@ -72,6 +75,8 @@ fun MainScreen(
 private fun MainScreen(
     incomeValue: Double,
     expenseValue: Double,
+    onExpensesClick: () -> Unit,
+    onIncomesClick: () -> Unit,
     onAddExpenseClick: () -> Unit,
     onAddIncomeClick: () -> Unit,
     onCategoriesClick: () -> Unit,
@@ -85,8 +90,8 @@ private fun MainScreen(
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
         ) {
-            ValueBox(incomeValue, TransactionType.Income)
-            ValueBox(expenseValue, TransactionType.Expense)
+            ValueBox(incomeValue, TransactionType.Income, onIncomesClick)
+            ValueBox(expenseValue, TransactionType.Expense, onExpensesClick)
         }
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -136,7 +141,7 @@ private fun MainScreen(
 }
 
 @Composable
-private fun ValueBox(value: Double, type: TransactionType) {
+private fun ValueBox(value: Double, type: TransactionType, onClick: () -> Unit) {
     val title by remember { mutableStateOf(getValueBoxTitle(type)) }
     val valuePrefix by remember { mutableStateOf(getValueBoxPrefix(type)) }
 
@@ -145,6 +150,7 @@ private fun ValueBox(value: Double, type: TransactionType) {
             .background(MaterialTheme.colors.primary, RoundedCornerShape(16.dp))
             .width(150.dp)
             .padding(16.dp)
+            .clickable { onClick() }
     ) {
         Text(
             text = stringResource(id = title),
@@ -197,6 +203,8 @@ private fun Preview() {
             MainScreen(
                 incomeValue = 7057.64,
                 expenseValue = 7057.64,
+                onExpensesClick = {},
+                onIncomesClick = {},
                 onAddExpenseClick = {},
                 onAddIncomeClick = {},
                 onCategoriesClick = {},

@@ -2,9 +2,8 @@ package com.emikhalets.myfinances.utils.di
 
 import android.content.Context
 import com.emikhalets.myfinances.data.database.AppDatabase
-import com.emikhalets.myfinances.data.dao.CategoryDao
-import com.emikhalets.myfinances.data.dao.TransactionDao
-import com.emikhalets.myfinances.data.dao.WalletDao
+import com.emikhalets.myfinances.data.database.CategoryDao
+import com.emikhalets.myfinances.data.database.TransactionDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,8 +27,4 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun providesTransactionDao(database: AppDatabase): TransactionDao = database.transactionDao
-
-    @Singleton
-    @Provides
-    fun providesWalletDao(database: AppDatabase): WalletDao = database.walletDao
 }

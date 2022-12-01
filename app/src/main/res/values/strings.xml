@@ -13,12 +13,15 @@
     <string name="app_add_expense">Add Expense</string>
     <string name="app_add_income">Add Income</string>
 
+    <!--  Screen titles  -->
+    <string name="title_incomes_screen">Income List</string>
+    <string name="title_expenses_screen">Expenses List</string>
+
     <string name="app_money_value">₽ %s</string>
     <string name="default_error">Произошла непредвиденная ошибка</string>
     <string name="default_wallet_name">Основной</string>
     <string name="default_category_name">Другое</string>
 
-    <string name="title_main_screen">Транзакции</string>
     <string name="title_transaction_screen">Транзакция</string>
     <string name="title_categories_screen">Категории</string>
     <string name="title_category_screen">Категория</string>

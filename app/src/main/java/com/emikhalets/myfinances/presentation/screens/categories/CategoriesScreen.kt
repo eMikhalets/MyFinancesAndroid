@@ -29,7 +29,7 @@
 //import androidx.navigation.NavHostController
 //import androidx.navigation.compose.rememberNavController
 //import com.emikhalets.myfinances.R
-//import com.emikhalets.myfinances.data.entity.Category
+//import com.emikhalets.myfinances.domain.entity.Category
 //import com.emikhalets.myfinances.presentation.core.AppPager
 //import com.emikhalets.myfinances.presentation.core.AppToolbar
 //import com.emikhalets.myfinances.presentation.core.ScreenScaffold

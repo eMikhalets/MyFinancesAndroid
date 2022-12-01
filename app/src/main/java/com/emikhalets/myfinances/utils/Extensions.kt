@@ -19,14 +19,9 @@ const val DEFAULT_ERROR = "null"
 // ========================================
 // Global constants
 
-suspend inline fun <T : Any> runDatabaseRequest(crossinline block: suspend () -> T): Result<T> {
-    return withContext(Dispatchers.Default) {
-        try {
-            Result.success(block())
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-            Result.failure(ex)
-        }
+suspend inline fun <T : Any> execute(crossinline block: suspend () -> T): Result<T> {
+    return withContext(Dispatchers.IO) {
+        kotlin.runCatching { block() }.onFailure { it.printStackTrace() }
     }
 }
 
@@ -63,10 +58,9 @@ fun String.toMoney(): String {
 // Date formatting
 
 fun Long?.toDate(): String {
-    if (this == null) return "no date"
-    val date = Date(this)
+    this ?: return "no date"
     val formatter = SimpleDateFormat("d MMM yyyy", Locale.getDefault())
-    return formatter.format(date)
+    return formatter.format(Date(this))
 }
 
 fun Long?.toLabelDate(): String {

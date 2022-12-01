@@ -1,6 +1,6 @@
 package com.emikhalets.myfinances.presentation.screens.categories
 
-import com.emikhalets.myfinances.data.entity.Category
+import com.emikhalets.myfinances.domain.entity.Category
 import com.emikhalets.myfinances.utils.DEFAULT_ERROR
 
 data class CategoriesState(

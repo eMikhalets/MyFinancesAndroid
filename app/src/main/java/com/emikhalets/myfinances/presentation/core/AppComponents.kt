@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.data.entity.Category
+import com.emikhalets.myfinances.domain.entity.Category
 import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.presentation.theme.appBackground
 import com.emikhalets.myfinances.presentation.theme.boxBackground

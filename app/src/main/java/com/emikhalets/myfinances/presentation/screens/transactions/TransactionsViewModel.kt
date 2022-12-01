@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.screens.main
+package com.emikhalets.myfinances.presentation.screens.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,30 +16,38 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class TransactionsViewModel @Inject constructor(
     private val repo: AppRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
 
-    fun getAllTransactions() {
+    fun getIncomeTransactions() {
         viewModelScope.launch(Dispatchers.Default) {
-            repo.getTransactions()
-                .onSuccess { flow -> setTransactionsState(flow) }
+            repo.getTransactionsByType(TransactionType.Income)
+                .onSuccess { flow -> setIncomeTransactions(flow) }
                 .onFailure { throwable -> setErrorState(throwable) }
         }
     }
 
-    private suspend fun setTransactionsState(flow: Flow<List<Transaction>>) {
+    fun getExpenseTransactions() {
+        viewModelScope.launch(Dispatchers.Default) {
+            repo.getTransactionsByType(TransactionType.Expense)
+                .onSuccess { flow -> setExpenseTransactions(flow) }
+                .onFailure { throwable -> setErrorState(throwable) }
+        }
+    }
+
+    private suspend fun setIncomeTransactions(flow: Flow<List<Transaction>>) {
         flow.collect { transactions ->
-            val incomes = transactions
-                .filter { it.type == TransactionType.Income }
-                .sumOf { it.value }
-            val expenses = transactions
-                .filter { it.type == TransactionType.Expense }
-                .sumOf { it.value }
-            _state.update { _state.value.setTransactions(incomes, expenses) }
+            _state.update { _state.value.setIncomes(transactions) }
+        }
+    }
+
+    private suspend fun setExpenseTransactions(flow: Flow<List<Transaction>>) {
+        flow.collect { transactions ->
+            _state.update { _state.value.setExpenses(transactions) }
         }
     }
 
@@ -48,13 +56,17 @@ class MainViewModel @Inject constructor(
     }
 
     data class State(
-        val incomeValue: Double = 0.0,
-        val expenseValue: Double = 0.0,
+        val incomes: List<Transaction> = emptyList(),
+        val expenses: List<Transaction> = emptyList(),
         val error: String = "",
     ) {
 
-        fun setTransactions(incomeValue: Double, expenseValue: Double): State {
-            return this.copy(incomeValue = incomeValue, expenseValue = expenseValue)
+        fun setIncomes(incomes: List<Transaction>): State {
+            return this.copy(incomes = incomes)
+        }
+
+        fun setExpenses(expenses: List<Transaction>): State {
+            return this.copy(expenses = expenses)
         }
 
         fun setError(message: String?): State {

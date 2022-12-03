@@ -3,7 +3,7 @@ package com.emikhalets.myfinances.presentation.screens.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.myfinances.data.repository.AppRepository
-import com.emikhalets.myfinances.domain.entity.Transaction
+import com.emikhalets.myfinances.domain.entity.TransactionEntity
 import com.emikhalets.myfinances.utils.DEFAULT_ERROR
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,14 +31,14 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun setTransactionsState(flow: Flow<List<Transaction>>) {
+    private suspend fun setTransactionsState(flow: Flow<List<TransactionEntity>>) {
         flow.collect { transactions ->
             val incomes = transactions
-                .filter { it.type == TransactionType.Income }
-                .sumOf { it.value }
+                .filter { it.transaction.type == TransactionType.Income }
+                .sumOf { it.transaction.value }
             val expenses = transactions
-                .filter { it.type == TransactionType.Expense }
-                .sumOf { it.value }
+                .filter { it.transaction.type == TransactionType.Expense }
+                .sumOf { it.transaction.value }
             _state.update { _state.value.setTransactions(incomes, expenses) }
         }
     }

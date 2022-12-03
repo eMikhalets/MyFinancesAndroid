@@ -44,25 +44,6 @@ fun TextPrimary(
 }
 
 @Composable
-fun TextPrimaryFillSize(
-    text: String,
-    modifier: Modifier = Modifier,
-    size: TextUnit = 16.sp,
-    fontWeight: FontWeight = FontWeight.Normal,
-) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier.fillMaxSize()
-    ) {
-        AppText(
-            text = text,
-            fontSize = size,
-            fontWeight = fontWeight
-        )
-    }
-}
-
-@Composable
 fun TextPrimaryFillWidth(
     text: String,
     modifier: Modifier = Modifier,

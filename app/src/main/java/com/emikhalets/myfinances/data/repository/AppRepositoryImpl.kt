@@ -4,6 +4,7 @@ import com.emikhalets.myfinances.data.database.CategoryDao
 import com.emikhalets.myfinances.data.database.TransactionDao
 import com.emikhalets.myfinances.domain.entity.Category
 import com.emikhalets.myfinances.domain.entity.Transaction
+import com.emikhalets.myfinances.domain.entity.TransactionEntity
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.execute
 import javax.inject.Inject
@@ -28,15 +29,17 @@ class AppRepositoryImpl @Inject constructor(
 
     override suspend fun delete(category: Category): Result<Int> {
         return execute {
-            val transactions = transactionDao.getAllForDelete(category.name)
-            val newTransactions = transactions.map { it.copy(category = Category.DEFAULT_NAME) }
+            val transactions = transactionDao.getAllForDelete(category.id)
+            val newTransactions = transactions.map { transaction ->
+                transaction.copy(categoryId = Category.getDefaultId(transaction.type))
+            }
             transactionDao.updateAll(newTransactions)
             categoryDao.delete(category)
         }
     }
 
-    override suspend fun getCategory(name: String): Result<Category> {
-        return execute { categoryDao.getItem(name) }
+    override suspend fun getCategory(id: Int): Result<Category> {
+        return execute { categoryDao.getItem(id) }
     }
 
     override suspend fun getCategories(): Result<Flow<List<Category>>> {
@@ -63,19 +66,19 @@ class AppRepositoryImpl @Inject constructor(
         return execute { transactionDao.delete(transaction) }
     }
 
-    override suspend fun getTransaction(id: Long): Result<Transaction> {
+    override suspend fun getTransaction(id: Long): Result<TransactionEntity> {
         return execute { transactionDao.getItem(id) }
     }
 
-    override suspend fun getTransactions(): Result<Flow<List<Transaction>>> {
+    override suspend fun getTransactions(): Result<Flow<List<TransactionEntity>>> {
         return execute { transactionDao.getAll() }
     }
 
-    override suspend fun getTransactionsByCategory(category: String): Result<Flow<List<Transaction>>> {
-        return execute { transactionDao.getAll(category) }
+    override suspend fun getTransactionsByCategory(categoryId: Int): Result<Flow<List<TransactionEntity>>> {
+        return execute { transactionDao.getAll(categoryId) }
     }
 
-    override suspend fun getTransactionsByType(type: TransactionType): Result<Flow<List<Transaction>>> {
+    override suspend fun getTransactionsByType(type: TransactionType): Result<Flow<List<TransactionEntity>>> {
         return execute { transactionDao.getAll(type) }
     }
 }

@@ -3,7 +3,7 @@ package com.emikhalets.myfinances.presentation.screens.transactions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.myfinances.data.repository.AppRepository
-import com.emikhalets.myfinances.domain.entity.Transaction
+import com.emikhalets.myfinances.domain.entity.TransactionEntity
 import com.emikhalets.myfinances.utils.DEFAULT_ERROR
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,13 +39,13 @@ class TransactionsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun setIncomeTransactions(flow: Flow<List<Transaction>>) {
+    private suspend fun setIncomeTransactions(flow: Flow<List<TransactionEntity>>) {
         flow.collect { transactions ->
             _state.update { _state.value.setIncomes(transactions) }
         }
     }
 
-    private suspend fun setExpenseTransactions(flow: Flow<List<Transaction>>) {
+    private suspend fun setExpenseTransactions(flow: Flow<List<TransactionEntity>>) {
         flow.collect { transactions ->
             _state.update { _state.value.setExpenses(transactions) }
         }
@@ -56,16 +56,16 @@ class TransactionsViewModel @Inject constructor(
     }
 
     data class State(
-        val incomes: List<Transaction> = emptyList(),
-        val expenses: List<Transaction> = emptyList(),
+        val incomes: List<TransactionEntity> = emptyList(),
+        val expenses: List<TransactionEntity> = emptyList(),
         val error: String = "",
     ) {
 
-        fun setIncomes(incomes: List<Transaction>): State {
+        fun setIncomes(incomes: List<TransactionEntity>): State {
             return this.copy(incomes = incomes)
         }
 
-        fun setExpenses(expenses: List<Transaction>): State {
+        fun setExpenses(expenses: List<TransactionEntity>): State {
             return this.copy(expenses = expenses)
         }
 

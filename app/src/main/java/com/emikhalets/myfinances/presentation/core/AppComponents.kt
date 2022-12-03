@@ -306,7 +306,7 @@ private fun CategoriesDropMenuPreview() {
     AppTheme {
         Box(Modifier.padding(8.dp)) {
             CategoriesDropMenu(
-                item = Category("Some category", TransactionType.Expense),
+                item = Category(name = "Some category", type = TransactionType.Expense),
                 list = emptyList(),
                 onSelect = {}
             )

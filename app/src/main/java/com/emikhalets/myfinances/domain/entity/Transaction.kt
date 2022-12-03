@@ -10,7 +10,7 @@ import java.util.*
 data class Transaction(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") val id: Long = 0,
-    @ColumnInfo(name = "category") val category: String,
+    @ColumnInfo(name = "category_id") val categoryId: Int,
     @ColumnInfo(name = "value") val value: Double,
     @ColumnInfo(name = "type") val type: TransactionType,
     @ColumnInfo(name = "note") val note: String = "",

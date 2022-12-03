@@ -11,36 +11,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.presentation.theme.appBackground
 
+// TODO: update compose
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AppBaseDialog(
+fun AppDialog(
     onDismiss: () -> Unit,
     label: String = "",
-    padding: Dp = 16.dp,
-    cancelable: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     Dialog(
         onDismissRequest = { onDismiss() },
-        properties = DialogProperties(
-            dismissOnBackPress = !cancelable,
-            dismissOnClickOutside = !cancelable,
-            usePlatformDefaultWidth = false
-        ),
+        properties = DialogProperties(dismissOnClickOutside = false),
     ) {
-        DialogLayout(label, padding, content)
+        DialogLayout(label, content)
     }
 }
 
 @Composable
-private fun DialogLayout(label: String, padding: Dp, content: @Composable () -> Unit) {
+private fun DialogLayout(label: String, content: @Composable () -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -50,7 +44,7 @@ private fun DialogLayout(label: String, padding: Dp, content: @Composable () -> 
                 shape = RoundedCornerShape(12.dp)
             )
     ) {
-        Column(Modifier.padding(padding)) {
+        Column(Modifier.padding(16.dp)) {
             if (label.isNotEmpty()) {
                 TextPrimaryFillWidth(
                     text = label,
@@ -68,7 +62,6 @@ private fun DialogPreview() {
     AppTheme {
         DialogLayout(
             label = "Preview label",
-            padding = 16.dp
         ) {
             TextPrimary("Preview dialog text")
         }

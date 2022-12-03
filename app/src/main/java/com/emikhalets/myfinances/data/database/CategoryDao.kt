@@ -22,8 +22,11 @@ interface CategoryDao {
     @Delete
     suspend fun delete(item: Category): Int
 
+    @Query("SELECT * FROM categories WHERE id=:id")
+    suspend fun getItem(id: Int): Category
+
     @Query("SELECT * FROM categories WHERE name=:name")
-    suspend fun getItem(name: String): Category
+    suspend fun getItemByName(name: String): Category
 
     @Query("SELECT * FROM categories ORDER BY name ASC")
     fun getAll(): Flow<List<Category>>

@@ -7,6 +7,7 @@
     <string name="app_categories">Categories</string>
     <string name="app_charts">Charts</string>
     <string name="app_budget">Budget</string>
+    <string name="app_add">Добавить</string>
 
     <string name="app_incomes">Incomes</string>
     <string name="app_expenses">Expenses</string>
@@ -20,7 +21,6 @@
     <string name="app_money_value">₽ %s</string>
     <string name="default_error">Произошла непредвиденная ошибка</string>
     <string name="default_wallet_name">Основной</string>
-    <string name="default_category_name">Другое</string>
 
     <string name="title_transaction_screen">Транзакция</string>
     <string name="title_categories_screen">Категории</string>
@@ -29,13 +29,13 @@
     <string name="title_wallet_screen">Кошелек</string>
 
     <string name="dialog_label_new_transaction">Новая транзакция</string>
-    <string name="dialog_label_new_category">Новая категория</string>
+    <string name="dialog_label_new_category">New Category</string>
     <string name="dialog_label_new_wallet">Новый кошелек</string>
 
     <string name="error_empty_text_field">Обязательно для заполнения</string>
     <string name="error_no_edit_category">Нельзя редактировать категорию по-умолчанию</string>
     <string name="error_no_delete_wallet">Нельзя удалять текущий колешек</string>
-    <string name="error_empty_field">Обязательно для заполнения</string>
+    <string name="error_empty_field">Required field</string>
 
     <string name="label_category">Категория</string>
     <string name="label_money_value">Сумма</string>
@@ -48,7 +48,7 @@
     <string name="add_transaction">Добавить</string>
     <string name="date_header">Дата: %s</string>
     <string name="transaction_type_header">Тип: %s</string>
-    <string name="save">Сохранить</string>
-    <string name="delete">Удалить</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
     <string name="no_transactions">Нет транзакций</string>
 </resources>

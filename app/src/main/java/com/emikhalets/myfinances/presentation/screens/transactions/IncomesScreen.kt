@@ -25,7 +25,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.emikhalets.myfinances.domain.entity.Category
 import com.emikhalets.myfinances.domain.entity.Transaction
+import com.emikhalets.myfinances.domain.entity.TransactionEntity
 import com.emikhalets.myfinances.presentation.core.AppScaffold
 import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.enums.TransactionType
@@ -44,28 +46,32 @@ fun IncomesScreen(
 
     AppScaffold(navController) {
         IncomesScreen(
-            transactions = state.incomes,
-            onTransactionClick = {},
-            onDeleteClick = {},
+            entities = state.incomes,
+            onTransactionClick = {
+                // TODO: open transaction edit screen
+            },
+            onDeleteClick = {
+                // TODO: delete transaction from db
+            },
         )
     }
 }
 
 @Composable
 private fun IncomesScreen(
-    transactions: List<Transaction>,
+    entities: List<TransactionEntity>,
     onTransactionClick: (Transaction) -> Unit,
     onDeleteClick: (Transaction) -> Unit,
 ) {
     Column(Modifier.fillMaxWidth()) {
         LazyColumn(Modifier.fillMaxWidth()) {
-            items(transactions) { transaction ->
+            items(entities) { entity ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(4.dp)
-                        .clickable { onTransactionClick(transaction) }
+                        .clickable { onTransactionClick(entity.transaction) }
                 ) {
                     Column(
                         modifier = Modifier
@@ -77,21 +83,21 @@ private fun IncomesScreen(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
-                                text = transaction.category,
+                                text = entity.category.name,
                                 fontSize = 18.sp
                             )
                             Spacer(Modifier.width(16.dp))
                             Text(
-                                text = transaction.timestamp.toDate(),
+                                text = entity.transaction.timestamp.toDate(),
                                 fontSize = 14.sp
                             )
                         }
                         Text(
-                            text = transaction.note,
+                            text = entity.transaction.note,
                             fontSize = 14.sp)
                     }
                     Text(
-                        text = transaction.value.toString(),
+                        text = entity.transaction.value.toString(),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -108,43 +114,55 @@ private fun Preview() {
     AppTheme {
         AppScaffold(rememberNavController()) {
             IncomesScreen(
-                transactions = listOf(
-                    Transaction(
-                        value = 450.34,
-                        category = "Category",
-                        note = "some description",
-                        type = TransactionType.Income
+                entities = listOf(
+                    TransactionEntity(
+                        Transaction(
+                            value = 450.00,
+                            categoryId = 0,
+                            note = "some description",
+                            type = TransactionType.Income
+                        ),
+                        Category(
+                            name = "Category",
+                            type = TransactionType.Income
+                        )
                     ),
-                    Transaction(
-                        value = 102458.99,
-                        category = "Category",
-                        note = "some description",
-                        type = TransactionType.Income
+                    TransactionEntity(
+                        Transaction(
+                            value = 102458.99,
+                            categoryId = 0,
+                            note = "some description",
+                            type = TransactionType.Income
+                        ),
+                        Category(
+                            name = "Category",
+                            type = TransactionType.Income
+                        )
                     ),
-                    Transaction(
-                        value = 450.02,
-                        category = "Category",
-                        note = "some description",
-                        type = TransactionType.Income
+                    TransactionEntity(
+                        Transaction(
+                            value = 450.02,
+                            categoryId = 0,
+                            note = "some description",
+                            type = TransactionType.Income
+                        ),
+                        Category(
+                            name = "Category",
+                            type = TransactionType.Income
+                        )
                     ),
-                    Transaction(
-                        value = 450.10,
-                        category = "Category",
-                        note = "some description",
-                        type = TransactionType.Income
-                    ),
-                    Transaction(
-                        value = 450.00,
-                        category = "Category",
-                        note = "some description",
-                        type = TransactionType.Income
-                    ),
-                    Transaction(
-                        value = 450.34,
-                        category = "Category",
-                        note = "some description",
-                        type = TransactionType.Income
-                    ),
+                    TransactionEntity(
+                        Transaction(
+                            value = 450.10,
+                            categoryId = 0,
+                            note = "some description",
+                            type = TransactionType.Income
+                        ),
+                        Category(
+                            name = "Category",
+                            type = TransactionType.Income
+                        )
+                    )
                 ),
                 onTransactionClick = {},
                 onDeleteClick = {},

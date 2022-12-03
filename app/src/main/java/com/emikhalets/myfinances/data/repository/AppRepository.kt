@@ -2,6 +2,7 @@ package com.emikhalets.myfinances.data.repository
 
 import com.emikhalets.myfinances.domain.entity.Category
 import com.emikhalets.myfinances.domain.entity.Transaction
+import com.emikhalets.myfinances.domain.entity.TransactionEntity
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import kotlinx.coroutines.flow.Flow
 
@@ -17,7 +18,7 @@ interface AppRepository {
 
     suspend fun delete(category: Category): Result<Int>
 
-    suspend fun getCategory(name: String): Result<Category>
+    suspend fun getCategory(id: Int): Result<Category>
 
     suspend fun getCategories(): Result<Flow<List<Category>>>
 
@@ -34,11 +35,11 @@ interface AppRepository {
 
     suspend fun delete(transaction: Transaction): Result<Int>
 
-    suspend fun getTransaction(id: Long): Result<Transaction>
+    suspend fun getTransaction(id: Long): Result<TransactionEntity>
 
-    suspend fun getTransactions(): Result<Flow<List<Transaction>>>
+    suspend fun getTransactions(): Result<Flow<List<TransactionEntity>>>
 
-    suspend fun getTransactionsByCategory(category: String): Result<Flow<List<Transaction>>>
+    suspend fun getTransactionsByCategory(categoryId: Int): Result<Flow<List<TransactionEntity>>>
 
-    suspend fun getTransactionsByType(type: TransactionType): Result<Flow<List<Transaction>>>
+    suspend fun getTransactionsByType(type: TransactionType): Result<Flow<List<TransactionEntity>>>
 }

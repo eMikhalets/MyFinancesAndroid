@@ -12,10 +12,19 @@ data class Category(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "type") val type: TransactionType,
 ) {
+
+    fun hasDefaultId(): Boolean {
+        return id == DEF_ID_EXPENSE || id == DEF_ID_INCOME
+    }
+
     companion object {
 
         const val DEF_ID_INCOME = -11
         const val DEF_ID_EXPENSE = -10
+
+        fun getDefaultInstance(type: TransactionType): Category {
+            return Category(getDefaultId(type), "", type)
+        }
 
         fun getDefaultId(type: TransactionType): Int {
             return when (type) {

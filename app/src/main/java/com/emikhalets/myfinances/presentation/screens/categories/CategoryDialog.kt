@@ -95,13 +95,13 @@ private fun DialogLayout(
         Row(Modifier.fillMaxWidth()) {
             if (isEditCategory) {
                 AppTextButton(
-                    text = stringResource(R.string.delete),
+                    text = stringResource(R.string.app_delete),
                     onClick = onDeleteClick,
                     modifier = Modifier.weight(1f)
                 )
             }
             AppTextButton(
-                text = stringResource(R.string.save),
+                text = stringResource(R.string.app_save),
                 onClick = onSaveClick,
                 modifier = Modifier.weight(1f)
             )

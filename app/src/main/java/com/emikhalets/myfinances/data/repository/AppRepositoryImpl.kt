@@ -50,6 +50,10 @@ class AppRepositoryImpl @Inject constructor(
         return execute { categoryDao.getAll(type) }
     }
 
+    override suspend fun getCategoriesByTypeSync(type: TransactionType): Result<List<Category>> {
+        return execute { categoryDao.getAllSync(type) }
+    }
+
     /**
      * Transactions Dao
      */

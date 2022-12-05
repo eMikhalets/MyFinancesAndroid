@@ -16,3 +16,23 @@ data class Transaction(
     @ColumnInfo(name = "note") val note: String = "",
     @ColumnInfo(name = "timestamp") val timestamp: Long = Date().time,
 )
+
+fun Transaction?.copyOrNew(
+    categoryId: Int,
+    value: Double,
+    type: TransactionType,
+    note: String,
+): Transaction {
+    return this?.copy(
+        categoryId = categoryId,
+        value = value,
+        type = type,
+        note = note
+    ) ?: Transaction(
+        categoryId = categoryId,
+        value = value,
+        type = type,
+        note = note,
+        timestamp = Date().time
+    )
+}

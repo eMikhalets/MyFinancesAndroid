@@ -29,6 +29,7 @@ import com.emikhalets.myfinances.domain.entity.Category
 import com.emikhalets.myfinances.domain.entity.Transaction
 import com.emikhalets.myfinances.domain.entity.TransactionEntity
 import com.emikhalets.myfinances.presentation.core.AppScaffold
+import com.emikhalets.myfinances.presentation.navigation.navToTransactionEdit
 import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toDate
@@ -48,7 +49,7 @@ fun ExpensesScreen(
         ExpensesScreen(
             entities = state.incomes,
             onTransactionClick = {
-                // TODO: open transaction edit screen
+                navController.navToTransactionEdit(it.id, it.type)
             },
             onDeleteClick = {
                 // TODO: delete transaction from db

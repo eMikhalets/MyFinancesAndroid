@@ -8,6 +8,8 @@ import com.emikhalets.myfinances.R
 enum class AppScreen(val route: String, @StringRes val title: Int) {
     MAIN("main", R.string.app_name_title),
     CATEGORIES("categories", R.string.app_categories),
+    TRANSACTION_EDIT("$ROUTE_EDIT_TRANSACTION/{$ARG_TRANSACTION_ID}/{$ARG_TRANSACTION_TYPE}",
+        R.string.title_edit_transaction),
     INCOMES("incomes", R.string.title_incomes_screen),
     EXPENSES("expenses", R.string.title_expenses_screen);
 

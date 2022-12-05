@@ -42,6 +42,7 @@ import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.presentation.core.AppScaffold
 import com.emikhalets.myfinances.presentation.navigation.AppScreen
+import com.emikhalets.myfinances.presentation.navigation.navToTransactionEdit
 import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.enums.TransactionType
 
@@ -62,8 +63,12 @@ fun MainScreen(
             expenseValue = state.expenseValue,
             onExpensesClick = { navController.navigate(AppScreen.EXPENSES.route) },
             onIncomesClick = { navController.navigate(AppScreen.INCOMES.route) },
-            onAddExpenseClick = {},
-            onAddIncomeClick = {},
+            onAddExpenseClick = {
+                navController.navToTransactionEdit(null, TransactionType.Expense)
+            },
+            onAddIncomeClick = {
+                navController.navToTransactionEdit(null, TransactionType.Income)
+            },
             onCategoriesClick = {},
             onChartsClick = {},
             onBudgetClick = {},

@@ -18,6 +18,23 @@ import com.emikhalets.myfinances.presentation.theme.textButton
 import com.emikhalets.myfinances.presentation.theme.textPrimary
 
 @Composable
+fun AppButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Button(
+        onClick = { onClick() },
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.boxBackground,
+            contentColor = MaterialTheme.colors.textPrimary
+        ),
+        modifier = modifier
+    ) {
+        AppText(
+            text = text,
+            modifier = Modifier.padding(8.dp)
+        )
+    }
+}
+
+@Composable
 fun AppTextButton(
     text: String,
     onClick: () -> Unit,
@@ -32,28 +49,6 @@ fun AppTextButton(
         AppText(
             text = text,
             fontColor = textColor,
-            modifier = Modifier.padding(padding)
-        )
-    }
-}
-
-@Composable
-fun AppButton(
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    padding: PaddingValues = PaddingValues(8.dp),
-) {
-    Button(
-        onClick = { onClick() },
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.boxBackground,
-            contentColor = MaterialTheme.colors.textPrimary
-        ),
-        modifier = modifier
-    ) {
-        AppText(
-            text = text,
             modifier = Modifier.padding(padding)
         )
     }

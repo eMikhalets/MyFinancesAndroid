@@ -24,6 +24,7 @@ interface AppRepository {
 
     suspend fun getCategoriesByType(type: TransactionType): Result<Flow<List<Category>>>
 
+    suspend fun getCategoriesByTypeSync(type: TransactionType): Result<List<Category>>
 
     /**
      * Transactions Dao

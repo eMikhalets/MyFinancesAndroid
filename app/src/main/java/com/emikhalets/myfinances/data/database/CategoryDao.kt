@@ -33,4 +33,7 @@ interface CategoryDao {
 
     @Query("SELECT * FROM categories WHERE type=:type ORDER BY name ASC")
     fun getAll(type: TransactionType): Flow<List<Category>>
+
+    @Query("SELECT * FROM categories WHERE type=:type ORDER BY name ASC")
+    suspend fun getAllSync(type: TransactionType): List<Category>
 }

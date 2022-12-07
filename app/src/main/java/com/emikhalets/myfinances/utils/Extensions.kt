@@ -28,6 +28,23 @@ suspend inline fun <T : Any> execute(crossinline block: suspend () -> T): Result
 // ========================================
 // Primitive conversion
 
+fun Double?.formatMoney(withCurrency: Boolean = false): String {
+    val valueString = this.toString()
+    return try {
+        val valueArray = valueString.split(".")
+        val remain = valueArray[1]
+        val newRemain = if (remain.length == 1) "${remain}0" else remain
+        return buildString {
+            append(valueArray[0])
+            append(".")
+            append(newRemain)
+            if (withCurrency) append(" ₽")
+        }
+    } catch (ex: Exception) {
+        if (withCurrency) "0.00  ₽" else "0.00"
+    }
+}
+
 inline fun String.safeToDouble(crossinline onError: () -> Unit = {}): Double {
     if (this.isEmpty() || this.isBlank()) return 0.0
     return try {

@@ -33,8 +33,10 @@ import com.emikhalets.myfinances.domain.entity.TransactionEntity
 import com.emikhalets.myfinances.domain.entity.copyOrNew
 import com.emikhalets.myfinances.presentation.core.AppCategorySpinner
 import com.emikhalets.myfinances.presentation.core.AppScaffold
+import com.emikhalets.myfinances.presentation.core.AppTextField
 import com.emikhalets.myfinances.presentation.core.TextPrimary
 import com.emikhalets.myfinances.presentation.core.TransactionTypeChooser
+import com.emikhalets.myfinances.presentation.core.compose_components.TransactionKeyboard
 import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.presentation.theme.boxBackground
 import com.emikhalets.myfinances.utils.enums.TransactionType
@@ -67,13 +69,11 @@ fun TransactionEditScreen(
     }
 
     AppScaffold(navController) {
-        TransactionEditScreen(
-            entity = state.entity,
+        TransactionEditScreen(entity = state.entity,
             categories = state.categories,
             passedType = transactionType,
             onTypeChange = { viewModel.getCategories(it) },
-            onSaveClick = { viewModel.saveTransaction(it) }
-        )
+            onSaveClick = { viewModel.saveTransaction(it) })
     }
 }
 
@@ -95,35 +95,27 @@ private fun TransactionEditScreen(
     var note by remember { mutableStateOf(entity?.transaction?.note ?: "") }
 
     Column(Modifier.fillMaxSize()) {
-        TransactionTypeChooser(
-            type = type,
-            onTypeSelect = {
-                type = it
-                onTypeChange(it)
-            }
-        )
+        TransactionTypeChooser(type = type, onTypeSelect = {
+            type = it
+            onTypeChange(it)
+        })
         Spacer(modifier = Modifier.height(16.dp))
-        AppCategorySpinner(
-            categories = categories,
+        AppCategorySpinner(categories = categories,
             initItem = category,
-            onSelect = { category = it }
-        )
-        Box(
-            contentAlignment = Alignment.Center,
+            onSelect = { category = it })
+        AppTextField(value = note, onValueChange = { note = it })
+        TransactionKeyboard(value = value, onValueChange = { value = it })
+        Box(contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colors.boxBackground)
                 .clickable {
-                    val saveTransaction = entity?.transaction
-                        .copyOrNew(category.id, value, type, note)
+                    val saveTransaction =
+                        entity?.transaction.copyOrNew(category.id, value, type, note)
                     onSaveClick(saveTransaction)
                 }
-                .padding(16.dp)
-        ) {
-            TextPrimary(
-                text = stringResource(R.string.app_save),
-                size = 20.sp
-            )
+                .padding(16.dp)) {
+            TextPrimary(text = stringResource(R.string.app_save), size = 20.sp)
         }
     }
 }
@@ -132,7 +124,10 @@ private fun TransactionEditScreen(
 @Composable
 private fun Preview() {
     AppTheme {
-        TransactionEditScreen(
-        )
+        TransactionEditScreen(entity = null,
+            categories = emptyList(),
+            passedType = TransactionType.Expense,
+            onTypeChange = {},
+            onSaveClick = {})
     }
 }

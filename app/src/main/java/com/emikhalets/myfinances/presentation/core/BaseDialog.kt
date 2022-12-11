@@ -3,12 +3,12 @@ package com.emikhalets.myfinances.presentation.core
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -17,10 +17,8 @@ import androidx.compose.ui.window.DialogProperties
 import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.presentation.theme.appBackground
 
-// TODO: update compose
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AppDialog(
+fun BaseDialog(
     onDismiss: () -> Unit,
     label: String = "",
     content: @Composable () -> Unit,
@@ -38,6 +36,7 @@ private fun DialogLayout(label: String, content: @Composable () -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
+            .fillMaxWidth()
             .padding(40.dp)
             .background(
                 color = MaterialTheme.colors.appBackground,
@@ -46,9 +45,11 @@ private fun DialogLayout(label: String, content: @Composable () -> Unit) {
     ) {
         Column(Modifier.padding(16.dp)) {
             if (label.isNotEmpty()) {
-                TextPrimaryFillWidth(
+                TextPrimary(
                     text = label,
-                    modifier = Modifier.padding(bottom = 32.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 32.dp)
                 )
             }
             content()

@@ -26,7 +26,7 @@ fun AppNavGraph(navController: NavHostController) {
         }
 
         composable(
-            route = AppScreen.TRANSACTION_EDIT.route,
+            route = "transaction_edit/{$ARG_TRANSACTION_ID}/{$ARG_TRANSACTION_TYPE}",
             arguments = listOf(
                 navArgument(ARG_TRANSACTION_ID) { type = NavType.LongType },
                 navArgument(ARG_TRANSACTION_TYPE) {

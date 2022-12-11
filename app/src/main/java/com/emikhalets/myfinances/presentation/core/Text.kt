@@ -1,12 +1,8 @@
 package com.emikhalets.myfinances.presentation.core
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -25,7 +21,7 @@ import com.emikhalets.myfinances.presentation.theme.textSecondary
 fun TextPrimary(
     text: String,
     modifier: Modifier = Modifier,
-    size: TextUnit = 16.sp,
+    fontSize: TextUnit = 16.sp,
     fontWeight: FontWeight = FontWeight.Normal,
     textAlign: TextAlign = TextAlign.Start,
     overflow: TextOverflow = TextOverflow.Clip,
@@ -35,27 +31,11 @@ fun TextPrimary(
         text = text,
         modifier = modifier,
         color = MaterialTheme.colors.textPrimary,
-        fontSize = size,
+        fontSize = fontSize,
         fontWeight = fontWeight,
         textAlign = textAlign,
         overflow = overflow,
         maxLines = maxLines
-    )
-}
-
-@Composable
-fun TextPrimaryFillWidth(
-    text: String,
-    modifier: Modifier = Modifier,
-    size: TextUnit = 16.sp,
-    fontWeight: FontWeight = FontWeight.Normal,
-) {
-    TextPrimary(
-        text = text,
-        size = size,
-        fontWeight = fontWeight,
-        textAlign = TextAlign.Center,
-        modifier = modifier.fillMaxWidth()
     )
 }
 

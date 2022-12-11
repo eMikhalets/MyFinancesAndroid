@@ -14,9 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BarChart
@@ -30,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,10 +39,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.R
+import com.emikhalets.myfinances.presentation.core.AppIcon
 import com.emikhalets.myfinances.presentation.core.AppScaffold
+import com.emikhalets.myfinances.presentation.core.TextPrimary
 import com.emikhalets.myfinances.presentation.navigation.AppScreen
 import com.emikhalets.myfinances.presentation.navigation.navToTransactionEdit
 import com.emikhalets.myfinances.presentation.theme.AppTheme
+import com.emikhalets.myfinances.presentation.theme.boxBackground
 import com.emikhalets.myfinances.utils.enums.TransactionType
 
 @Composable
@@ -69,7 +71,9 @@ fun MainScreen(
             onAddIncomeClick = {
                 navController.navToTransactionEdit(null, TransactionType.Income)
             },
-            onCategoriesClick = {},
+            onCategoriesClick = {
+                navController.navigate(AppScreen.CATEGORIES.route)
+            },
             onChartsClick = {},
             onBudgetClick = {},
         )
@@ -152,22 +156,21 @@ private fun ValueBox(value: Double, type: TransactionType, onClick: () -> Unit) 
 
     Column(
         modifier = Modifier
-            .background(MaterialTheme.colors.primary, RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colors.boxBackground, RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(12.dp))
             .width(150.dp)
-            .padding(16.dp)
             .clickable { onClick() }
+            .padding(16.dp)
     ) {
-        Text(
+        TextPrimary(
             text = stringResource(id = title),
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onPrimary,
             fontSize = 18.sp,
         )
         Spacer(modifier = Modifier.height(4.dp))
-        Text(
+        TextPrimary(
             text = "${stringResource(valuePrefix)} $value",
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onPrimary,
             fontSize = 20.sp
         )
     }
@@ -179,22 +182,20 @@ private fun RowScope.MainButton(text: String, icon: ImageVector, onClick: () -> 
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
-            .background(MaterialTheme.colors.primary, RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colors.boxBackground, RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(12.dp))
             .clickable { onClick() }
             .padding(8.dp)
             .weight(1f)
             .aspectRatio(1f)
     ) {
-        Icon(
+        AppIcon(
             imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colors.onPrimary,
             modifier = Modifier.size(50.dp)
         )
-        Text(
+        TextPrimary(
             text = text,
             fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colors.onPrimary,
             fontSize = 14.sp,
         )
     }

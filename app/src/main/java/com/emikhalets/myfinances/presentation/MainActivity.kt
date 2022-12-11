@@ -8,6 +8,7 @@ import androidx.compose.material.Surface
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.presentation.navigation.AppNavGraph
 import com.emikhalets.myfinances.presentation.theme.AppTheme
+import com.emikhalets.myfinances.presentation.theme.appBackground
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
             val navController = rememberNavController()
 
             AppTheme {
-                Surface(color = MaterialTheme.colors.surface) {
+                Surface(color = MaterialTheme.colors.appBackground) {
                     AppNavGraph(navController)
                 }
             }

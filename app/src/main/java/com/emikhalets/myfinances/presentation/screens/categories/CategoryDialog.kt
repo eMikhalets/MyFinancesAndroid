@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.dp
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.domain.entity.Category
 import com.emikhalets.myfinances.domain.entity.copyOrNew
-import com.emikhalets.myfinances.presentation.core.AppDialog
 import com.emikhalets.myfinances.presentation.core.AppTextButton
 import com.emikhalets.myfinances.presentation.core.AppTextField
+import com.emikhalets.myfinances.presentation.core.BaseDialog
 import com.emikhalets.myfinances.presentation.core.TransactionTypeChooser
 import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.enums.TransactionType
@@ -38,7 +38,7 @@ fun CategoryDialog(
 
     var nameEmptyError by remember { mutableStateOf(false) }
 
-    AppDialog(
+    BaseDialog(
         label = stringResource(R.string.dialog_label_new_category),
         onDismiss = { onDismiss() }
     ) {

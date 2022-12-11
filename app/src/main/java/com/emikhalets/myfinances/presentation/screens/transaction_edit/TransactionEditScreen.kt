@@ -36,7 +36,7 @@ import com.emikhalets.myfinances.presentation.core.AppScaffold
 import com.emikhalets.myfinances.presentation.core.AppTextField
 import com.emikhalets.myfinances.presentation.core.TextPrimary
 import com.emikhalets.myfinances.presentation.core.TransactionTypeChooser
-import com.emikhalets.myfinances.presentation.core.compose_components.TransactionKeyboard
+import com.emikhalets.myfinances.presentation.core.TransactionKeyboard
 import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.presentation.theme.boxBackground
 import com.emikhalets.myfinances.utils.enums.TransactionType
@@ -115,7 +115,7 @@ private fun TransactionEditScreen(
                     onSaveClick(saveTransaction)
                 }
                 .padding(16.dp)) {
-            TextPrimary(text = stringResource(R.string.app_save), size = 20.sp)
+            TextPrimary(text = stringResource(R.string.app_save), fontSize = 20.sp)
         }
     }
 }

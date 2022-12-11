@@ -1,6 +1,5 @@
 package com.emikhalets.myfinances.presentation.screens.categories
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,10 +29,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.domain.entity.Category
+import com.emikhalets.myfinances.presentation.core.AppButton
 import com.emikhalets.myfinances.presentation.core.AppScaffold
 import com.emikhalets.myfinances.presentation.core.TextPrimary
 import com.emikhalets.myfinances.presentation.theme.AppTheme
-import com.emikhalets.myfinances.presentation.theme.boxBackground
 import com.emikhalets.myfinances.presentation.theme.textSecondary
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toast
@@ -98,7 +97,7 @@ private fun CategoriesScreen(
             ) {
                 TextPrimary(
                     text = stringResource(id = R.string.app_incomes),
-                    size = 18.sp,
+                    fontSize = 18.sp,
                     modifier = Modifier.padding(8.dp)
                 )
                 Divider(color = MaterialTheme.colors.textSecondary)
@@ -116,7 +115,7 @@ private fun CategoriesScreen(
             ) {
                 TextPrimary(
                     text = stringResource(id = R.string.app_expenses),
-                    size = 18.sp,
+                    fontSize = 18.sp,
                     modifier = Modifier.padding(8.dp)
                 )
                 Divider(color = MaterialTheme.colors.textSecondary)
@@ -131,13 +130,11 @@ private fun CategoriesScreen(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.boxBackground)
-                .clickable { onAddClick() }
                 .padding(16.dp)
         ) {
-            TextPrimary(
+            AppButton(
                 text = stringResource(R.string.app_add),
-                size = 20.sp
+                onClick = { onAddClick() }
             )
         }
     }
@@ -148,7 +145,7 @@ private fun CategoryItem(category: Category, onCategoryClick: (Category) -> Unit
     Column(Modifier.fillMaxWidth()) {
         TextPrimary(
             text = category.name,
-            size = 18.sp,
+            fontSize = 18.sp,
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onCategoryClick(category) }

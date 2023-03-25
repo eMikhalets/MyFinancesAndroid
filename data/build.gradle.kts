@@ -36,7 +36,7 @@ dependencies {
     implementation(project(":domain"))
 
     // Database
-    implementation(Dependencies.Room)
+    api(Dependencies.Room)
     implementation(Dependencies.RoomKtx)
     kapt(Dependencies.RoomCompiler)
 

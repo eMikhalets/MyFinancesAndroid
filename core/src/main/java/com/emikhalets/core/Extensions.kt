@@ -1,10 +1,8 @@
-package com.emikhalets.myfinances.utils
+package com.emikhalets.core
 
 import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import com.emikhalets.myfinances.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -15,15 +13,6 @@ import kotlinx.coroutines.withContext
 // Global constants
 
 const val DEFAULT_ERROR = "null"
-
-// ========================================
-// Global constants
-
-suspend inline fun <T : Any> execute(crossinline block: suspend () -> T): Result<T> {
-    return withContext(Dispatchers.IO) {
-        kotlin.runCatching { block() }.onFailure { it.printStackTrace() }
-    }
-}
 
 // ========================================
 // Primitive conversion
@@ -94,29 +83,29 @@ fun toast(context: Context, @StringRes res: Int) {
     Toast.makeText(context, res, Toast.LENGTH_SHORT).show()
 }
 
-fun toast(context: Context, message: String) {
-    if (message.isEmpty()) return
-    Toast.makeText(context, message.errorOrDefault(context), Toast.LENGTH_SHORT).show()
-}
+//fun toast(context: Context, message: String) {
+//    if (message.isEmpty()) return
+//    Toast.makeText(context, message.errorOrDefault(context), Toast.LENGTH_SHORT).show()
+//}
 
-private fun String.errorOrDefault(context: Context): String {
-    return if (this == DEFAULT_ERROR) context.getString(R.string.default_error) else this
-}
+//private fun String.errorOrDefault(context: Context): String {
+//    return if (this == DEFAULT_ERROR) context.getString(R.string.default_error) else this
+//}
 
 // ========================================
 // Compose
 
-@Composable
-fun String.formatValue(): String {
-    val thousandsString = this
-    val resourceString = stringResource(R.string.app_money_value, thousandsString)
-    return this
-}
-
-fun String.appKeyboardInput(oldValue: String): String {
-    return if (this == "X") {
-        ""
-    } else {
-        oldValue + this
-    }
-}
+//@Composable
+//fun String.formatValue(): String {
+//    val thousandsString = this
+//    val resourceString = stringResource(R.string.app_money_value, thousandsString)
+//    return this
+//}
+//
+//fun String.appKeyboardInput(oldValue: String): String {
+//    return if (this == "X") {
+//        ""
+//    } else {
+//        oldValue + this
+//    }
+//}

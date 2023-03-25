@@ -1,12 +1,16 @@
-package com.emikhalets.myfinances.presentation
+package com.emikhalets.myfinances
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.presentation.navigation.NavGraph
+import com.emikhalets.presentation.theme.AppTheme
 import com.emikhalets.presentation.theme.appBackground
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,10 +24,21 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             AppTheme {
-                Surface(color = MaterialTheme.colors.appBackground) {
-                    NavGraph(navController)
-                }
+                App(navController)
             }
         }
     }
+}
+
+@Composable
+fun App(navController: NavHostController) {
+    Surface(color = MaterialTheme.colors.appBackground) {
+        NavGraph(navController)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Preview() {
+    App(rememberNavController())
 }

@@ -31,17 +31,17 @@ dependencies {
     implementation(project(":domain"))
 
     // General
-    implementation(Dependencies.Core)
+    api(Dependencies.Core)
     implementation(Dependencies.Lifecycle)
 
     // Compose
-    implementation(Dependencies.ComposeUi)
-    implementation(Dependencies.UiTooling)
-    implementation(Dependencies.Material)
+    api(Dependencies.ComposeUi)
+    api(Dependencies.UiTooling)
+    api(Dependencies.Material)
     implementation(Dependencies.IconsCore)
     implementation(Dependencies.IconsExt)
-    implementation(Dependencies.ActivityCompose)
-    implementation(Dependencies.Navigation)
+    api(Dependencies.ActivityCompose)
+    api(Dependencies.Navigation)
     implementation(Dependencies.HiltCompose)
 
     // DI

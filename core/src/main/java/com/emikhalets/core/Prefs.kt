@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.utils
+package com.emikhalets.core
 
 import android.content.Context
 import android.content.SharedPreferences

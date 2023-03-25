@@ -4,11 +4,13 @@ import com.emikhalets.data.database.table.CategoryDb
 import com.emikhalets.data.database.table.CurrencyDb
 import com.emikhalets.data.database.table.TransactionDb
 import com.emikhalets.data.database.table.WalletDb
+import com.emikhalets.data.database.table.embedded.ComplexWalletDb
 import com.emikhalets.domain.entity.CategoryEntity
 import com.emikhalets.domain.entity.CurrencyEntity
 import com.emikhalets.domain.entity.TransactionEntity
 import com.emikhalets.domain.entity.TransactionType
 import com.emikhalets.domain.entity.WalletEntity
+import com.emikhalets.domain.entity.complex.ComplexWalletEntity
 import javax.inject.Inject
 
 class DatabaseMapper @Inject constructor() {
@@ -110,6 +112,7 @@ class DatabaseMapper @Inject constructor() {
         return WalletDb(
             id = entity.id,
             name = entity.name,
+            currencyId = entity.currencyId,
             initialValue = entity.initialValue
         )
     }
@@ -118,6 +121,7 @@ class DatabaseMapper @Inject constructor() {
         return WalletEntity(
             id = dbEntity.id,
             name = dbEntity.name,
+            currencyId = dbEntity.currencyId,
             initialValue = dbEntity.initialValue
         )
     }
@@ -127,8 +131,16 @@ class DatabaseMapper @Inject constructor() {
             WalletEntity(
                 id = dbEntity.id,
                 name = dbEntity.name,
+                currencyId = dbEntity.currencyId,
                 initialValue = dbEntity.initialValue
             )
         }
+    }
+
+    fun mapComplexWalletDbToEntity(dbEntity: ComplexWalletDb): ComplexWalletEntity {
+        return ComplexWalletEntity(
+            wallet = mapWalletDbToEntity(dbEntity.wallet),
+            transactions = mapTransactionsListDbToEntity(dbEntity.transactions)
+        )
     }
 }

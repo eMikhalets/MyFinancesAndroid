@@ -5,6 +5,7 @@ import com.emikhalets.domain.entity.CurrencyEntity
 import com.emikhalets.domain.entity.ResultWrapper
 import com.emikhalets.domain.entity.TransactionEntity
 import com.emikhalets.domain.entity.WalletEntity
+import com.emikhalets.domain.entity.complex.ComplexWalletEntity
 import kotlinx.coroutines.flow.Flow
 
 interface DatabaseRepository {
@@ -48,4 +49,5 @@ interface DatabaseRepository {
     suspend fun deleteWallet(entity: WalletEntity): ResultWrapper<Int>
     suspend fun getWalletFlow(id: Long): ResultWrapper<Flow<WalletEntity>>
     suspend fun getWalletsFlow(): ResultWrapper<Flow<List<WalletEntity>>>
+    suspend fun getComplexWallet(id: Long): ResultWrapper<ComplexWalletEntity>
 }

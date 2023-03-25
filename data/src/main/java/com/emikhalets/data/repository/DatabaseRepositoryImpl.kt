@@ -18,6 +18,7 @@ import com.emikhalets.domain.entity.ResultWrapper
 import com.emikhalets.domain.entity.TransactionEntity
 import com.emikhalets.domain.entity.TransactionType
 import com.emikhalets.domain.entity.WalletEntity
+import com.emikhalets.domain.entity.complex.ComplexWalletEntity
 import com.emikhalets.domain.repository.DatabaseRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -199,6 +200,13 @@ class DatabaseRepositoryImpl @Inject constructor(
         return execute {
             val flow = walletsDao.getAllFlow()
             flow.map { mapper.mapWalletsListDbToEntity(it) }
+        }
+    }
+
+    override suspend fun getComplexWallet(id: Long): ResultWrapper<ComplexWalletEntity> {
+        return execute {
+            val dbEntity = walletsDao.getComplexWallet(id)
+            mapper.mapComplexWalletDbToEntity(dbEntity)
         }
     }
 }

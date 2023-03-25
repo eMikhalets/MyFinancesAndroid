@@ -26,9 +26,10 @@ fun NavGraph(navController: NavHostController) {
         composable(Screen.Main.route) {
             MainScreen(
                 onTransactionsClick = {},
-                onCategoriesClick = {},
-                onWalletsClick = {},
-                onCurrenciesClick = {}
+                onTransactionEditClick = {},
+                onCategoriesClick = { navController.navigate(Screen.Categories.route) },
+                onWalletsClick = { navController.navigate(Screen.Wallets.route) },
+                onCurrenciesClick = { navController.navigate(Screen.Currencies.route) }
             )
         }
         composable(Screen.Categories.route) {

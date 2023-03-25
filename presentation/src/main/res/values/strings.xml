@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--    <string name="app_name">SimpleMoney</string>-->
-<!--    <string name="app_name_title">My Finances</string>-->
-
 <!--    <string name="app_plus">+</string>-->
 <!--    <string name="app_minus">-</string>-->
 <!--    <string name="app_categories">Categories</string>-->
@@ -32,6 +29,11 @@
     <string name="title_currency_edit">Редактирование</string>
     <string name="title_transactions">Транзакции</string>
     <string name="title_transaction_edit">Редактирование</string>
+
+    <!--  Main Screen  -->
+    <string name="main_categories">Категории</string>
+    <string name="main_wallets">Кошельки</string>
+    <string name="main_currencies">Валюты</string>
 
 <!--    <string name="app_money_value">₽ %s</string>-->
 <!--    <string name="default_error">Произошла непредвиденная ошибка</string>-->

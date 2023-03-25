@@ -14,17 +14,17 @@ enum class AppScreen(val route: String, @StringRes val title: Int) {
 
     companion object {
 
-        fun AppScreen?.isRootScreen(): Boolean {
+        fun com.emikhalets.presentation.navigation.Screen?.isRootScreen(): Boolean {
             this ?: return false
             val screen = getRoot().find { it == this }
             return screen != null
         }
 
         @Composable
-        fun getScreen(entry: NavBackStackEntry?): AppScreen? {
+        fun getScreen(entry: NavBackStackEntry?): com.emikhalets.presentation.navigation.Screen? {
             return values().find { entry?.destination?.route == it.route }
         }
 
-        private fun getRoot(): List<AppScreen> = listOf(MAIN)
+        private fun getRoot(): List<com.emikhalets.presentation.navigation.Screen> = listOf(MAIN)
     }
 }

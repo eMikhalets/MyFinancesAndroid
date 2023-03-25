@@ -12,16 +12,17 @@ import com.emikhalets.myfinances.presentation.screens.transaction_edit.Transacti
 import com.emikhalets.myfinances.presentation.screens.transactions.ExpensesScreen
 import com.emikhalets.myfinances.presentation.screens.transactions.IncomesScreen
 import com.emikhalets.myfinances.utils.enums.TransactionType
+import com.emikhalets.presentation.navigation.Screen
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
-    NavHost(navController, AppScreen.MAIN.route) {
+    NavHost(navController, Screen.MAIN.route) {
 
-        composable(AppScreen.MAIN.route) {
+        composable(Screen.MAIN.route) {
             MainScreen(navController)
         }
 
-        composable(AppScreen.CATEGORIES.route) {
+        composable(Screen.CATEGORIES.route) {
             CategoriesScreen(navController)
         }
 
@@ -44,11 +45,11 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
 
-        composable(AppScreen.INCOMES.route) {
+        composable(Screen.INCOMES.route) {
             IncomesScreen(navController)
         }
 
-        composable(AppScreen.EXPENSES.route) {
+        composable(Screen.EXPENSES.route) {
             ExpensesScreen(navController)
         }
 

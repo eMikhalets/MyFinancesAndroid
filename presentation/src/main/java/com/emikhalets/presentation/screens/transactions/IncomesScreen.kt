@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -35,18 +34,18 @@ import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toDate
 
 @Composable
-fun ExpensesScreen(
+fun IncomesScreen(
     navController: NavHostController,
     viewModel: TransactionsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.getExpenseTransactions()
+        viewModel.getIncomeTransactions()
     }
 
     AppScaffold(navController) {
-        ExpensesScreen(
+        IncomesScreen(
             entities = state.incomes,
             onTransactionClick = {
                 navController.navToTransactionEdit(it.id, it.type)
@@ -59,7 +58,7 @@ fun ExpensesScreen(
 }
 
 @Composable
-private fun ExpensesScreen(
+private fun IncomesScreen(
     entities: List<TransactionEntity>,
     onTransactionClick: (Transaction) -> Unit,
     onDeleteClick: (Transaction) -> Unit,
@@ -114,7 +113,7 @@ private fun ExpensesScreen(
 private fun Preview() {
     AppTheme {
         AppScaffold(rememberNavController()) {
-            ExpensesScreen(
+            IncomesScreen(
                 entities = listOf(
                     TransactionEntity(
                         Transaction(

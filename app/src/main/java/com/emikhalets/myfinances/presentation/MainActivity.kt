@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.navigation.compose.rememberNavController
-import com.emikhalets.myfinances.presentation.navigation.AppNavGraph
+import com.emikhalets.presentation.navigation.NavGraph
 import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.presentation.theme.appBackground
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
 
             AppTheme {
                 Surface(color = MaterialTheme.colors.appBackground) {
-                    AppNavGraph(navController)
+                    NavGraph(navController)
                 }
             }
         }

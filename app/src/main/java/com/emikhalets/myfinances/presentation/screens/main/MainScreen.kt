@@ -44,9 +44,9 @@ import com.emikhalets.myfinances.presentation.core.AppScaffold
 import com.emikhalets.myfinances.presentation.core.TextPrimary
 import com.emikhalets.presentation.navigation.Screen
 import com.emikhalets.presentation.navigation.navToTransactionEdit
-import com.emikhalets.myfinances.presentation.theme.AppTheme
-import com.emikhalets.myfinances.presentation.theme.boxBackground
+import com.emikhalets.presentation.theme.boxBackground
 import com.emikhalets.myfinances.utils.enums.TransactionType
+import com.emikhalets.presentation.screens.main.MainViewModel
 
 @Composable
 fun MainScreen(

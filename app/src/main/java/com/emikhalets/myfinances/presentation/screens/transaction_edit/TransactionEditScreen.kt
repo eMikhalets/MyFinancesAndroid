@@ -37,8 +37,7 @@ import com.emikhalets.myfinances.presentation.core.AppTextField
 import com.emikhalets.myfinances.presentation.core.TextPrimary
 import com.emikhalets.myfinances.presentation.core.TransactionTypeChooser
 import com.emikhalets.myfinances.presentation.core.TransactionKeyboard
-import com.emikhalets.myfinances.presentation.theme.AppTheme
-import com.emikhalets.myfinances.presentation.theme.boxBackground
+import com.emikhalets.presentation.theme.boxBackground
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toast
 

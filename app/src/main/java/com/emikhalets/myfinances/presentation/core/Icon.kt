@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.emikhalets.myfinances.presentation.theme.textPrimary
+import com.emikhalets.presentation.theme.textPrimary
 
 @Deprecated("")
 @Composable

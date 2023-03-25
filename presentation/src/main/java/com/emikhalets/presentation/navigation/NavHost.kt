@@ -4,8 +4,15 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.emikhalets.myfinances.presentation.screens.categories.CategoriesScreen
-import com.emikhalets.myfinances.presentation.screens.main.MainScreen
+import com.emikhalets.presentation.screens.categories.CategoriesScreen
+import com.emikhalets.presentation.screens.category_edit.CategoryEditScreen
+import com.emikhalets.presentation.screens.currencies.CurrenciesScreen
+import com.emikhalets.presentation.screens.currency_edit.CurrencyEditScreen
+import com.emikhalets.presentation.screens.main.MainScreen
+import com.emikhalets.presentation.screens.transaction_edit.TransactionEditScreen
+import com.emikhalets.presentation.screens.transactions.TransactionsScreen
+import com.emikhalets.presentation.screens.wallet_edit.WalletEditScreen
+import com.emikhalets.presentation.screens.wallets.WalletsScreen
 
 private const val ARGS_CATEGORY_ID = "ARGS_CATEGORY_ID"
 private const val ARGS_WALLET_ID = "ARGS_WALLET_ID"
@@ -17,31 +24,52 @@ private const val ARGS_TRANSACTION_TYPE = "ARGS_TRANSACTION_TYPE"
 fun NavGraph(navController: NavHostController) {
     NavHost(navController, Screen.Main.route) {
         composable(Screen.Main.route) {
-            MainScreen(navController)
+            MainScreen(
+                onTransactionsClick = {},
+                onCategoriesClick = {},
+                onWalletsClick = {},
+                onCurrenciesClick = {}
+            )
         }
         composable(Screen.Categories.route) {
-            CategoriesScreen(navController)
+            CategoriesScreen(
+                onBackClick = {}
+            )
         }
         composable(Screen.CategoryEdit.route) {
-            CategoriesScreen(navController)
+            CategoryEditScreen(
+                onBackClick = {}
+            )
         }
         composable(Screen.Transactions.route) {
-            CategoriesScreen(navController)
+            TransactionsScreen(
+                onBackClick = {}
+            )
         }
         composable(Screen.TransactionEdit.route) {
-            CategoriesScreen(navController)
+            TransactionEditScreen(
+                onBackClick = {}
+            )
         }
         composable(Screen.Wallets.route) {
-            CategoriesScreen(navController)
+            WalletsScreen(
+                onBackClick = {}
+            )
         }
         composable(Screen.WalletEdit.route) {
-            CategoriesScreen(navController)
+            WalletEditScreen(
+                onBackClick = {}
+            )
         }
         composable(Screen.Currencies.route) {
-            CategoriesScreen(navController)
+            CurrenciesScreen(
+                onBackClick = {}
+            )
         }
         composable(Screen.CurrencyEdit.route) {
-            CategoriesScreen(navController)
+            CurrencyEditScreen(
+                onBackClick = {}
+            )
         }
 //        composable(
 //            route = "transaction_edit/{$ARG_TRANSACTION_ID}/{$ARG_TRANSACTION_TYPE}",

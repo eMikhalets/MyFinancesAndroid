@@ -14,8 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.emikhalets.myfinances.presentation.theme.AppTheme
-import com.emikhalets.myfinances.presentation.theme.appBackground
+import com.emikhalets.presentation.theme.appBackground
 
 @Composable
 fun BaseDialog(

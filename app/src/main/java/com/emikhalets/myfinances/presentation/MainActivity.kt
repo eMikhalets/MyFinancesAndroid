@@ -7,8 +7,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.presentation.navigation.NavGraph
-import com.emikhalets.myfinances.presentation.theme.AppTheme
-import com.emikhalets.myfinances.presentation.theme.appBackground
+import com.emikhalets.presentation.theme.appBackground
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

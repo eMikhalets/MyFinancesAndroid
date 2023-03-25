@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.screens.main
+package com.emikhalets.presentation.screens.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,21 +36,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.emikhalets.domain.entity.TransactionType
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.presentation.core.AppIcon
 import com.emikhalets.myfinances.presentation.core.AppScaffold
 import com.emikhalets.myfinances.presentation.core.TextPrimary
 import com.emikhalets.presentation.navigation.Screen
 import com.emikhalets.presentation.navigation.navToTransactionEdit
-import com.emikhalets.myfinances.presentation.theme.AppTheme
-import com.emikhalets.myfinances.presentation.theme.boxBackground
-import com.emikhalets.myfinances.utils.enums.TransactionType
+import com.emikhalets.presentation.theme.AppTheme
+import com.emikhalets.presentation.theme.boxBackground
 
 @Composable
 fun MainScreen(
-    navController: NavHostController,
+    onTransactionsClick: (type: TransactionType) -> Unit,
+    onCategoriesClick: () -> Unit,
+    onWalletsClick: () -> Unit,
+    onCurrenciesClick: () -> Unit,
     viewModel: MainViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsState()

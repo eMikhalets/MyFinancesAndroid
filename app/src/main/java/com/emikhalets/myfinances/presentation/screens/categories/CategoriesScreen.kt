@@ -32,8 +32,7 @@ import com.emikhalets.myfinances.domain.entity.Category
 import com.emikhalets.myfinances.presentation.core.AppButton
 import com.emikhalets.myfinances.presentation.core.AppScaffold
 import com.emikhalets.myfinances.presentation.core.TextPrimary
-import com.emikhalets.myfinances.presentation.theme.AppTheme
-import com.emikhalets.myfinances.presentation.theme.textSecondary
+import com.emikhalets.presentation.theme.textSecondary
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toast
 

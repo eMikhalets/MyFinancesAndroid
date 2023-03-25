@@ -23,9 +23,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.emikhalets.myfinances.presentation.theme.AppTheme
-import com.emikhalets.myfinances.presentation.theme.boxBackground
-import com.emikhalets.myfinances.presentation.theme.textPrimary
+import com.emikhalets.presentation.theme.AppTheme
+import com.emikhalets.presentation.theme.boxBackground
+import com.emikhalets.presentation.theme.textPrimary
 import com.emikhalets.myfinances.utils.formatMoney
 
 @Composable

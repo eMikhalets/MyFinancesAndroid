@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.screens.categories
+package com.emikhalets.presentation.screens.categories
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -26,20 +25,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.domain.entity.Category
 import com.emikhalets.myfinances.presentation.core.AppButton
 import com.emikhalets.myfinances.presentation.core.AppScaffold
 import com.emikhalets.myfinances.presentation.core.TextPrimary
-import com.emikhalets.myfinances.presentation.theme.AppTheme
-import com.emikhalets.myfinances.presentation.theme.textSecondary
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toast
+import com.emikhalets.presentation.theme.AppTheme
+import com.emikhalets.presentation.theme.textSecondary
 
 @Composable
 fun CategoriesScreen(
-    navController: NavHostController,
+    onBackClick: () -> Unit,
     viewModel: CategoriesViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current

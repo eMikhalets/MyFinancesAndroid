@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.screens.transaction_edit
+package com.emikhalets.presentation.screens.transaction_edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

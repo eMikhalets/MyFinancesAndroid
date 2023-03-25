@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.screens.transactions
+package com.emikhalets.presentation.screens.transactions
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -29,7 +29,7 @@ import com.emikhalets.myfinances.domain.entity.Transaction
 import com.emikhalets.myfinances.domain.entity.TransactionEntity
 import com.emikhalets.myfinances.presentation.core.AppScaffold
 import com.emikhalets.presentation.navigation.navToTransactionEdit
-import com.emikhalets.myfinances.presentation.theme.AppTheme
+import com.emikhalets.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toDate
 

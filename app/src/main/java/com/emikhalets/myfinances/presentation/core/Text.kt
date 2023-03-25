@@ -13,9 +13,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import com.emikhalets.myfinances.presentation.theme.textError
-import com.emikhalets.myfinances.presentation.theme.textPrimary
-import com.emikhalets.myfinances.presentation.theme.textSecondary
+import com.emikhalets.presentation.theme.textError
+import com.emikhalets.presentation.theme.textPrimary
+import com.emikhalets.presentation.theme.textSecondary
 
 @Composable
 fun TextPrimary(

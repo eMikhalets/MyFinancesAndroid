@@ -21,7 +21,6 @@ import com.emikhalets.myfinances.presentation.core.AppTextButton
 import com.emikhalets.myfinances.presentation.core.AppTextField
 import com.emikhalets.myfinances.presentation.core.BaseDialog
 import com.emikhalets.myfinances.presentation.core.TransactionTypeChooser
-import com.emikhalets.myfinances.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.enums.TransactionType
 
 @Composable

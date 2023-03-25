@@ -12,10 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.emikhalets.myfinances.presentation.theme.AppTheme
-import com.emikhalets.myfinances.presentation.theme.boxBackground
-import com.emikhalets.myfinances.presentation.theme.textButton
-import com.emikhalets.myfinances.presentation.theme.textPrimary
+import com.emikhalets.presentation.theme.AppTheme
+import com.emikhalets.presentation.theme.boxBackground
+import com.emikhalets.presentation.theme.textButton
+import com.emikhalets.presentation.theme.textPrimary
 
 @Composable
 fun AppButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {

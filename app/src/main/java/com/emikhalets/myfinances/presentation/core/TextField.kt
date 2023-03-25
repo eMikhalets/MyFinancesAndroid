@@ -28,13 +28,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.emikhalets.myfinances.presentation.theme.AppTheme
-import com.emikhalets.myfinances.presentation.theme.border
-import com.emikhalets.myfinances.presentation.theme.borderFocused
-import com.emikhalets.myfinances.presentation.theme.textError
-import com.emikhalets.myfinances.presentation.theme.textFieldBackground
-import com.emikhalets.myfinances.presentation.theme.textPrimary
-import com.emikhalets.myfinances.presentation.theme.textSecondary
+import com.emikhalets.presentation.theme.border
+import com.emikhalets.presentation.theme.borderFocused
+import com.emikhalets.presentation.theme.textError
+import com.emikhalets.presentation.theme.textFieldBackground
+import com.emikhalets.presentation.theme.textPrimary
+import com.emikhalets.presentation.theme.textSecondary
 
 @Composable
 fun AppTextField(

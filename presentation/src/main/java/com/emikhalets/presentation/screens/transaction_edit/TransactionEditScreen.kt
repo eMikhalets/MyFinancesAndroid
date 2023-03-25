@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.screens.transaction_edit
+package com.emikhalets.presentation.screens.transaction_edit
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,14 +37,14 @@ import com.emikhalets.myfinances.presentation.core.AppTextField
 import com.emikhalets.myfinances.presentation.core.TextPrimary
 import com.emikhalets.myfinances.presentation.core.TransactionTypeChooser
 import com.emikhalets.myfinances.presentation.core.TransactionKeyboard
-import com.emikhalets.myfinances.presentation.theme.AppTheme
-import com.emikhalets.myfinances.presentation.theme.boxBackground
+import com.emikhalets.presentation.theme.AppTheme
+import com.emikhalets.presentation.theme.boxBackground
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toast
 
 @Composable
 fun TransactionEditScreen(
-    navController: NavHostController,
+    onBackClick: () -> Unit,
     viewModel: TransactionEditViewModel = hiltViewModel(),
     transactionId: Long?,
     transactionType: TransactionType?,

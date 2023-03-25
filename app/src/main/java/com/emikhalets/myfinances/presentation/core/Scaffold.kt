@@ -20,7 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.emikhalets.myfinances.R
 import com.emikhalets.presentation.navigation.Screen
 import com.emikhalets.presentation.navigation.Screen.Companion.isRootScreen
-import com.emikhalets.myfinances.presentation.theme.boxBackground
+import com.emikhalets.presentation.theme.boxBackground
 
 @Composable
 fun AppScaffold(

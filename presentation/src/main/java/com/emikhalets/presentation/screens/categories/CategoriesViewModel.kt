@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.screens.categories
+package com.emikhalets.presentation.screens.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

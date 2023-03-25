@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.theme
+package com.emikhalets.presentation.theme
 
 import androidx.compose.material.Colors
 import androidx.compose.ui.graphics.Color

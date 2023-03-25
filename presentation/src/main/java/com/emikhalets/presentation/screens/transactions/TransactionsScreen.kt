@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.screens.transactions
+package com.emikhalets.presentation.screens.transactions
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -22,20 +22,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.emikhalets.myfinances.domain.entity.Category
 import com.emikhalets.myfinances.domain.entity.Transaction
 import com.emikhalets.myfinances.domain.entity.TransactionEntity
 import com.emikhalets.myfinances.presentation.core.AppScaffold
 import com.emikhalets.presentation.navigation.navToTransactionEdit
-import com.emikhalets.myfinances.presentation.theme.AppTheme
+import com.emikhalets.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.enums.TransactionType
 import com.emikhalets.myfinances.utils.toDate
 
 @Composable
-fun ExpensesScreen(
-    navController: NavHostController,
+fun TransactionsScreen(
+    onBackClick: () -> Unit,
     viewModel: TransactionsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsState()

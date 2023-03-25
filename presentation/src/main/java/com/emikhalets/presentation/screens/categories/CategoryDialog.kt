@@ -1,4 +1,4 @@
-package com.emikhalets.myfinances.presentation.screens.categories
+package com.emikhalets.presentation.screens.categories
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,7 +21,7 @@ import com.emikhalets.myfinances.presentation.core.AppTextButton
 import com.emikhalets.myfinances.presentation.core.AppTextField
 import com.emikhalets.myfinances.presentation.core.BaseDialog
 import com.emikhalets.myfinances.presentation.core.TransactionTypeChooser
-import com.emikhalets.myfinances.presentation.theme.AppTheme
+import com.emikhalets.presentation.theme.AppTheme
 import com.emikhalets.myfinances.utils.enums.TransactionType
 
 @Composable

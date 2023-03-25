@@ -22,11 +22,11 @@ interface CategoriesDao {
     suspend fun delete(entity: CategoryDb): Int
 
     @Query("SELECT * FROM categories WHERE id=:id")
-    suspend fun getItemFlow(id: Long): Flow<CategoryDb>
+    fun getItemFlow(id: Long): Flow<CategoryDb>
 
     @Query("SELECT * FROM categories ORDER BY name ASC")
     fun getAllFlow(): Flow<List<CategoryDb>>
 
     @Query("SELECT EXISTS(SELECT * FROM categories WHERE name=:name)")
-    fun isExists(name: String): Boolean
+    suspend fun isExists(name: String): Boolean
 }

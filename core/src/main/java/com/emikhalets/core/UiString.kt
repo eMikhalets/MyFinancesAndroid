@@ -22,7 +22,7 @@ sealed class UiString {
 
     companion object {
 
-        fun create(value: String?): UiString = Message(value)
+        fun create(value: String? = null): UiString = Message(value)
 
         fun create(@StringRes resId: Int, vararg args: Any): UiString = Resource(resId, args)
     }

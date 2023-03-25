@@ -1,6 +1,12 @@
 package com.emikhalets.data.repository
 
+import com.emikhalets.core.CATEGORY_EXPENSE_ID
+import com.emikhalets.core.CATEGORY_INCOME_ID
+import com.emikhalets.core.CODE_DELETE_CURRENCY_TRANSACTIONS
+import com.emikhalets.core.CURRENCY_ID
 import com.emikhalets.core.UiString
+import com.emikhalets.core.WALLET_ID
+import com.emikhalets.data.DELETE_CURRENCY_TRANSACTIONS
 import com.emikhalets.data.database.dao.CategoriesDao
 import com.emikhalets.data.database.dao.CurrenciesDao
 import com.emikhalets.data.database.dao.TransactionsDao
@@ -10,6 +16,7 @@ import com.emikhalets.domain.entity.CategoryEntity
 import com.emikhalets.domain.entity.CurrencyEntity
 import com.emikhalets.domain.entity.ResultWrapper
 import com.emikhalets.domain.entity.TransactionEntity
+import com.emikhalets.domain.entity.TransactionType
 import com.emikhalets.domain.entity.WalletEntity
 import com.emikhalets.domain.repository.DatabaseRepository
 import javax.inject.Inject
@@ -24,25 +31,21 @@ class DatabaseRepositoryImpl @Inject constructor(
     private val mapper: DatabaseMapper,
 ) : DatabaseRepository {
 
-    private suspend fun <T> execute(block: suspend () -> T): ResultWrapper<T> {
+    private suspend fun <T : Any> execute(block: suspend () -> T): ResultWrapper<T> {
         return try {
             ResultWrapper.Success(block())
         } catch (e: Exception) {
             e.printStackTrace()
-            ResultWrapper.Error(UiString.create(e.message))
+            when (e.message) {
+                DELETE_CURRENCY_TRANSACTIONS -> {
+                    ResultWrapper.Error(UiString.create(), CODE_DELETE_CURRENCY_TRANSACTIONS)
+                }
+                else -> {
+                    ResultWrapper.Error(UiString.create(e.message))
+                }
+            }
         }
     }
-
-//    override suspend fun delete(category: Category): ResultWrapper<Int> {
-//        return execute {
-//            val transactions = transactionDao.getAllForDelete(category.id)
-//            val newTransactions = transactions.map { transaction ->
-//                transaction.copy(categoryId = Category.getDefaultId(transaction.type))
-//            }
-//            transactionDao.updateAll(newTransactions)
-//            categoryDao.delete(category)
-//        }
-//    }
 
     /**
      * Categories Table
@@ -60,7 +63,16 @@ class DatabaseRepositoryImpl @Inject constructor(
 
     override suspend fun deleteCategory(entity: CategoryEntity): ResultWrapper<Int> {
         val dbEntity = mapper.mapCategoryEntityToDb(entity)
-        return execute { categoriesDao.delete(dbEntity) }
+        return execute {
+            val transactions = transactionsDao.getAllByCategory(dbEntity.id)
+            val newCategoryId = when (TransactionType.valueOf(dbEntity.type)) {
+                TransactionType.Expense -> CATEGORY_EXPENSE_ID
+                TransactionType.Income -> CATEGORY_INCOME_ID
+            }
+            val mappedTransactions = transactions.map { it.copy(categoryId = newCategoryId) }
+            transactionsDao.updateAll(mappedTransactions)
+            categoriesDao.delete(dbEntity)
+        }
     }
 
     override suspend fun getCategoryFlow(id: Long): ResultWrapper<Flow<CategoryEntity>> {
@@ -126,7 +138,16 @@ class DatabaseRepositoryImpl @Inject constructor(
 
     override suspend fun deleteCurrency(entity: CurrencyEntity): ResultWrapper<Int> {
         val dbEntity = mapper.mapCurrencyEntityToDb(entity)
-        return execute { currenciesDao.delete(dbEntity) }
+        return execute {
+            val transactions = transactionsDao.getAllByCurrency(dbEntity.id)
+            if (transactions.isNotEmpty()) {
+                throw Exception(DELETE_CURRENCY_TRANSACTIONS)
+            }
+            val wallets = walletsDao.getAllByCurrency(dbEntity.id)
+            val mappedWallets = wallets.map { it.copy(currencyId = CURRENCY_ID) }
+            walletsDao.updateAll(mappedWallets)
+            currenciesDao.delete(dbEntity)
+        }
     }
 
     override suspend fun getCurrencyFlow(id: Long): ResultWrapper<Flow<CurrencyEntity>> {
@@ -159,7 +180,12 @@ class DatabaseRepositoryImpl @Inject constructor(
 
     override suspend fun deleteWallet(entity: WalletEntity): ResultWrapper<Int> {
         val dbEntity = mapper.mapWalletEntityToDb(entity)
-        return execute { walletsDao.delete(dbEntity) }
+        return execute {
+            val transactions = transactionsDao.getAllByWallet(dbEntity.id)
+            val mappedTransactions = transactions.map { it.copy(walletId = WALLET_ID) }
+            transactionsDao.updateAll(mappedTransactions)
+            walletsDao.delete(dbEntity)
+        }
     }
 
     override suspend fun getWalletFlow(id: Long): ResultWrapper<Flow<WalletEntity>> {

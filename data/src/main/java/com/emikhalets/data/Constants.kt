@@ -1,0 +1,3 @@
+package com.emikhalets.data
+
+const val DELETE_CURRENCY_TRANSACTIONS = "DELETE_CURRENCY_TRANSACTIONS"

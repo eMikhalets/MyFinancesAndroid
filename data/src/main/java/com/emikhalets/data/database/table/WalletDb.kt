@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 data class WalletDb(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") val id: Long = 0,
+    @ColumnInfo(name = "currency_id") val currencyId: Long,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "initial_value") val initialValue: Double,
 )

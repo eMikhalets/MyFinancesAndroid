@@ -18,15 +18,21 @@ interface WalletsDao {
     @Update
     suspend fun update(entity: WalletDb): Int
 
+    @Update
+    suspend fun updateAll(list: List<WalletDb>): List<Int>
+
     @Delete
     suspend fun delete(entity: WalletDb): Int
 
     @Query("SELECT * FROM wallets WHERE id=:id")
-    suspend fun getItemFlow(id: Long): Flow<WalletDb>
+    fun getItemFlow(id: Long): Flow<WalletDb>
 
     @Query("SELECT * FROM wallets ORDER BY name ASC")
     fun getAllFlow(): Flow<List<WalletDb>>
 
+    @Query("SELECT * FROM wallets WHERE currency_id=:id")
+    suspend fun getAllByCurrency(id: Long): List<WalletDb>
+
     @Query("SELECT EXISTS(SELECT * FROM wallets WHERE name=:name)")
-    fun isExists(name: String): Boolean
+    suspend fun isExists(name: String): Boolean
 }

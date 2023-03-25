@@ -22,7 +22,7 @@ interface TransactionsDao {
     suspend fun delete(entity: TransactionDb): Int
 
     @Query("SELECT * FROM transactions WHERE id=:id")
-    suspend fun getItemFlow(id: Long): TransactionDb
+    suspend fun getItemFlow(id: Long): Flow<TransactionDb>
 
     @Query("SELECT * FROM transactions ORDER BY timestamp DECS")
     fun getAllFlow(): Flow<List<TransactionDb>>

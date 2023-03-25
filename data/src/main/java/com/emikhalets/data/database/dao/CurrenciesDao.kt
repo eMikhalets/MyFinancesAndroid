@@ -22,7 +22,7 @@ interface CurrenciesDao {
     suspend fun delete(entity: CurrencyDb): Int
 
     @Query("SELECT * FROM currencies WHERE id=:id")
-    suspend fun getItemFlow(id: Long): CurrencyDb
+    suspend fun getItemFlow(id: Long): Flow<CurrencyDb>
 
     @Query("SELECT * FROM currencies")
     fun getAllFlow(): Flow<List<CurrencyDb>>

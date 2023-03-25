@@ -22,7 +22,7 @@ interface WalletsDao {
     suspend fun delete(entity: WalletDb): Int
 
     @Query("SELECT * FROM wallets WHERE id=:id")
-    suspend fun getItemFlow(id: Long): WalletDb
+    suspend fun getItemFlow(id: Long): Flow<WalletDb>
 
     @Query("SELECT * FROM wallets ORDER BY name ASC")
     fun getAllFlow(): Flow<List<WalletDb>>

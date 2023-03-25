@@ -2,8 +2,8 @@ package com.emikhalets.domain.repository
 
 import com.emikhalets.domain.entity.CategoryEntity
 import com.emikhalets.domain.entity.CurrencyEntity
+import com.emikhalets.domain.entity.ResultWrapper
 import com.emikhalets.domain.entity.TransactionEntity
-import com.emikhalets.domain.entity.TransactionType
 import com.emikhalets.domain.entity.WalletEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -13,40 +13,39 @@ interface DatabaseRepository {
      * Categories Table
      */
 
-    suspend fun insertCategory(entity: CategoryEntity): Result<Long>
-    suspend fun updateCategory(entity: CategoryEntity): Result<Int>
-    suspend fun deleteCategory(entity: CategoryEntity): Result<Int>
-    suspend fun getCategoryFlow(id: Long): Result<Flow<CategoryEntity>>
-    suspend fun getCategoriesFlow(): Result<Flow<List<CategoryEntity>>>
-    suspend fun getCategoriesByType(type: TransactionType): Result<Flow<List<CategoryEntity>>>
+    suspend fun insertCategory(entity: CategoryEntity): ResultWrapper<Long>
+    suspend fun updateCategory(entity: CategoryEntity): ResultWrapper<Int>
+    suspend fun deleteCategory(entity: CategoryEntity): ResultWrapper<Int>
+    suspend fun getCategoryFlow(id: Long): ResultWrapper<Flow<CategoryEntity>>
+    suspend fun getCategoriesFlow(): ResultWrapper<Flow<List<CategoryEntity>>>
 
     /**
      * Transactions Table
      */
 
-    suspend fun insertTransaction(entity: TransactionEntity): Result<Long>
-    suspend fun updateTransaction(entity: TransactionEntity): Result<Int>
-    suspend fun deleteTransaction(entity: TransactionEntity): Result<Int>
-    suspend fun getTransactionFlow(id: Long): Result<Flow<TransactionEntity>>
-    suspend fun getTransactionsFlow(): Result<Flow<List<TransactionEntity>>>
+    suspend fun insertTransaction(entity: TransactionEntity): ResultWrapper<Long>
+    suspend fun updateTransaction(entity: TransactionEntity): ResultWrapper<Int>
+    suspend fun deleteTransaction(entity: TransactionEntity): ResultWrapper<Int>
+    suspend fun getTransactionFlow(id: Long): ResultWrapper<Flow<TransactionEntity>>
+    suspend fun getTransactionsFlow(): ResultWrapper<Flow<List<TransactionEntity>>>
 
     /**
      * Currencies Table
      */
 
-    suspend fun insertCurrency(entity: CurrencyEntity): Result<Long>
-    suspend fun updateCurrency(entity: CurrencyEntity): Result<Int>
-    suspend fun deleteCurrency(entity: CurrencyEntity): Result<Int>
-    suspend fun getCurrencyFlow(id: Long): Result<Flow<CurrencyEntity>>
-    suspend fun getCurrenciesFlow(): Result<Flow<List<CurrencyEntity>>>
+    suspend fun insertCurrency(entity: CurrencyEntity): ResultWrapper<Long>
+    suspend fun updateCurrency(entity: CurrencyEntity): ResultWrapper<Int>
+    suspend fun deleteCurrency(entity: CurrencyEntity): ResultWrapper<Int>
+    suspend fun getCurrencyFlow(id: Long): ResultWrapper<Flow<CurrencyEntity>>
+    suspend fun getCurrenciesFlow(): ResultWrapper<Flow<List<CurrencyEntity>>>
 
     /**
      * Wallets Table
      */
 
-    suspend fun insertWallet(entity: WalletEntity): Result<Long>
-    suspend fun updateWallet(entity: WalletEntity): Result<Int>
-    suspend fun deleteWallet(entity: WalletEntity): Result<Int>
-    suspend fun getWalletFlow(id: Long): Result<Flow<WalletEntity>>
-    suspend fun getWalletsFlow(): Result<Flow<List<WalletEntity>>>
+    suspend fun insertWallet(entity: WalletEntity): ResultWrapper<Long>
+    suspend fun updateWallet(entity: WalletEntity): ResultWrapper<Int>
+    suspend fun deleteWallet(entity: WalletEntity): ResultWrapper<Int>
+    suspend fun getWalletFlow(id: Long): ResultWrapper<Flow<WalletEntity>>
+    suspend fun getWalletsFlow(): ResultWrapper<Flow<List<WalletEntity>>>
 }

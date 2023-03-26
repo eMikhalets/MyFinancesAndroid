@@ -84,6 +84,10 @@ fun NavGraph(navController: NavHostController) {
         }
         composable(Screen.Currencies.route) {
             CurrenciesScreen(
+                onCurrencyClick = { id ->
+                    navController.navigate("${Screen.CurrencyEdit.route}/$id")
+                },
+                onAddCurrencyClick = { navController.navigate(Screen.CurrencyEdit.route) },
                 onBackClick = { navController.popBackStack() }
             )
         }

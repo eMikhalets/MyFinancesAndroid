@@ -91,8 +91,12 @@ fun NavGraph(navController: NavHostController) {
                 onBackClick = { navController.popBackStack() }
             )
         }
-        composable(Screen.CurrencyEdit.route) {
+        composable(
+            route = "${Screen.CurrencyEdit.route}/{$ARGS_CURRENCY_ID}",
+            arguments = listOf(navArgument(ARGS_CURRENCY_ID) { type = NavType.LongType })
+        ) {
             CurrencyEditScreen(
+                currencyId = it.arguments?.getLong(ARGS_CURRENCY_ID),
                 onBackClick = { navController.popBackStack() }
             )
         }

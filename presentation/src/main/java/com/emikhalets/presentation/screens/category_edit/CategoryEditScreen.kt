@@ -138,7 +138,7 @@ private fun ScreenContent(
             value = name,
             onValueChange = onNameChange,
             label = stringResource(R.string.label_name),
-            error = if (nameError.isNotEmpty()) nameError else null,
+            error = nameError.ifEmpty { null },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp)

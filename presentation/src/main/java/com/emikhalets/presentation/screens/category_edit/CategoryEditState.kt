@@ -24,7 +24,7 @@ data class CategoryEditState(
     }
 
     fun setCategoryExisted(existed: Boolean = true): CategoryEditState {
-        return this.copy(categorySaved = existed)
+        return this.copy(categoryExisted = existed)
     }
 
     fun setError(message: UiString?): CategoryEditState {

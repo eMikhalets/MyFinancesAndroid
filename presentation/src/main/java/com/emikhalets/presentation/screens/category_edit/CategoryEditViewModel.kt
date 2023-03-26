@@ -7,6 +7,7 @@ import com.emikhalets.core.UiString
 import com.emikhalets.domain.entity.CategoryEntity
 import com.emikhalets.domain.entity.ResultWrapper
 import com.emikhalets.domain.use_case.category.AddCategoryUseCase
+import com.emikhalets.domain.use_case.category.DeleteCategoryUseCase
 import com.emikhalets.domain.use_case.category.GetCategoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class CategoryEditViewModel @Inject constructor(
     private val getCategoryUseCase: GetCategoryUseCase,
     private val addCategoryUseCase: AddCategoryUseCase,
+    private val deleteCategoryUseCase: DeleteCategoryUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(CategoryEditState())
@@ -46,8 +48,20 @@ class CategoryEditViewModel @Inject constructor(
     fun saveCategory(entity: CategoryEntity) {
         viewModelScope.launch {
             when (val result = addCategoryUseCase.invoke(entity)) {
-                is ResultWrapper.Success -> setCategorySavedState()
+                is ResultWrapper.Success -> _state.update { _state.value.setCategorySaved() }
                 is ResultWrapper.Error -> setErrorState(result.code, result.message)
+            }
+        }
+    }
+
+    fun deleteCategory() {
+        viewModelScope.launch {
+            val entity = _state.value.category
+            if (entity != null) {
+                when (val result = deleteCategoryUseCase.invoke(entity)) {
+                    is ResultWrapper.Success -> _state.update { _state.value.setCategoryDeleted() }
+                    is ResultWrapper.Error -> setErrorState(result.code, result.message)
+                }
             }
         }
     }
@@ -57,10 +71,6 @@ class CategoryEditViewModel @Inject constructor(
         flow.collectLatest { category ->
             _state.update { _state.value.setCategory(category) }
         }
-    }
-
-    private fun setCategorySavedState() {
-        _state.update { _state.value.setCategorySaved() }
     }
 
     private fun setErrorState(code: Int, message: UiString) {

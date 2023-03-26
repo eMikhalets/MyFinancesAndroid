@@ -7,6 +7,7 @@ data class CategoryEditState(
     val category: CategoryEntity? = null,
     val categoryExisted: Boolean = false,
     val categorySaved: Boolean = false,
+    val categoryDeleted: Boolean = false,
     val error: UiString? = null,
 ) {
 
@@ -16,6 +17,10 @@ data class CategoryEditState(
 
     fun setCategorySaved(saved: Boolean = true): CategoryEditState {
         return this.copy(categorySaved = saved)
+    }
+
+    fun setCategoryDeleted(deleted: Boolean = true): CategoryEditState {
+        return this.copy(categoryDeleted = deleted)
     }
 
     fun setCategoryExisted(existed: Boolean = true): CategoryEditState {

@@ -25,7 +25,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.emikhalets.myfinances.R
 import com.emikhalets.myfinances.domain.entity.Category
 import com.emikhalets.myfinances.domain.entity.Transaction
@@ -33,7 +32,7 @@ import com.emikhalets.myfinances.domain.entity.TransactionEntity
 import com.emikhalets.myfinances.domain.entity.copyOrNew
 import com.emikhalets.myfinances.presentation.core.AppCategorySpinner
 import com.emikhalets.myfinances.presentation.core.AppScaffold
-import com.emikhalets.myfinances.presentation.core.AppTextField
+import com.emikhalets.presentation.core.AppTextField
 import com.emikhalets.myfinances.presentation.core.TextPrimary
 import com.emikhalets.myfinances.presentation.core.TransactionTypeChooser
 import com.emikhalets.myfinances.presentation.core.TransactionKeyboard

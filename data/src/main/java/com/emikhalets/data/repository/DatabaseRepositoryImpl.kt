@@ -101,6 +101,13 @@ class DatabaseRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getCategoriesFlow(type: TransactionType): ResultWrapper<Flow<List<CategoryEntity>>> {
+        return execute {
+            val flow = categoriesDao.getAllFlow(type.toString())
+            flow.map { mapper.mapCategoriesListDbToEntity(it) }
+        }
+    }
+
     /**
      * Transactions Table
      */

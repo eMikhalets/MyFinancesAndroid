@@ -4,6 +4,7 @@ import com.emikhalets.domain.entity.CategoryEntity
 import com.emikhalets.domain.entity.CurrencyEntity
 import com.emikhalets.domain.entity.ResultWrapper
 import com.emikhalets.domain.entity.TransactionEntity
+import com.emikhalets.domain.entity.TransactionType
 import com.emikhalets.domain.entity.WalletEntity
 import com.emikhalets.domain.entity.complex.ComplexWalletEntity
 import kotlinx.coroutines.flow.Flow
@@ -19,6 +20,7 @@ interface DatabaseRepository {
     suspend fun deleteCategory(entity: CategoryEntity): ResultWrapper<Int>
     suspend fun getCategoryFlow(id: Long): ResultWrapper<Flow<CategoryEntity>>
     suspend fun getCategoriesFlow(): ResultWrapper<Flow<List<CategoryEntity>>>
+    suspend fun getCategoriesFlow(type: TransactionType): ResultWrapper<Flow<List<CategoryEntity>>>
 
     /**
      * Transactions Table

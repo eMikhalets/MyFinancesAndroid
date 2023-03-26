@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,80 +20,140 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.emikhalets.core.UiString
+import com.emikhalets.domain.entity.TransactionEntity
+import com.emikhalets.domain.entity.TransactionType
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.domain.entity.Category
-import com.emikhalets.myfinances.domain.entity.Transaction
-import com.emikhalets.myfinances.domain.entity.TransactionEntity
 import com.emikhalets.myfinances.domain.entity.copyOrNew
 import com.emikhalets.myfinances.presentation.core.AppCategorySpinner
-import com.emikhalets.myfinances.presentation.core.AppScaffold
-import com.emikhalets.presentation.core.AppTextField
 import com.emikhalets.myfinances.presentation.core.TextPrimary
-import com.emikhalets.myfinances.presentation.core.TransactionTypeChooser
 import com.emikhalets.myfinances.presentation.core.TransactionKeyboard
+import com.emikhalets.presentation.core.AppTextButton
+import com.emikhalets.presentation.core.AppTextField
+import com.emikhalets.presentation.core.AppTopAppBar
+import com.emikhalets.presentation.core.TransactionTypeChooser
+import com.emikhalets.presentation.dialog.MessageDialog
+import com.emikhalets.presentation.navigation.Screen
 import com.emikhalets.presentation.theme.AppTheme
 import com.emikhalets.presentation.theme.boxBackground
-import com.emikhalets.myfinances.utils.enums.TransactionType
-import com.emikhalets.myfinances.utils.toast
 
 @Composable
 fun TransactionEditScreen(
+    transactionId: Long?,
+    type: TransactionType?,
     onBackClick: () -> Unit,
     viewModel: TransactionEditViewModel = hiltViewModel(),
-    transactionId: Long?,
-    transactionType: TransactionType?,
 ) {
-    val context = LocalContext.current
-    val state by viewModel.state.collectAsState()
+    val uiState by viewModel.state.collectAsState()
+
+    var id by remember { mutableStateOf(transactionId ?: 0L) }
+    var categoryId by remember { mutableStateOf(0L) }
+    var walletId by remember { mutableStateOf(0L) }
+    var currencyId by remember { mutableStateOf(0L) }
+    var value by remember { mutableStateOf(0.0) }
+    var transactionType by remember { mutableStateOf(type ?: TransactionType.Expense) }
+    var note by remember { mutableStateOf("") }
+    var valueError by remember { mutableStateOf("") }
+    var error by remember { mutableStateOf<UiString?>(null) }
 
     LaunchedEffect(Unit) {
-        transactionId?.let { viewModel.getTransaction(it) }
+        if (transactionId != null) {
+            viewModel.getTransaction(transactionId)
+        }
     }
 
-    LaunchedEffect(state.entity) {
-        viewModel.getCategories(transactionType ?: state.entity?.transaction?.type)
+    LaunchedEffect(transactionType) {
+        viewModel.getCategories(transactionType)
     }
 
-    LaunchedEffect(state.error) {
-        toast(context, state.error)
+    LaunchedEffect(uiState.error) {
+        if (uiState.error != null) {
+            error = uiState.error
+            viewModel.dropError()
+        }
     }
 
-    LaunchedEffect(state.saved) {
-        if (state.saved) navController.popBackStack()
+    LaunchedEffect(uiState.transaction) {
+        val entity = uiState.transaction
+        if (entity != null) {
+            id = entity.id
+            categoryId = entity.categoryId
+            walletId = entity.walletId
+            currencyId = entity.currencyId
+            value = entity.value
+            transactionType = entity.type
+            note = entity.note
+        }
     }
 
-    AppScaffold(navController) {
-        TransactionEditScreen(entity = state.entity,
-            categories = state.categories,
-            passedType = transactionType,
-            onTypeChange = { viewModel.getCategories(it) },
-            onSaveClick = { viewModel.saveTransaction(it) })
+    LaunchedEffect(uiState.saved) {
+        if (uiState.saved) {
+            onBackClick()
+        }
+    }
+
+    LaunchedEffect(uiState.deleted) {
+        if (uiState.deleted) {
+            onBackClick()
+        }
+    }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        AppTopAppBar(title = stringResource(Screen.TransactionEdit.title),
+            onBackClick = onBackClick)
+        ScreenContent(
+            id = id,
+            value = value,
+            transactionType = transactionType,
+            note = note,
+            valueError = valueError,
+            onValueChange = {
+                valueError = ""
+                value = it
+            },
+            onTypeChange = { transactionType = it },
+            onDeleteClick = { viewModel.deleteTransaction() },
+            onSaveClick = {
+                val entity = TransactionEntity(
+                    id = id,
+                    categoryId = categoryId,
+                    walletId = walletId,
+                    currencyId = currencyId,
+                    value = value,
+                    type = transactionType,
+                    note = note
+                )
+                viewModel.saveTransaction(entity)
+            }
+        )
+    }
+
+    val errorMessage = error
+    if (errorMessage != null) {
+        MessageDialog(
+            message = errorMessage.asString(),
+            onDismiss = { error = null }
+        )
     }
 }
 
 @Composable
-private fun TransactionEditScreen(
-    entity: TransactionEntity?,
-    categories: List<Category>,
-    passedType: TransactionType?,
+private fun ScreenContent(
+    id: Long,
+    value: Double,
+    transactionType: TransactionType,
+    note: String,
+    valueError: String,
+    onValueChange: (String) -> Unit,
     onTypeChange: (TransactionType) -> Unit,
-    onSaveClick: (Transaction) -> Unit,
+    onDeleteClick: () -> Unit,
+    onSaveClick: () -> Unit,
 ) {
-    var type by remember {
-        mutableStateOf(entity?.transaction?.type ?: passedType ?: TransactionType.Expense)
-    }
-    var category by remember {
-        mutableStateOf(entity?.category ?: Category.getDefaultInstance(type))
-    }
-    var value by remember { mutableStateOf(entity?.transaction?.value ?: 0.0) }
-    var note by remember { mutableStateOf(entity?.transaction?.note ?: "") }
-
     Column(Modifier.fillMaxSize()) {
         TransactionTypeChooser(type = type, onTypeSelect = {
             type = it
@@ -117,16 +178,54 @@ private fun TransactionEditScreen(
             TextPrimary(text = stringResource(R.string.app_save), fontSize = 20.sp)
         }
     }
+    Column(modifier = Modifier.fillMaxSize()) {
+        TransactionTypeChooser(
+            selectedType = transactionType,
+            onTypeSelect = onTypeChange
+        )
+        AppTextField(
+            value = name,
+            onValueChange = onNameChange,
+            label = stringResource(R.string.label_name),
+            error = nameError.ifEmpty { null },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 32.dp)
+        ) {
+            if (id > 0) {
+                AppTextButton(
+                    text = stringResource(R.string.app_delete),
+                    onClick = onDeleteClick,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            AppTextButton(
+                text = stringResource(R.string.app_save),
+                onClick = onSaveClick,
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
     AppTheme {
-        TransactionEditScreen(entity = null,
-            categories = emptyList(),
-            passedType = TransactionType.Expense,
+        ScreenContent(
+            id = 0,
+            name = "Test name",
+            transactionType = TransactionType.Expense,
+            nameError = "",
+            onNameChange = {},
             onTypeChange = {},
-            onSaveClick = {})
+            onDeleteClick = {},
+            onSaveClick = {},
+        )
     }
 }

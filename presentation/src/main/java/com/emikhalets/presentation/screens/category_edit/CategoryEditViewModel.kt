@@ -78,6 +78,5 @@ class CategoryEditViewModel @Inject constructor(
             CODE_CATEGORY_EXISTED -> _state.update { _state.value.setCategoryExisted() }
             else -> _state.update { _state.value.setError(message) }
         }
-
     }
 }

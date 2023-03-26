@@ -2,93 +2,91 @@ package com.emikhalets.presentation.screens.transaction_edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emikhalets.myfinances.data.repository.AppRepository
-import com.emikhalets.myfinances.domain.entity.Category
-import com.emikhalets.myfinances.domain.entity.Transaction
-import com.emikhalets.myfinances.domain.entity.TransactionEntity
-import com.emikhalets.myfinances.utils.DEFAULT_ERROR
-import com.emikhalets.myfinances.utils.enums.TransactionType
+import com.emikhalets.core.UiString
+import com.emikhalets.domain.entity.CategoryEntity
+import com.emikhalets.domain.entity.ResultWrapper
+import com.emikhalets.domain.entity.TransactionEntity
+import com.emikhalets.domain.entity.TransactionType
+import com.emikhalets.domain.use_case.category.GetCategoriesUseCase
+import com.emikhalets.domain.use_case.transaction.AddTransactionUseCase
+import com.emikhalets.domain.use_case.transaction.DeleteTransactionUseCase
+import com.emikhalets.domain.use_case.transaction.GetTransactionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class TransactionEditViewModel @Inject constructor(
-    private val repo: AppRepository,
+    private val getTransactionUseCase: GetTransactionUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val addTransactionUseCase: AddTransactionUseCase,
+    private val deleteTransactionUseCase: DeleteTransactionUseCase,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(State())
+    private val _state = MutableStateFlow(TransactionEditState())
     val state = _state.asStateFlow()
+
+    fun dropError() {
+        _state.update { _state.value.setError(null) }
+    }
 
     fun getTransaction(id: Long) {
         viewModelScope.launch {
-            repo.getTransaction(id)
-                .onSuccess { result -> _state.update { it.setTransaction(result) } }
-                .onFailure { ex -> _state.update { it.setError(ex.message) } }
-        }
-    }
-
-    fun getCategories(type: TransactionType?) {
-        viewModelScope.launch {
-            val typeNotNull = type ?: TransactionType.Expense
-            repo.getCategoriesByType(typeNotNull)
-                .onSuccess { setCategoriesResult(it, typeNotNull) }
-                .onFailure { ex -> _state.update { _state.value.setError(ex.message) } }
-        }
-    }
-
-    fun saveTransaction(transaction: Transaction) {
-        viewModelScope.launch {
-            val request = if (transaction.id == 0L) {
-                repo.insert(transaction)
-            } else {
-                repo.update(transaction)
+            when (val result = getTransactionUseCase.invoke(id)) {
+                is ResultWrapper.Success -> seTransactionState(result.data)
+                is ResultWrapper.Error -> setErrorState(result.message)
             }
-            request
-                .onSuccess { _state.update { it.setSaved() } }
-                .onFailure { ex -> _state.update { _state.value.setError(ex.message) } }
         }
     }
 
-    private suspend fun setCategoriesResult(flow: Flow<List<Category>>, type: TransactionType) {
-        try {
-            flow.collectLatest { list ->
-                val newList = list.toMutableList().apply {
-                    add(0, Category.getDefaultInstance(type))
-                }
-                _state.update { it.setCategories(newList) }
+    fun getCategories(type: TransactionType) {
+        viewModelScope.launch {
+            when (val result = getCategoriesUseCase.invoke(type)) {
+                is ResultWrapper.Success -> setCategoriesState(result.data)
+                is ResultWrapper.Error -> setErrorState(result.message)
             }
-        } catch (ex: Exception) {
-            ex.printStackTrace()
         }
     }
 
-    data class State(
-        val entity: TransactionEntity? = null,
-        val categories: List<Category> = emptyList(),
-        val saved: Boolean = false,
-        val error: String = "",
-    ) {
-
-        fun setTransaction(transaction: TransactionEntity): State {
-            return this.copy(entity = transaction)
+    private suspend fun seTransactionState(flow: Flow<TransactionEntity>?) {
+        flow ?: return
+        flow.collectLatest { transaction ->
+            _state.update { _state.value.setTransaction(transaction) }
         }
+    }
 
-        fun setCategories(categories: List<Category>): State {
-            return this.copy(categories = categories)
+    private suspend fun setCategoriesState(flow: Flow<List<CategoryEntity>>?) {
+        flow ?: return
+        flow.collectLatest { categories ->
+            _state.update { it.setCategories(categories) }
         }
+    }
 
-        fun setSaved(): State {
-            return this.copy(saved = true)
+    private fun setErrorState(message: UiString) {
+        _state.update { _state.value.setError(message) }
+    }
+
+    fun saveTransaction(entity: TransactionEntity) {
+        viewModelScope.launch {
+            when (val result = addTransactionUseCase.invoke(entity)) {
+                is ResultWrapper.Success -> _state.update { _state.value.setTransactionSaved() }
+                is ResultWrapper.Error -> setErrorState(result.message)
+            }
         }
+    }
 
-        fun setError(message: String?): State {
-            return this.copy(error = message ?: DEFAULT_ERROR)
+    fun deleteTransaction() {
+        viewModelScope.launch {
+            val entity = _state.value.transaction ?: return@launch
+            when (val result = deleteTransactionUseCase.invoke(entity)) {
+                is ResultWrapper.Success -> _state.update { _state.value.setTransactionSaved() }
+                is ResultWrapper.Error -> setErrorState(result.message)
+            }
         }
     }
 }

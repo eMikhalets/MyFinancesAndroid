@@ -27,6 +27,9 @@ interface CategoriesDao {
     @Query("SELECT * FROM categories ORDER BY name ASC")
     fun getAllFlow(): Flow<List<CategoryDb>>
 
+    @Query("SELECT * FROM categories WHERE type=:type ORDER BY name ASC")
+    fun getAllFlow(type: String): Flow<List<CategoryDb>>
+
     @Query("SELECT EXISTS(SELECT * FROM categories WHERE name=:name AND type=:type)")
     suspend fun isExists(name: String, type: String): Boolean
 }

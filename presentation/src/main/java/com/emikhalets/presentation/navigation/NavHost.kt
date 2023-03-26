@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.emikhalets.presentation.screens.categories.CategoriesScreen
+import com.emikhalets.presentation.screens.categories.ScreenContent
 import com.emikhalets.presentation.screens.category_edit.CategoryEditScreen
 import com.emikhalets.presentation.screens.currencies.CurrenciesScreen
 import com.emikhalets.presentation.screens.currency_edit.CurrencyEditScreen
@@ -33,7 +33,9 @@ fun NavGraph(navController: NavHostController) {
             )
         }
         composable(Screen.Categories.route) {
-            CategoriesScreen(
+            ScreenContent(
+                onCategoryClick = {},
+                onAddCategoryClick = {},
                 onBackClick = {}
             )
         }

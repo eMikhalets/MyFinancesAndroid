@@ -19,13 +19,12 @@ import com.emikhalets.presentation.theme.AppTheme
 fun AppTopAppBar(
     title: String,
     modifier: Modifier = Modifier,
-    isBackIcon: Boolean = false,
-    onBackClick: () -> Unit = {},
+    onBackClick: (() -> Unit)? = null,
 ) {
     TopAppBar(
         title = { Text(title) },
         elevation = 0.dp,
-        navigationIcon = if (isBackIcon) {
+        navigationIcon = if (onBackClick != null) {
             { NavigationIcon(onIconClick = onBackClick) }
         } else null,
         modifier = modifier
@@ -48,6 +47,6 @@ private fun NavigationIcon(onIconClick: () -> Unit) {
 @Composable
 private fun Preview() {
     AppTheme {
-        AppTopAppBar(title = "Test", isBackIcon = true)
+        AppTopAppBar(title = "Test", onBackClick = {})
     }
 }

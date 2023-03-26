@@ -2,83 +2,51 @@ package com.emikhalets.presentation.screens.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emikhalets.myfinances.data.repository.AppRepository
-import com.emikhalets.myfinances.domain.entity.Category
-import com.emikhalets.myfinances.utils.DEFAULT_ERROR
-import com.emikhalets.myfinances.utils.enums.TransactionType
+import com.emikhalets.core.UiString
+import com.emikhalets.domain.entity.CategoryEntity
+import com.emikhalets.domain.entity.ResultWrapper
+import com.emikhalets.domain.entity.TransactionType
+import com.emikhalets.domain.use_case.category.GetCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
-    private val repo: AppRepository,
+    private val getCategoriesUseCase: GetCategoriesUseCase,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(State())
+    private val _state = MutableStateFlow(CategoriesState())
     val state = _state.asStateFlow()
+
+    fun dropError() {
+        _state.update { _state.value.setError(null) }
+    }
 
     fun getCategories() {
         viewModelScope.launch {
-            repo.getCategoriesByType(TransactionType.Income)
-                .onSuccess { setIncomeCategoriesState(it) }
-                .onFailure { ex -> _state.update { it.setError(ex.message) } }
-            repo.getCategoriesByType(TransactionType.Expense)
-                .onSuccess { setExpenseCategoriesState(it) }
-                .onFailure { ex -> _state.update { _state.value.setError(ex.message) } }
-        }
-    }
-
-    private suspend fun setIncomeCategoriesState(flow: Flow<List<Category>>) {
-        flow.collect { categories ->
-            _state.update { _state.value.setIncomeCategories(categories) }
-        }
-    }
-
-    private suspend fun setExpenseCategoriesState(flow: Flow<List<Category>>) {
-        flow.collect { categories ->
-            _state.update { _state.value.setExpenseCategories(categories) }
-        }
-    }
-
-    fun saveCategory(category: Category) {
-        viewModelScope.launch {
-            val request = if (category.id == 0) {
-                repo.insert(category)
-            } else {
-                repo.update(category)
+            when (val result = getCategoriesUseCase.invoke()) {
+                is ResultWrapper.Success -> setCategoriesState(result.data)
+                is ResultWrapper.Error -> setErrorState(result.message)
             }
-            request.onFailure { ex -> _state.update { _state.value.setError(ex.message) } }
         }
     }
 
-    fun deleteCategory(category: Category) {
-        viewModelScope.launch {
-            repo.delete(category)
-                .onFailure { ex -> _state.update { _state.value.setError(ex.message) } }
+    private suspend fun setCategoriesState(flow: Flow<List<CategoryEntity>>?) {
+        flow ?: return
+        flow.collectLatest { categories ->
+            val expenses = categories.filter { it.type == TransactionType.Expense }
+            val incomes = categories.filter { it.type == TransactionType.Income }
+            _state.update { _state.value.setCategories(expenses, incomes) }
         }
     }
 
-    data class State(
-        val incomeList: List<Category> = emptyList(),
-        val expenseList: List<Category> = emptyList(),
-        val error: String = "",
-    ) {
-
-        fun setIncomeCategories(incomeList: List<Category>): State {
-            return this.copy(incomeList = incomeList)
-        }
-
-        fun setExpenseCategories(expenseList: List<Category>): State {
-            return this.copy(expenseList = expenseList)
-        }
-
-        fun setError(message: String?): State {
-            return this.copy(error = message ?: DEFAULT_ERROR)
-        }
+    private fun setErrorState(message: UiString) {
+        _state.update { _state.value.setError(message) }
     }
 }

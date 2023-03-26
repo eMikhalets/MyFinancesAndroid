@@ -46,7 +46,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ScreenContent(
-    onCategoryClick: (categoryId: Long) -> Unit,
+    onCategoryClick: (categoryId: Long, type: TransactionType) -> Unit,
     onAddCategoryClick: (type: TransactionType) -> Unit,
     onBackClick: () -> Unit,
     viewModel: CategoriesViewModel = hiltViewModel(),
@@ -71,7 +71,7 @@ fun ScreenContent(
         ScreenContent(
             expenseList = uiState.expenseList,
             incomeList = uiState.incomeList,
-            onCategoryClick = { id -> onCategoryClick(id) },
+            onCategoryClick = { id, type -> onCategoryClick(id, type) },
             onAddCategoryClick = { type -> onAddCategoryClick(type) }
         )
     }
@@ -89,7 +89,7 @@ fun ScreenContent(
 private fun ScreenContent(
     expenseList: List<CategoryEntity>,
     incomeList: List<CategoryEntity>,
-    onCategoryClick: (id: Long) -> Unit,
+    onCategoryClick: (Long, TransactionType) -> Unit,
     onAddCategoryClick: (type: TransactionType) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -107,8 +107,8 @@ private fun ScreenContent(
 private fun ColumnScope.Pager(
     expenseList: List<CategoryEntity>,
     incomeList: List<CategoryEntity>,
-    onCategoryClick: (id: Long) -> Unit,
-    onAddCategoryClick: (type: TransactionType) -> Unit,
+    onCategoryClick: (Long, TransactionType) -> Unit,
+    onAddCategoryClick: (TransactionType) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(initialPage = 0)
@@ -134,7 +134,10 @@ private fun ColumnScope.Pager(
                 1 -> incomeList
                 else -> throw Exception("Unknown page index $page")
             },
-            onCategoryClick = onCategoryClick,
+            onCategoryClick = { id ->
+                val type = getCategoryType(page)
+                onCategoryClick(id, type)
+            },
             onAddCategoryClick = {
                 val type = getCategoryType(page)
                 onAddCategoryClick(type)

@@ -2,10 +2,12 @@ package com.emikhalets.data.repository
 
 import com.emikhalets.core.CATEGORY_EXPENSE_ID
 import com.emikhalets.core.CATEGORY_INCOME_ID
+import com.emikhalets.core.CODE_CATEGORY_EXISTED
 import com.emikhalets.core.CODE_DELETE_CURRENCY_TRANSACTIONS
 import com.emikhalets.core.CURRENCY_ID
 import com.emikhalets.core.UiString
 import com.emikhalets.core.WALLET_ID
+import com.emikhalets.data.CATEGORY_EXISTED
 import com.emikhalets.data.DELETE_CURRENCY_TRANSACTIONS
 import com.emikhalets.data.database.dao.CategoriesDao
 import com.emikhalets.data.database.dao.CurrenciesDao
@@ -20,9 +22,9 @@ import com.emikhalets.domain.entity.TransactionType
 import com.emikhalets.domain.entity.WalletEntity
 import com.emikhalets.domain.entity.complex.ComplexWalletEntity
 import com.emikhalets.domain.repository.DatabaseRepository
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 class DatabaseRepositoryImpl @Inject constructor(
     private val categoriesDao: CategoriesDao,
@@ -41,6 +43,9 @@ class DatabaseRepositoryImpl @Inject constructor(
                 DELETE_CURRENCY_TRANSACTIONS -> {
                     ResultWrapper.Error(UiString.create(), CODE_DELETE_CURRENCY_TRANSACTIONS)
                 }
+                CATEGORY_EXISTED -> {
+                    ResultWrapper.Error(UiString.create(), CODE_CATEGORY_EXISTED)
+                }
                 else -> {
                     ResultWrapper.Error(UiString.create(e.message))
                 }
@@ -54,7 +59,13 @@ class DatabaseRepositoryImpl @Inject constructor(
 
     override suspend fun insertCategory(entity: CategoryEntity): ResultWrapper<Long> {
         val dbEntity = mapper.mapCategoryEntityToDb(entity)
-        return execute { categoriesDao.insert(dbEntity) }
+        return execute {
+            val isNameExisted = categoriesDao.isExists(dbEntity.name, dbEntity.type)
+            if (isNameExisted) {
+                throw Exception(CATEGORY_EXISTED)
+            }
+            categoriesDao.insert(dbEntity)
+        }
     }
 
     override suspend fun updateCategory(entity: CategoryEntity): ResultWrapper<Int> {

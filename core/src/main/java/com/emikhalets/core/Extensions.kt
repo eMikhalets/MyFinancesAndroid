@@ -1,13 +1,13 @@
 package com.emikhalets.core
 
 import android.content.Context
+import android.content.res.Resources
 import android.widget.Toast
 import androidx.annotation.StringRes
-import com.emikhalets.myfinances.R
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+
+fun getString(@StringRes res: Int): String = Resources.getSystem().getString(res)
 
 // ========================================
 // Global constants

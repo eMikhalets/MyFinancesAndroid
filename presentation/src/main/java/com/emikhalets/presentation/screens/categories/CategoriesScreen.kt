@@ -45,7 +45,7 @@ import com.emikhalets.presentation.theme.textSecondary
 import kotlinx.coroutines.launch
 
 @Composable
-fun ScreenContent(
+fun CategoriesScreen(
     onCategoryClick: (categoryId: Long, type: TransactionType) -> Unit,
     onAddCategoryClick: (type: TransactionType) -> Unit,
     onBackClick: () -> Unit,

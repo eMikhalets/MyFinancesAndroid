@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.emikhalets.domain.entity.TransactionType
-import com.emikhalets.presentation.screens.categories.ScreenContent
+import com.emikhalets.presentation.screens.categories.CategoriesScreen
 import com.emikhalets.presentation.screens.category_edit.CategoryEditScreen
 import com.emikhalets.presentation.screens.currencies.CurrenciesScreen
 import com.emikhalets.presentation.screens.currency_edit.CurrencyEditScreen
@@ -29,15 +29,19 @@ fun NavGraph(navController: NavHostController) {
     NavHost(navController, Screen.Main.route) {
         composable(Screen.Main.route) {
             MainScreen(
-                onTransactionsClick = {},
-                onTransactionEditClick = {},
+                onTransactionsClick = { type ->
+                    navController.navigate("${Screen.Transactions.route}/$type")
+                                      },
+                onTransactionEditClick = { type ->
+                    navController.navigate("${Screen.TransactionEdit.route}/$id/$type")
+                                         },
                 onCategoriesClick = { navController.navigate(Screen.Categories.route) },
                 onWalletsClick = { navController.navigate(Screen.Wallets.route) },
                 onCurrenciesClick = { navController.navigate(Screen.Currencies.route) }
             )
         }
         composable(Screen.Categories.route) {
-            ScreenContent(
+            CategoriesScreen(
                 onCategoryClick = { categoryId, type ->
                     navController.navigate("${Screen.CategoryEdit.route}/$categoryId/$type")
                 },
@@ -62,13 +66,35 @@ fun NavGraph(navController: NavHostController) {
                 onBackClick = { navController.popBackStack() }
             )
         }
-        composable(Screen.Transactions.route) {
+        composable(
+            route = "${Screen.Transactions.route}/{$ARGS_TRANSACTION_TYPE}",
+            arguments = listOf(
+                navArgument(ARGS_TRANSACTION_TYPE) {
+                    type = NavType.EnumType(TransactionType::class.java)
+                },
+            )
+        ) {
             TransactionsScreen(
+                type = it.arguments?.getParcelable(ARGS_CATEGORY_ID, TransactionType::class.java),
+                onTransactionClick = { id, type ->
+                    navController.navigate("${Screen.TransactionEdit.route}/$id/$type")
+                },
                 onBackClick = { navController.popBackStack() }
             )
         }
-        composable(Screen.TransactionEdit.route) {
+        composable(
+            route = "${Screen.TransactionEdit.route}/{$ARGS_TRANSACTION_ID}/{$ARGS_TRANSACTION_TYPE}",
+            arguments = listOf(
+                navArgument(ARGS_TRANSACTION_ID) { type = NavType.LongType },
+                navArgument(ARGS_TRANSACTION_TYPE) {
+                    type = NavType.EnumType(TransactionType::class.java)
+                },
+            )
+        ) {
             TransactionEditScreen(
+                transactionId = it.arguments?.getLong(ARGS_TRANSACTION_ID),
+                type = it.arguments
+                    ?.getParcelable(ARGS_TRANSACTION_TYPE, TransactionType::class.java),
                 onBackClick = { navController.popBackStack() }
             )
         }

@@ -24,12 +24,13 @@ fun AppCategoriesSpinner(
     categoriesList: List<CategoryEntity>,
     selectedCategory: CategoryEntity,
     onSelectCategory: (CategoryEntity) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clickable { expanded = !expanded }
     ) {

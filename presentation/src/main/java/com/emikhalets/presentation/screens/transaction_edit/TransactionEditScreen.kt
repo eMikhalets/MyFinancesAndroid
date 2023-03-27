@@ -1,16 +1,10 @@
 package com.emikhalets.presentation.screens.transaction_edit
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -18,21 +12,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.emikhalets.core.CATEGORY_EXPENSE_ID
+import com.emikhalets.core.CATEGORY_INCOME_ID
 import com.emikhalets.core.UiString
+import com.emikhalets.domain.entity.CategoryEntity
 import com.emikhalets.domain.entity.TransactionEntity
 import com.emikhalets.domain.entity.TransactionType
 import com.emikhalets.myfinances.R
-import com.emikhalets.myfinances.domain.entity.copyOrNew
-import com.emikhalets.myfinances.presentation.core.AppCategorySpinner
-import com.emikhalets.myfinances.presentation.core.TextPrimary
-import com.emikhalets.myfinances.presentation.core.TransactionKeyboard
+import com.emikhalets.presentation.core.AppCategoriesSpinner
 import com.emikhalets.presentation.core.AppTextButton
 import com.emikhalets.presentation.core.AppTextField
 import com.emikhalets.presentation.core.AppTopAppBar
@@ -40,7 +32,6 @@ import com.emikhalets.presentation.core.TransactionTypeChooser
 import com.emikhalets.presentation.dialog.MessageDialog
 import com.emikhalets.presentation.navigation.Screen
 import com.emikhalets.presentation.theme.AppTheme
-import com.emikhalets.presentation.theme.boxBackground
 
 @Composable
 fun TransactionEditScreen(
@@ -59,6 +50,7 @@ fun TransactionEditScreen(
     var transactionType by remember { mutableStateOf(type ?: TransactionType.Expense) }
     var note by remember { mutableStateOf("") }
     var valueError by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf<CategoryEntity?>(null) }
     var error by remember { mutableStateOf<UiString?>(null) }
 
     LaunchedEffect(Unit) {
@@ -75,6 +67,12 @@ fun TransactionEditScreen(
         if (uiState.error != null) {
             error = uiState.error
             viewModel.dropError()
+        }
+    }
+
+    LaunchedEffect(uiState.categories) {
+        if (uiState.categories.isNotEmpty()) {
+            category = uiState.categories.first()
         }
     }
 
@@ -112,16 +110,20 @@ fun TransactionEditScreen(
             transactionType = transactionType,
             note = note,
             valueError = valueError,
+            category = category,
+            categories = uiState.categories,
             onValueChange = {
                 valueError = ""
-                value = it
+                value = it.toDouble()
             },
             onTypeChange = { transactionType = it },
+            onNoteChange = { note = it },
+            onCategoryChange = { category = it },
             onDeleteClick = { viewModel.deleteTransaction() },
             onSaveClick = {
                 val entity = TransactionEntity(
                     id = id,
-                    categoryId = categoryId,
+                    categoryId = category?.id ?: getCategoryId(transactionType),
                     walletId = walletId,
                     currencyId = currencyId,
                     value = value,
@@ -142,6 +144,13 @@ fun TransactionEditScreen(
     }
 }
 
+private fun getCategoryId(type: TransactionType): Long {
+    return when (type) {
+        TransactionType.Expense -> CATEGORY_EXPENSE_ID
+        TransactionType.Income -> CATEGORY_INCOME_ID
+    }
+}
+
 @Composable
 private fun ScreenContent(
     id: Long,
@@ -149,48 +158,37 @@ private fun ScreenContent(
     transactionType: TransactionType,
     note: String,
     valueError: String,
+    category: CategoryEntity?,
+    categories: List<CategoryEntity>,
     onValueChange: (String) -> Unit,
     onTypeChange: (TransactionType) -> Unit,
+    onCategoryChange: (CategoryEntity) -> Unit,
+    onNoteChange: (String) -> Unit,
     onDeleteClick: () -> Unit,
     onSaveClick: () -> Unit,
 ) {
     Column(Modifier.fillMaxSize()) {
-        TransactionTypeChooser(type = type, onTypeSelect = {
-            type = it
-            onTypeChange(it)
-        })
-        Spacer(modifier = Modifier.height(16.dp))
-        AppCategorySpinner(categories = categories,
-            initItem = category,
-            onSelect = { category = it })
-        AppTextField(value = note, onValueChange = { note = it })
-        TransactionKeyboard(value = value, onValueChange = { value = it })
-        Box(contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colors.boxBackground)
-                .clickable {
-                    val saveTransaction =
-                        entity?.transaction.copyOrNew(category.id, value, type, note)
-                    onSaveClick(saveTransaction)
-                }
-                .padding(16.dp)) {
-            TextPrimary(text = stringResource(R.string.app_save), fontSize = 20.sp)
+        TransactionTypeChooser(transactionType, onTypeChange)
+        category?.let {
+            AppCategoriesSpinner(
+                categoriesList = categories,
+                selectedCategory = category,
+                onSelectCategory = onCategoryChange,
+                modifier = Modifier.padding(top = 16.dp)
+            )
         }
-    }
-    Column(modifier = Modifier.fillMaxSize()) {
-        TransactionTypeChooser(
-            selectedType = transactionType,
-            onTypeSelect = onTypeChange
+        AppTextField(
+            value = value.toString(),
+            onValueChange = onValueChange,
+            label = stringResource(R.string.label_name),
+            error = valueError.ifEmpty { null },
+            modifier = Modifier.fillMaxWidth()
         )
         AppTextField(
-            value = name,
-            onValueChange = onNameChange,
+            value = note,
+            onValueChange = onNoteChange,
             label = stringResource(R.string.label_name),
-            error = nameError.ifEmpty { null },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
+            modifier = Modifier.fillMaxWidth()
         )
         Row(
             modifier = Modifier
@@ -219,13 +217,22 @@ private fun Preview() {
     AppTheme {
         ScreenContent(
             id = 0,
-            name = "Test name",
-            transactionType = TransactionType.Expense,
-            nameError = "",
-            onNameChange = {},
+            value = 123.42,
+            transactionType = TransactionType.Income,
+            note = "note",
+            valueError = "valueError",
+            category = CategoryEntity(1, "Category 2", TransactionType.Income),
+            categories = listOf(
+                CategoryEntity(0, "Category 1", TransactionType.Income),
+                CategoryEntity(1, "Category 2", TransactionType.Income),
+                CategoryEntity(2, "Category 3", TransactionType.Income),
+            ),
+            onValueChange = {},
             onTypeChange = {},
+            onNoteChange = {},
+            onCategoryChange = {},
             onDeleteClick = {},
-            onSaveClick = {},
+            onSaveClick = {}
         )
     }
 }

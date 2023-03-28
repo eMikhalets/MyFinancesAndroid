@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emikhalets.core.UiString
 import com.emikhalets.domain.entity.TransactionType
-import com.emikhalets.presentation.R
 import com.emikhalets.presentation.core.AppTopAppBar
 import com.emikhalets.presentation.dialog.MessageDialog
 import com.emikhalets.presentation.navigation.Screen
@@ -135,19 +134,19 @@ private fun ScreenContent(
                 .padding(horizontal = 16.dp)
         ) {
             MainButton(
-                text = stringResource(R.string.main_),
+                text = "stringResource(R.string.main_)",
                 icon = Icons.Rounded.Bookmark,
                 onClick = onCategoriesClick
             )
             Spacer(modifier = Modifier.width(8.dp))
             MainButton(
-                text = stringResource(R.string.app_budget),
+                text = "stringResource(R.string.app_budget)",
                 icon = Icons.Rounded.Wallet,
                 onClick = onWalletsClick
             )
             Spacer(modifier = Modifier.width(8.dp))
             MainButton(
-                text = stringResource(R.string.app_charts),
+                text = "stringResource(R.string.app_charts)",
                 icon = Icons.Rounded.Money,
                 onClick = onCurrenciesClick
             )
@@ -162,13 +161,13 @@ private fun ScreenContent(
                 .weight(1f)
         ) {
             MainButton(
-                text = stringResource(R.string.app_add_expense),
+                text = "stringResource(R.string.app_add_expense)",
                 icon = Icons.Rounded.HorizontalRule,
                 onClick = onAddExpenseClick
             )
             Spacer(modifier = Modifier.width(8.dp))
             MainButton(
-                text = stringResource(R.string.app_add_income),
+                text = "stringResource(R.string.app_add_income)",
                 icon = Icons.Rounded.Add,
                 onClick = onAddIncomeClick
             )
@@ -236,6 +235,7 @@ private fun Preview() {
         ScreenContent(
             incomeSum = 7057.64,
             expenseSum = 7057.64,
+            walletName = "Test wallet name",
             onExpensesClick = {},
             onIncomesClick = {},
             onAddExpenseClick = {},
@@ -249,14 +249,18 @@ private fun Preview() {
 
 private fun getValueBoxTitle(type: TransactionType): Int {
     return when (type) {
-        TransactionType.Expense -> R.string.app_expenses
-        TransactionType.Income -> R.string.app_incomes
+//        TransactionType.Expense -> R.string.app_expenses
+//        TransactionType.Income -> R.string.app_incomes
+        TransactionType.Expense -> 0
+        TransactionType.Income -> 0
     }
 }
 
 private fun getValueBoxPrefix(type: TransactionType): Int {
     return when (type) {
-        TransactionType.Expense -> R.string.app_minus
-        TransactionType.Income -> R.string.app_plus
+        TransactionType.Expense -> 0
+        TransactionType.Income -> 0
+//        TransactionType.Expense -> R.string.app_minus
+//        TransactionType.Income -> R.string.app_plus
     }
 }

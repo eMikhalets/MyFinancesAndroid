@@ -5,7 +5,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.emikhalets.presentation.R
 import com.emikhalets.presentation.core.AppButton
 import com.emikhalets.presentation.theme.AppTheme
 
@@ -23,7 +22,7 @@ fun MessageDialog(
         text = { Text(message) },
         confirmButton = {
             AppButton(
-                text = stringResource(R.string.dialog_ok),
+                text = "stringResource(R.string.dialog_ok)",
                 onClick = onDismiss
             )
         }

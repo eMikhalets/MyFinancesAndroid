@@ -31,10 +31,10 @@ fun NavGraph(navController: NavHostController) {
             MainScreen(
                 onTransactionsClick = { type ->
                     navController.navigate("${Screen.Transactions.route}/$type")
-                                      },
+                },
                 onTransactionEditClick = { type ->
                     navController.navigate("${Screen.TransactionEdit.route}/$id/$type")
-                                         },
+                },
                 onCategoriesClick = { navController.navigate(Screen.Categories.route) },
                 onWalletsClick = { navController.navigate(Screen.Wallets.route) },
                 onCurrenciesClick = { navController.navigate(Screen.Currencies.route) }
@@ -100,11 +100,21 @@ fun NavGraph(navController: NavHostController) {
         }
         composable(Screen.Wallets.route) {
             WalletsScreen(
+                onsWalletClick = { id ->
+                    navController.navigate("${Screen.WalletEdit.route}/$id")
+                },
+                onAddWalletClick = {
+                    navController.navigate("${Screen.WalletEdit.route}/${null}")
+                },
                 onBackClick = { navController.popBackStack() }
             )
         }
-        composable(Screen.WalletEdit.route) {
+        composable(
+            route = "${Screen.WalletEdit.route}/{$ARGS_WALLET_ID}",
+            arguments = listOf(navArgument(ARGS_WALLET_ID) { type = NavType.LongType })
+        ) {
             WalletEditScreen(
+                walletId = it.arguments?.getLong(ARGS_WALLET_ID),
                 onBackClick = { navController.popBackStack() }
             )
         }
@@ -113,7 +123,9 @@ fun NavGraph(navController: NavHostController) {
                 onCurrencyClick = { id ->
                     navController.navigate("${Screen.CurrencyEdit.route}/$id")
                 },
-                onAddCurrencyClick = { navController.navigate(Screen.CurrencyEdit.route) },
+                onAddCurrencyClick = {
+                    navController.navigate("${Screen.CurrencyEdit.route}/${null}")
+                },
                 onBackClick = { navController.popBackStack() }
             )
         }

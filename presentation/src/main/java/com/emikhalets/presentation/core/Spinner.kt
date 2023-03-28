@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.emikhalets.domain.entity.CategoryEntity
+import com.emikhalets.domain.entity.CurrencyEntity
 
 @Composable
 fun AppCategoriesSpinner(
@@ -57,6 +58,50 @@ fun AppCategoriesSpinner(
                         onSelectCategory(category)
                     },
                     content = { Text(text = category.name) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun AppCurrenciesSpinner(
+    list: List<CurrencyEntity>,
+    selected: CurrencyEntity,
+    onSelect: (CurrencyEntity) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { expanded = !expanded }
+    ) {
+        Text(
+            text = selected.name,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        )
+        if (expanded) {
+            Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = "")
+        } else {
+            Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "")
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            list.forEach { currency ->
+                DropdownMenuItem(
+                    onClick = {
+                        expanded = false
+                        onSelect(currency)
+                    },
+                    content = { Text(text = currency.name) }
                 )
             }
         }

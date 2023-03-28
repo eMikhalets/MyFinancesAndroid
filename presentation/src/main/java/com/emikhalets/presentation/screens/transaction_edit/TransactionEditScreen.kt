@@ -23,7 +23,6 @@ import com.emikhalets.core.UiString
 import com.emikhalets.domain.entity.CategoryEntity
 import com.emikhalets.domain.entity.TransactionEntity
 import com.emikhalets.domain.entity.TransactionType
-import com.emikhalets.myfinances.R
 import com.emikhalets.presentation.core.AppCategoriesSpinner
 import com.emikhalets.presentation.core.AppTextButton
 import com.emikhalets.presentation.core.AppTextField
@@ -180,14 +179,14 @@ private fun ScreenContent(
         AppTextField(
             value = value.toString(),
             onValueChange = onValueChange,
-            label = stringResource(R.string.label_name),
+            label = "stringResource(R.string.label_name)",
             error = valueError.ifEmpty { null },
             modifier = Modifier.fillMaxWidth()
         )
         AppTextField(
             value = note,
             onValueChange = onNoteChange,
-            label = stringResource(R.string.label_name),
+            label = "stringResource(R.string.label_name)",
             modifier = Modifier.fillMaxWidth()
         )
         Row(
@@ -197,13 +196,13 @@ private fun ScreenContent(
         ) {
             if (id > 0) {
                 AppTextButton(
-                    text = stringResource(R.string.app_delete),
+                    text = "stringResource(R.string.app_delete)",
                     onClick = onDeleteClick,
                     modifier = Modifier.weight(1f)
                 )
             }
             AppTextButton(
-                text = stringResource(R.string.app_save),
+                text = "stringResource(R.string.app_save)",
                 onClick = onSaveClick,
                 modifier = Modifier.weight(1f)
             )

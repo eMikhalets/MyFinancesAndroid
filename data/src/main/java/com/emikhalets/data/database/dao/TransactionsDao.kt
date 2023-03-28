@@ -19,7 +19,7 @@ interface TransactionsDao {
     suspend fun update(entity: TransactionDb): Int
 
     @Update
-    suspend fun updateAll(list: List<TransactionDb>): List<Int>
+    suspend fun updateAll(list: List<TransactionDb>): Int
 
     @Delete
     suspend fun delete(entity: TransactionDb): Int
@@ -27,7 +27,7 @@ interface TransactionsDao {
     @Query("SELECT * FROM transactions WHERE id=:id")
     fun getItemFlow(id: Long): Flow<TransactionDb>
 
-    @Query("SELECT * FROM transactions ORDER BY timestamp DECS")
+    @Query("SELECT * FROM transactions ORDER BY timestamp DESC")
     fun getAllFlow(): Flow<List<TransactionDb>>
 
     @Query("SELECT * FROM transactions WHERE category_id=:id")

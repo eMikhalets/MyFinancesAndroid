@@ -18,9 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emikhalets.core.UiString
-import com.emikhalets.core.getString
 import com.emikhalets.domain.entity.CurrencyEntity
-import com.emikhalets.myfinances.R
 import com.emikhalets.presentation.core.AppTextButton
 import com.emikhalets.presentation.core.AppTextField
 import com.emikhalets.presentation.core.AppTopAppBar
@@ -78,7 +76,7 @@ fun CurrencyEditScreen(
 
     LaunchedEffect(uiState.existed) {
         if (uiState.existed) {
-            nameError = getString(R.string.existed)
+            nameError = "getString(R.string.existed)"
             viewModel.dropCurrencyExisted()
         }
     }
@@ -89,6 +87,7 @@ fun CurrencyEditScreen(
             id = id,
             name = name,
             symbol = symbol,
+            nameError = nameError,
             onNameChange = {
                 nameError = ""
                 name = it
@@ -96,7 +95,7 @@ fun CurrencyEditScreen(
             onDeleteClick = { viewModel.deleteCurrency() },
             onSaveClick = {
                 if (name.isEmpty()) {
-                    nameError = getString(R.string.empty)
+                    nameError = "getString(R.string.empty)"
                 } else {
                     val entity = CurrencyEntity(id, name, symbol)
                     viewModel.saveCurrency(entity)
@@ -128,7 +127,7 @@ private fun ScreenContent(
         AppTextField(
             value = name,
             onValueChange = onNameChange,
-            label = stringResource(R.string.label_name),
+            label = "stringResource(R.string.label_name)",
             error = nameError.ifEmpty { null },
             modifier = Modifier
                 .fillMaxWidth()
@@ -141,13 +140,13 @@ private fun ScreenContent(
         ) {
             if (id > 0) {
                 AppTextButton(
-                    text = stringResource(R.string.app_delete),
+                    text = "stringResource(R.string.app_delete)",
                     onClick = onDeleteClick,
                     modifier = Modifier.weight(1f)
                 )
             }
             AppTextButton(
-                text = stringResource(R.string.app_save),
+                text = "stringResource(R.string.app_save)",
                 onClick = onSaveClick,
                 modifier = Modifier.weight(1f)
             )

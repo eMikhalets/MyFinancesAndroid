@@ -110,7 +110,7 @@ private fun ScreenContent(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
-                                text = entity.category.name,
+                                text = "entity.name",
                                 fontSize = 18.sp
                             )
                             Spacer(Modifier.width(16.dp))

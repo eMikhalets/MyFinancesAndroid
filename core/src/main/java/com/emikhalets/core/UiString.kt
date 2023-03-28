@@ -2,7 +2,6 @@ package com.emikhalets.core
 
 import android.content.res.Resources
 import androidx.annotation.StringRes
-import com.emikhalets.myfinances.R
 
 sealed class UiString {
 

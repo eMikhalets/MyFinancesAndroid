@@ -21,7 +21,7 @@ interface WalletsDao {
     suspend fun update(entity: WalletDb): Int
 
     @Update
-    suspend fun updateAll(list: List<WalletDb>): List<Int>
+    suspend fun updateAll(list: List<WalletDb>): Int
 
     @Delete
     suspend fun delete(entity: WalletDb): Int

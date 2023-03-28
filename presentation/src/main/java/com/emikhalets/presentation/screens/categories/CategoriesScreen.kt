@@ -35,7 +35,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.emikhalets.core.UiString
 import com.emikhalets.domain.entity.CategoryEntity
 import com.emikhalets.domain.entity.TransactionType
-import com.emikhalets.presentation.R
 import com.emikhalets.presentation.core.AppButton
 import com.emikhalets.presentation.core.AppTopAppBar
 import com.emikhalets.presentation.dialog.MessageDialog
@@ -116,8 +115,8 @@ private fun ColumnScope.Pager(
     Tabs(
         tabIndex = pagerState.currentPage,
         titles = listOf(
-            stringResource(R.string.error_internal),
-            stringResource(R.string.error_internal),
+            "stringResource(R.string.error_internal)",
+            "stringResource(R.string.error_internal)",
         ),
         onTabClick = { index -> scope.launch { pagerState.scrollToPage(index) } }
     )
@@ -199,7 +198,7 @@ private fun CategoriesList(
         }
         Divider()
         AppButton(
-            text = stringResource(R.string.add),
+            text = "stringResource(R.string.add)",
             onClick = onAddCategoryClick
         )
     }
@@ -241,7 +240,7 @@ private fun Preview() {
                 CategoryEntity(0, "Name 1", TransactionType.Income),
                 CategoryEntity(0, "Name 1", TransactionType.Income),
             ),
-            onCategoryClick = {},
+            onCategoryClick = { _, _ -> },
             onAddCategoryClick = {}
         )
     }

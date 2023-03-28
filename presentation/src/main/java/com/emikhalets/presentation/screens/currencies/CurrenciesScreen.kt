@@ -106,7 +106,7 @@ private fun CurrenciesList(
         }
         Divider()
         AppButton(
-            text = stringResource(R.string.add),
+            text = "stringResource(R.string.add)",
             onClick = onAddCurrencyClick
         )
     }

@@ -6,7 +6,6 @@ plugins {
 }
 
 android {
-    namespace = Configuration.namespace
     compileSdk = 33
 
     defaultConfig {
@@ -22,11 +21,11 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_15
+        targetCompatibility = JavaVersion.VERSION_15
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "15"
     }
 }
 

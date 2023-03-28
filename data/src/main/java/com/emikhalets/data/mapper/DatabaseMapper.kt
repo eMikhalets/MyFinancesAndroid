@@ -4,12 +4,14 @@ import com.emikhalets.data.database.table.CategoryDb
 import com.emikhalets.data.database.table.CurrencyDb
 import com.emikhalets.data.database.table.TransactionDb
 import com.emikhalets.data.database.table.WalletDb
+import com.emikhalets.data.database.table.embedded.ComplexTransactionDb
 import com.emikhalets.data.database.table.embedded.ComplexWalletDb
 import com.emikhalets.domain.entity.CategoryEntity
 import com.emikhalets.domain.entity.CurrencyEntity
 import com.emikhalets.domain.entity.TransactionEntity
 import com.emikhalets.domain.entity.TransactionType
 import com.emikhalets.domain.entity.WalletEntity
+import com.emikhalets.domain.entity.complex.ComplexTransactionEntity
 import com.emikhalets.domain.entity.complex.ComplexWalletEntity
 import javax.inject.Inject
 
@@ -67,6 +69,15 @@ class DatabaseMapper @Inject constructor() {
         )
     }
 
+    fun mapComplexTransactionDbToEntity(dbEntity: ComplexTransactionDb): ComplexTransactionEntity {
+        return ComplexTransactionEntity(
+            transaction = mapTransactionDbToEntity(dbEntity.transaction),
+            category = mapCategoryDbToEntity(dbEntity.category),
+            wallet = mapWalletDbToEntity(dbEntity.wallet),
+            currency = mapCurrencyDbToEntity(dbEntity.currency)
+        )
+    }
+
     fun mapTransactionsListDbToEntity(dbList: List<TransactionDb>): List<TransactionEntity> {
         return dbList.map { dbEntity ->
             TransactionEntity(
@@ -79,6 +90,14 @@ class DatabaseMapper @Inject constructor() {
                 note = dbEntity.note,
                 timestamp = dbEntity.timestamp
             )
+        }
+    }
+
+    fun mapComplexTransactionsListDbToEntity(
+        dbList: List<ComplexTransactionDb>,
+    ): List<ComplexTransactionEntity> {
+        return dbList.map { dbEntity ->
+            mapComplexTransactionDbToEntity(dbEntity)
         }
     }
 
@@ -142,5 +161,9 @@ class DatabaseMapper @Inject constructor() {
             wallet = mapWalletDbToEntity(dbEntity.wallet),
             transactions = mapTransactionsListDbToEntity(dbEntity.transactions)
         )
+    }
+
+    fun mapComplexWalletsListDbToEntity(dbList: List<ComplexWalletDb>): List<ComplexWalletEntity> {
+        return dbList.map { mapComplexWalletDbToEntity(it) }
     }
 }

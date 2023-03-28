@@ -26,4 +26,7 @@ interface CurrenciesDao {
 
     @Query("SELECT * FROM currencies")
     fun getAllFlow(): Flow<List<CurrencyDb>>
+
+    @Query("SELECT EXISTS(SELECT * FROM currencies WHERE name=:name)")
+    suspend fun isExists(name: String): Boolean
 }

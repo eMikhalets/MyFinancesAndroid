@@ -5,8 +5,10 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.emikhalets.data.database.table.TransactionDb
+import com.emikhalets.data.database.table.embedded.ComplexTransactionDb
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -38,4 +40,14 @@ interface TransactionsDao {
 
     @Query("SELECT * FROM transactions WHERE currency_id=:id")
     suspend fun getAllByCurrency(id: Long): List<TransactionDb>
+
+    @Transaction
+    @Query("SELECT * FROM transactions WHERE type=:type AND wallet_id=:walletId")
+    fun getComplexTransactions(
+        type: String,
+        walletId: Long,
+    ): Flow<List<ComplexTransactionDb>>
+
+    @Query("DELETE FROM transactions WHERE id=:id")
+    suspend fun deleteById(id: Long): List<TransactionDb>
 }

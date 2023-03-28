@@ -39,6 +39,6 @@ interface WalletsDao {
     suspend fun isExists(name: String): Boolean
 
     @Transaction
-    @Query("SELECT * FROM wallets WHERE id=:id")
-    suspend fun getComplexWallet(id: Long): ComplexWalletDb
+    @Query("SELECT * FROM wallets")
+    fun getComplexWallets(): Flow<List<ComplexWalletDb>>
 }

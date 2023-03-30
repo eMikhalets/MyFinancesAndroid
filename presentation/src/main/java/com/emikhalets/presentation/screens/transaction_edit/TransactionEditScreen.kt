@@ -17,8 +17,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.emikhalets.core.CATEGORY_EXPENSE_ID
-import com.emikhalets.core.CATEGORY_INCOME_ID
+import com.emikhalets.core.DEFAULT_CATEGORY_EXPENSE_ID
+import com.emikhalets.core.DEFAULT_CATEGORY_INCOME_ID
 import com.emikhalets.core.UiString
 import com.emikhalets.domain.entity.CategoryEntity
 import com.emikhalets.domain.entity.TransactionEntity
@@ -145,8 +145,8 @@ fun TransactionEditScreen(
 
 private fun getCategoryId(type: TransactionType): Long {
     return when (type) {
-        TransactionType.Expense -> CATEGORY_EXPENSE_ID
-        TransactionType.Income -> CATEGORY_INCOME_ID
+        TransactionType.Expense -> DEFAULT_CATEGORY_EXPENSE_ID
+        TransactionType.Income -> DEFAULT_CATEGORY_INCOME_ID
     }
 }
 

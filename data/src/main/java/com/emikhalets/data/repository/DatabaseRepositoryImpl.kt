@@ -146,6 +146,15 @@ class DatabaseRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getTransactionsFlow(
+        walletId: Long,
+    ): ResultWrapper<Flow<List<ComplexTransactionEntity>>> {
+        return execute {
+            val flow = transactionsDao.getComplexTransactions(walletId)
+            flow.map { mapper.mapComplexTransactionsListDbToEntity(it) }
+        }
+    }
+
+    override suspend fun getTransactionsFlow(
         type: TransactionType,
         walletId: Long,
     ): ResultWrapper<Flow<List<ComplexTransactionEntity>>> {
@@ -246,9 +255,16 @@ class DatabaseRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getComplexWallet(id: Long): ResultWrapper<Flow<ComplexWalletEntity>> {
+        return execute {
+            val flow = walletsDao.getComplexWalletFlow(id)
+            flow.map { mapper.mapComplexWalletDbToEntity(it) }
+        }
+    }
+
     override suspend fun getComplexWallets(): ResultWrapper<Flow<List<ComplexWalletEntity>>> {
         return execute {
-            val flow = walletsDao.getComplexWallets()
+            val flow = walletsDao.getComplexWalletsFlow()
             flow.map { mapper.mapComplexWalletsListDbToEntity(it) }
         }
     }

@@ -159,7 +159,8 @@ class DatabaseMapper @Inject constructor() {
     fun mapComplexWalletDbToEntity(dbEntity: ComplexWalletDb): ComplexWalletEntity {
         return ComplexWalletEntity(
             wallet = mapWalletDbToEntity(dbEntity.wallet),
-            transactions = mapTransactionsListDbToEntity(dbEntity.transactions)
+            transactions = mapTransactionsListDbToEntity(dbEntity.transactions),
+            currency = mapCurrencyDbToEntity(dbEntity.currency)
         )
     }
 

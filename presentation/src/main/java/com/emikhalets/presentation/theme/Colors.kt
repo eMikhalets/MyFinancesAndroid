@@ -16,17 +16,8 @@ val Colors.textPrimary
 val Colors.textSecondary
     get() = if (isLight) Grey_500 else Color.White
 
-val Colors.textButton
-    get() = if (isLight) Blue_700 else Color.White
-
 val Colors.textError
     get() = if (isLight) Red_700 else Red_700
-
-val Colors.appBackground
-    get() = if (isLight) Color.White else Color.Black
-
-val Colors.boxBackground
-    get() = if (isLight) Blue_400 else Color.Black
 
 val Colors.textFieldBackground
     get() = if (isLight) Color.White else Color.Black

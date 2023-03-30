@@ -42,12 +42,18 @@ interface TransactionsDao {
     suspend fun getAllByCurrency(id: Long): List<TransactionDb>
 
     @Transaction
-    @Query("SELECT * FROM transactions WHERE type=:type AND wallet_id=:walletId")
+    @Query("SELECT * FROM transactions WHERE wallet_id=:walletId ORDER BY timestamp DESC")
+    fun getComplexTransactions(walletId: Long): Flow<List<ComplexTransactionDb>>
+
+    @Transaction
+    @Query("SELECT * FROM transactions " +
+            "WHERE type=:type AND wallet_id=:walletId " +
+            "ORDER BY timestamp DESC")
     fun getComplexTransactions(
         type: String,
         walletId: Long,
     ): Flow<List<ComplexTransactionDb>>
 
     @Query("DELETE FROM transactions WHERE id=:id")
-    suspend fun deleteById(id: Long): List<TransactionDb>
+    suspend fun deleteById(id: Long): Int
 }

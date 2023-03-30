@@ -19,6 +19,9 @@
     <string name="main_categories">Категории</string>
     <string name="main_wallets">Кошельки</string>
     <string name="main_currencies">Валюты</string>
+    <string name="main_expenses">Расходы</string>
+    <string name="main_incomes">Доходы</string>
+    <string name="main_last_transactions">Последние транзакции</string>
 
     <!--  Categories Screen  -->
     <string name="categories_expenses_tab">Расходы</string>

@@ -36,6 +36,10 @@ interface DatabaseRepository {
         walletId: Long,
     ): ResultWrapper<Flow<List<ComplexTransactionEntity>>>
 
+    suspend fun getTransactionsFlow(
+        walletId: Long,
+    ): ResultWrapper<Flow<List<ComplexTransactionEntity>>>
+
     /**
      * Currencies Table
      */
@@ -55,5 +59,6 @@ interface DatabaseRepository {
     suspend fun deleteWallet(entity: WalletEntity): ResultWrapper<Int>
     suspend fun getWalletFlow(id: Long): ResultWrapper<Flow<WalletEntity>>
     suspend fun getWalletsFlow(): ResultWrapper<Flow<List<WalletEntity>>>
+    suspend fun getComplexWallet(id: Long): ResultWrapper<Flow<ComplexWalletEntity>>
     suspend fun getComplexWallets(): ResultWrapper<Flow<List<ComplexWalletEntity>>>
 }

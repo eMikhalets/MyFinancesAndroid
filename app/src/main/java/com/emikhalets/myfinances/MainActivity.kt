@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.emikhalets.presentation.core.AppScaffold
 import com.emikhalets.presentation.navigation.NavGraph
 import com.emikhalets.presentation.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +30,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun App(navController: NavHostController) {
-    NavGraph(navController)
+    AppScaffold(navController) {
+        NavGraph(navController)
+    }
 }
 
 @Preview(showBackground = true)

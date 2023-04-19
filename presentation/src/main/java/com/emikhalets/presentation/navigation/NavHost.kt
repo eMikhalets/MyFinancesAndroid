@@ -26,46 +26,7 @@ private const val ARGS_TRANSACTION_TYPE = "ARGS_TRANSACTION_TYPE"
 
 @Composable
 fun NavGraph(navController: NavHostController) {
-    NavHost(navController, Screen.Main.route) {
-        composable(Screen.Main.route) {
-            MainScreen(
-                onTransactionsClick = { type ->
-                    navController.navigate("${Screen.Transactions.route}/$type")
-                },
-                onTransactionEditClick = { type ->
-                    navController.navigate("${Screen.TransactionEdit.route}/$id/$type")
-                },
-                onCategoriesClick = { navController.navigate(Screen.Categories.route) },
-                onWalletsClick = { navController.navigate(Screen.Wallets.route) },
-                onCurrenciesClick = { navController.navigate(Screen.Currencies.route) }
-            )
-        }
-        composable(Screen.Categories.route) {
-            CategoriesScreen(
-                onCategoryClick = { categoryId, type ->
-                    navController.navigate("${Screen.CategoryEdit.route}/$categoryId/$type")
-                },
-                onAddCategoryClick = { type ->
-                    navController.navigate("${Screen.CategoryEdit.route}/${null}/$type")
-                },
-                onBackClick = { navController.popBackStack() }
-            )
-        }
-        composable(
-            route = "${Screen.CategoryEdit.route}/{$ARGS_CATEGORY_ID}/{$ARGS_CATEGORY_TYPE}",
-            arguments = listOf(
-                navArgument(ARGS_CATEGORY_ID) { type = NavType.LongType },
-                navArgument(ARGS_CATEGORY_TYPE) {
-                    type = NavType.EnumType(TransactionType::class.java)
-                },
-            )
-        ) {
-            CategoryEditScreen(
-                categoryId = it.arguments?.getLong(ARGS_CATEGORY_ID),
-                type = it.arguments?.getParcelable(ARGS_CATEGORY_ID, TransactionType::class.java),
-                onBackClick = { navController.popBackStack() }
-            )
-        }
+    NavHost(navController, Screen.Transactions.route) {
         composable(
             route = "${Screen.Transactions.route}/{$ARGS_TRANSACTION_TYPE}",
             arguments = listOf(
@@ -77,66 +38,105 @@ fun NavGraph(navController: NavHostController) {
             TransactionsScreen(
                 type = it.arguments?.getParcelable(ARGS_CATEGORY_ID, TransactionType::class.java),
                 onTransactionClick = { id, type ->
-                    navController.navigate("${Screen.TransactionEdit.route}/$id/$type")
+//                    navController.navigate("${Screen.TransactionEdit.route}/$id/$type")
                 },
                 onBackClick = { navController.popBackStack() }
             )
         }
-        composable(
-            route = "${Screen.TransactionEdit.route}/{$ARGS_TRANSACTION_ID}/{$ARGS_TRANSACTION_TYPE}",
-            arguments = listOf(
-                navArgument(ARGS_TRANSACTION_ID) { type = NavType.LongType },
-                navArgument(ARGS_TRANSACTION_TYPE) {
-                    type = NavType.EnumType(TransactionType::class.java)
-                },
-            )
-        ) {
-            TransactionEditScreen(
-                transactionId = it.arguments?.getLong(ARGS_TRANSACTION_ID),
-                type = it.arguments
-                    ?.getParcelable(ARGS_TRANSACTION_TYPE, TransactionType::class.java),
-                onBackClick = { navController.popBackStack() }
-            )
-        }
-        composable(Screen.Wallets.route) {
-            WalletsScreen(
-                onsWalletClick = { id ->
-                    navController.navigate("${Screen.WalletEdit.route}/$id")
-                },
-                onAddWalletClick = {
-                    navController.navigate("${Screen.WalletEdit.route}/${null}")
-                },
-                onBackClick = { navController.popBackStack() }
-            )
-        }
-        composable(
-            route = "${Screen.WalletEdit.route}/{$ARGS_WALLET_ID}",
-            arguments = listOf(navArgument(ARGS_WALLET_ID) { type = NavType.LongType })
-        ) {
-            WalletEditScreen(
-                walletId = it.arguments?.getLong(ARGS_WALLET_ID),
-                onBackClick = { navController.popBackStack() }
-            )
-        }
-        composable(Screen.Currencies.route) {
-            CurrenciesScreen(
-                onCurrencyClick = { id ->
-                    navController.navigate("${Screen.CurrencyEdit.route}/$id")
-                },
-                onAddCurrencyClick = {
-                    navController.navigate("${Screen.CurrencyEdit.route}/${null}")
-                },
-                onBackClick = { navController.popBackStack() }
-            )
-        }
-        composable(
-            route = "${Screen.CurrencyEdit.route}/{$ARGS_CURRENCY_ID}",
-            arguments = listOf(navArgument(ARGS_CURRENCY_ID) { type = NavType.LongType })
-        ) {
-            CurrencyEditScreen(
-                currencyId = it.arguments?.getLong(ARGS_CURRENCY_ID),
-                onBackClick = { navController.popBackStack() }
-            )
-        }
+//        composable(Screen.Main.route) {
+//            MainScreen(
+//                onTransactionsClick = { type ->
+//                    navController.navigate("${Screen.Transactions.route}/$type")
+//                },
+//                onTransactionEditClick = { type ->
+//                    navController.navigate("${Screen.TransactionEdit.route}/$id/$type")
+//                },
+//                onCategoriesClick = { navController.navigate(Screen.Categories.route) },
+//                onWalletsClick = { navController.navigate(Screen.Wallets.route) },
+//                onCurrenciesClick = { navController.navigate(Screen.Currencies.route) }
+//            )
+//        }
+//        composable(Screen.Categories.route) {
+//            CategoriesScreen(
+//                onCategoryClick = { categoryId, type ->
+//                    navController.navigate("${Screen.CategoryEdit.route}/$categoryId/$type")
+//                },
+//                onAddCategoryClick = { type ->
+//                    navController.navigate("${Screen.CategoryEdit.route}/${null}/$type")
+//                },
+//                onBackClick = { navController.popBackStack() }
+//            )
+//        }
+//        composable(
+//            route = "${Screen.CategoryEdit.route}/{$ARGS_CATEGORY_ID}/{$ARGS_CATEGORY_TYPE}",
+//            arguments = listOf(
+//                navArgument(ARGS_CATEGORY_ID) { type = NavType.LongType },
+//                navArgument(ARGS_CATEGORY_TYPE) {
+//                    type = NavType.EnumType(TransactionType::class.java)
+//                },
+//            )
+//        ) {
+//            CategoryEditScreen(
+//                categoryId = it.arguments?.getLong(ARGS_CATEGORY_ID),
+//                type = it.arguments?.getParcelable(ARGS_CATEGORY_ID, TransactionType::class.java),
+//                onBackClick = { navController.popBackStack() }
+//            )
+//        }
+//        composable(
+//            route = "${Screen.TransactionEdit.route}/{$ARGS_TRANSACTION_ID}/{$ARGS_TRANSACTION_TYPE}",
+//            arguments = listOf(
+//                navArgument(ARGS_TRANSACTION_ID) { type = NavType.LongType },
+//                navArgument(ARGS_TRANSACTION_TYPE) {
+//                    type = NavType.EnumType(TransactionType::class.java)
+//                },
+//            )
+//        ) {
+//            TransactionEditScreen(
+//                transactionId = it.arguments?.getLong(ARGS_TRANSACTION_ID),
+//                type = it.arguments
+//                    ?.getParcelable(ARGS_TRANSACTION_TYPE, TransactionType::class.java),
+//                onBackClick = { navController.popBackStack() }
+//            )
+//        }
+//        composable(Screen.Wallets.route) {
+//            WalletsScreen(
+//                onsWalletClick = { id ->
+//                    navController.navigate("${Screen.WalletEdit.route}/$id")
+//                },
+//                onAddWalletClick = {
+//                    navController.navigate("${Screen.WalletEdit.route}/${null}")
+//                },
+//                onBackClick = { navController.popBackStack() }
+//            )
+//        }
+//        composable(
+//            route = "${Screen.WalletEdit.route}/{$ARGS_WALLET_ID}",
+//            arguments = listOf(navArgument(ARGS_WALLET_ID) { type = NavType.LongType })
+//        ) {
+//            WalletEditScreen(
+//                walletId = it.arguments?.getLong(ARGS_WALLET_ID),
+//                onBackClick = { navController.popBackStack() }
+//            )
+//        }
+//        composable(Screen.Currencies.route) {
+//            CurrenciesScreen(
+//                onCurrencyClick = { id ->
+//                    navController.navigate("${Screen.CurrencyEdit.route}/$id")
+//                },
+//                onAddCurrencyClick = {
+//                    navController.navigate("${Screen.CurrencyEdit.route}/${null}")
+//                },
+//                onBackClick = { navController.popBackStack() }
+//            )
+//        }
+//        composable(
+//            route = "${Screen.CurrencyEdit.route}/{$ARGS_CURRENCY_ID}",
+//            arguments = listOf(navArgument(ARGS_CURRENCY_ID) { type = NavType.LongType })
+//        ) {
+//            CurrencyEditScreen(
+//                currencyId = it.arguments?.getLong(ARGS_CURRENCY_ID),
+//                onBackClick = { navController.popBackStack() }
+//            )
+//        }
     }
 }

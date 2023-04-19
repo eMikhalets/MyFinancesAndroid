@@ -121,8 +121,8 @@ private fun ScreenContent(
     onCurrenciesClick: () -> Unit,
 ) {
 
-    AppScaffold {
-        AppTopAppBar(title = stringResource(Screen.Main.title))
+//    AppScaffold {
+//        AppTopAppBar(title = stringResource(Screen.Main.title))
         Column(modifier = Modifier.fillMaxWidth()) {
             WalletInfoBox(
                 name = complexWallet?.wallet?.name ?: "",
@@ -153,7 +153,7 @@ private fun ScreenContent(
                     .padding(bottom = 8.dp, start = 8.dp, end = 8.dp)
             )
         }
-    }
+//    }
 }
 
 @Composable

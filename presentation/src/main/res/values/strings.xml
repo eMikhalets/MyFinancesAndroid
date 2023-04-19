@@ -2,18 +2,22 @@
 <resources>
 
     <!--  Screen titles  -->
-    <string name="title_main">Главное меню</string>
-    <string name="title_categories">Категории</string>
-    <string name="title_category_edit">Редактирование</string>
-    <string name="title_wallets">Кошельки</string>
-    <string name="title_wallet_edit">Редактирование</string>
-    <string name="title_currencies">Валюты</string>
-    <string name="title_currency_edit">Редактирование</string>
     <string name="title_transactions">Транзакции</string>
+    <string name="title_categories">Категории</string>
+    <string name="title_wallets">Кошельки</string>
+    <string name="title_settings">Настройки</string>
+    <string name="title_category_edit">Редактирование</string>
+    <string name="title_wallet_edit">Редактирование</string>
+    <string name="title_currency_edit">Редактирование</string>
     <string name="title_transaction_edit">Редактирование</string>
 
     <!--  Dialogs  -->
     <string name="dialog_ok">OK</string>
+
+    <!--  Transactions Screen  -->
+    <string name="transactions_income">Расходы</string>
+    <string name="transactions_expenses">Доходы</string>
+    <string name="transactions_total">Итого</string>
 
     <!--  Main Screen  -->
     <string name="main_categories">Категории</string>

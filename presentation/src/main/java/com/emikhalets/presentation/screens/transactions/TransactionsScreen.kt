@@ -3,6 +3,7 @@ package com.emikhalets.presentation.screens.transactions
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,9 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emikhalets.core.UiString
+import com.emikhalets.core.formatAmount
 import com.emikhalets.core.toDate
 import com.emikhalets.domain.entity.TransactionEntity
 import com.emikhalets.domain.entity.TransactionType
+import com.emikhalets.presentation.R
 import com.emikhalets.presentation.core.AppTopAppBar
 import com.emikhalets.presentation.dialog.MessageDialog
 import com.emikhalets.presentation.navigation.Screen
@@ -81,6 +84,9 @@ fun TransactionsScreen(
 
 @Composable
 private fun ScreenContent(
+    incomeValue: Double,
+    expensesValue: Double,
+    totalValue: Double,
     expenses: List<TransactionEntity>,
     incomes: List<TransactionEntity>,
     type: TransactionType,
@@ -91,6 +97,11 @@ private fun ScreenContent(
         TransactionType.Income -> incomes
     }
     Column(modifier = Modifier.fillMaxWidth()) {
+        SummaryInfoRow(
+            incomeValue = incomeValue,
+            expensesValue = expensesValue,
+            totalValue = totalValue
+        )
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             items(list) { entity ->
                 Row(
@@ -132,6 +143,55 @@ private fun ScreenContent(
                 Divider(color = Color.Gray)
             }
         }
+    }
+}
+
+@Composable
+private fun SummaryInfoRow(
+    incomeValue: Double,
+    expensesValue: Double,
+    totalValue: Double,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            SummaryInfoDetailsBox(
+                title = stringResource(id = R.string.transactions_income),
+                value = incomeValue
+            )
+            SummaryInfoDetailsBox(
+                title = stringResource(id = R.string.transactions_expenses),
+                value = expensesValue
+            )
+            SummaryInfoDetailsBox(
+                title = stringResource(id = R.string.transactions_total),
+                value = totalValue
+            )
+        }
+        Divider()
+    }
+}
+
+@Composable
+private fun RowScope.SummaryInfoDetailsBox(
+    title: String,
+    value: Double,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .fillMaxWidth()
+            .weight(1f)
+    ) {
+        Text(
+            text = title,
+            fontSize = 16.sp,
+        )
+        Text(
+            text = value.formatAmount(),
+            fontSize = 18.sp,
+        )
     }
 }
 

@@ -16,11 +16,6 @@ android {
         versionCode = Configuration.versionCode
         versionName = Configuration.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        kapt {
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas")
-            }
-        }
     }
 
     buildTypes {
@@ -36,11 +31,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_15
+        targetCompatibility = JavaVersion.VERSION_15
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "15"
     }
     buildFeatures {
         compose = true
@@ -53,37 +48,12 @@ android {
 
 dependencies {
 
-    // General
-    implementation(Dependencies.Core)
-    implementation(Dependencies.Lifecycle)
-    implementation(Dependencies.Coroutines)
-
-    // Compose
-    implementation(Dependencies.ComposeUi)
-    implementation(Dependencies.UiTooling)
-    implementation(Dependencies.Material)
-    implementation(Dependencies.IconsCore)
-    implementation(Dependencies.IconsExt)
-    implementation(Dependencies.ActivityCompose)
-    implementation(Dependencies.Navigation)
-    implementation(Dependencies.HiltCompose)
-
-    // Database
-    implementation(Dependencies.Room)
-    implementation(Dependencies.RoomKtx)
-    kapt(Dependencies.RoomCompiler)
+    implementation(project(":core"))
+    implementation(project(":data"))
+    implementation(project(":domain"))
+    implementation(project(":presentation"))
 
     // DI
     implementation(Dependencies.Hilt)
     kapt(Dependencies.HiltCompiler)
-
-    // ThirdParty
-    implementation(Dependencies.Coil)
-
-    // Testing
-    implementation(Dependencies.JUnit)
-    implementation(Dependencies.JUnitExt)
-    implementation(Dependencies.JUnit4)
-    implementation(Dependencies.UiToolingTest)
-    implementation(Dependencies.TestManifest)
 }

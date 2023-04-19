@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--  Screen titles  -->
+    <string name="title_main">Главное меню</string>
+    <string name="title_categories">Категории</string>
+    <string name="title_category_edit">Редактирование</string>
+    <string name="title_wallets">Кошельки</string>
+    <string name="title_wallet_edit">Редактирование</string>
+    <string name="title_currencies">Валюты</string>
+    <string name="title_currency_edit">Редактирование</string>
+    <string name="title_transactions">Транзакции</string>
+    <string name="title_transaction_edit">Редактирование</string>
+
+    <!--  Dialogs  -->
+    <string name="dialog_ok">OK</string>
+
+    <!--  Main Screen  -->
+    <string name="main_categories">Категории</string>
+    <string name="main_wallets">Кошельки</string>
+    <string name="main_currencies">Валюты</string>
+    <string name="main_expenses">Расходы</string>
+    <string name="main_incomes">Доходы</string>
+    <string name="main_last_transactions">Последние транзакции</string>
+
+    <!--  Categories Screen  -->
+    <string name="categories_expenses_tab">Расходы</string>
+    <string name="categories_incomes_tab">Доходы</string>
+    <string name="categories_add_new">Добавить</string>
+</resources>

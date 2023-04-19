@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_internal">Произошла непредвиденная ошибка</string>
+    <string name="error_delete_default_category">Нельзя удалить категорию по умолчанию</string>
+    <string name="error_delete_default_wallet">Нельзя удалить кошелек по умолчанию</string>
+    <string name="error_delete_default_currency">Нельзя удалить валюту по умолчанию</string>
+</resources>

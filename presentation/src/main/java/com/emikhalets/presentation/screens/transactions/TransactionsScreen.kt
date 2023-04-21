@@ -128,11 +128,13 @@ private fun SummaryInfoBox(
         ) {
             SummaryInfoItemBox(
                 title = stringResource(id = R.string.transactions_income),
-                value = incomeValue
+                value = incomeValue,
+                color = MaterialTheme.colors.primary
             )
             SummaryInfoItemBox(
                 title = stringResource(id = R.string.transactions_expenses),
-                value = expensesValue
+                value = expensesValue,
+                color = MaterialTheme.colors.error
             )
             SummaryInfoItemBox(
                 title = stringResource(id = R.string.transactions_total),
@@ -148,6 +150,7 @@ private fun RowScope.SummaryInfoItemBox(
     title: String,
     value: Double,
     modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colors.onSurface,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -158,10 +161,12 @@ private fun RowScope.SummaryInfoItemBox(
         Text(
             text = title,
             fontSize = 16.sp,
+            color = color
         )
         Text(
             text = value.formatAmount(),
             fontSize = 18.sp,
+            color = color
         )
     }
 }
@@ -188,7 +193,6 @@ private fun TransactionsList(
                     entity = transactionEntity,
                     onClick = onClick
                 )
-                Divider(color = Color.Gray)
             }
         }
     }
@@ -216,11 +220,15 @@ private fun TransactionsDayHeaderBox(
             )
             Text(
                 text = incomeSum.formatAmount(),
+                fontSize = 16.sp,
+                color = MaterialTheme.colors.primary,
                 textAlign = TextAlign.End,
                 modifier = Modifier.weight(1f)
             )
             Text(
                 text = expensesSum.formatAmount(),
+                fontSize = 16.sp,
+                color = MaterialTheme.colors.error,
                 textAlign = TextAlign.End,
                 modifier = Modifier.weight(1f)
             )
@@ -276,19 +284,38 @@ private fun TransactionItemBox(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(8.dp)
                 .clickable { onClick() }
         ) {
             Text(
-                text = entity.category.name
+                text = entity.category.name,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 4.dp)
             )
             Text(
-                text = entity.wallet.name
+                text = entity.wallet.name,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp)
             )
             Text(
-                text = entity.transaction.value.formatAmount()
+                text = entity.transaction.value.formatAmount(),
+                fontSize = 16.sp,
+                color = if (entity.transaction.type == TransactionType.Expense) {
+                    MaterialTheme.colors.error
+                } else {
+                    MaterialTheme.colors.primary
+                },
+                textAlign = TextAlign.End,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 4.dp)
             )
         }
-        Divider(color = Color.Gray)
+        Divider()
     }
 }
 
@@ -337,9 +364,9 @@ private fun Preview() {
                                 0,
                                 0,
                                 123.12,
-                                TransactionType.Expense,
+                                TransactionType.Income,
                                 "123123"),
-                            category = CategoryEntity(0, "Category name", TransactionType.Expense),
+                            category = CategoryEntity(0, "Category name", TransactionType.Income),
                             wallet = WalletEntity(0, "Wallet name", 0, 123.12),
                             currency = CurrencyEntity(0, "asd", "a")
                         ),

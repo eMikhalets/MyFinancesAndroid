@@ -4,17 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.core.Prefs
 import com.emikhalets.core.UiString
+import com.emikhalets.core.getEndOfMonth
 import com.emikhalets.domain.entity.ResultWrapper
 import com.emikhalets.domain.entity.TransactionType
 import com.emikhalets.domain.entity.complex.ComplexTransactionEntity
 import com.emikhalets.domain.use_case.transaction.GetTransactionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
@@ -29,9 +30,10 @@ class TransactionsViewModel @Inject constructor(
         _state.update { _state.value.setError(null) }
     }
 
-    fun getTransactions() {
+    fun getTransactions(startDate: Long) {
         viewModelScope.launch {
-            when (val result = getTransactionsUseCase.invoke(TransactionType.Expense, prefs.defaultWalletId)) {
+            val endDate = startDate.getEndOfMonth()
+            when (val result = getTransactionsUseCase.invoke(startDate, endDate)) {
                 is ResultWrapper.Success -> setTransactionsState(result.data)
                 is ResultWrapper.Error -> setErrorState(result.message)
             }

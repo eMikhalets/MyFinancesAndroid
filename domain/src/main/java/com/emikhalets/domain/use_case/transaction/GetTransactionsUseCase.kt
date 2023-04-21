@@ -12,4 +12,7 @@ class GetTransactionsUseCase @Inject constructor(
 
     suspend operator fun invoke(type: TransactionType, walletId: Long) =
         repository.getTransactionsFlow(type, walletId)
+
+    suspend operator fun invoke(start: Long, end: Long) =
+        repository.getTransactionsFlow(start, end)
 }

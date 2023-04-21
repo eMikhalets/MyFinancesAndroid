@@ -37,6 +37,11 @@ interface DatabaseRepository {
     ): ResultWrapper<Flow<List<ComplexTransactionEntity>>>
 
     suspend fun getTransactionsFlow(
+        start: Long,
+        end: Long,
+    ): ResultWrapper<Flow<List<ComplexTransactionEntity>>>
+
+    suspend fun getTransactionsFlow(
         walletId: Long,
     ): ResultWrapper<Flow<List<ComplexTransactionEntity>>>
 

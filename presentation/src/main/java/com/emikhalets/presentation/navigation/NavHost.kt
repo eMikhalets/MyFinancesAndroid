@@ -2,20 +2,9 @@ package com.emikhalets.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import com.emikhalets.domain.entity.TransactionType
-import com.emikhalets.presentation.screens.categories.CategoriesScreen
-import com.emikhalets.presentation.screens.category_edit.CategoryEditScreen
-import com.emikhalets.presentation.screens.currencies.CurrenciesScreen
-import com.emikhalets.presentation.screens.currency_edit.CurrencyEditScreen
-import com.emikhalets.presentation.screens.main.MainScreen
-import com.emikhalets.presentation.screens.transaction_edit.TransactionEditScreen
 import com.emikhalets.presentation.screens.transactions.TransactionsScreen
-import com.emikhalets.presentation.screens.wallet_edit.WalletEditScreen
-import com.emikhalets.presentation.screens.wallets.WalletsScreen
 
 private const val ARGS_CATEGORY_ID = "ARGS_CATEGORY_ID"
 private const val ARGS_CATEGORY_TYPE = "ARGS_CATEGORY_TYPE"
@@ -27,20 +16,14 @@ private const val ARGS_TRANSACTION_TYPE = "ARGS_TRANSACTION_TYPE"
 @Composable
 fun NavGraph(navController: NavHostController) {
     NavHost(navController, Screen.Transactions.route) {
-        composable(
-            route = "${Screen.Transactions.route}/{$ARGS_TRANSACTION_TYPE}",
-            arguments = listOf(
-                navArgument(ARGS_TRANSACTION_TYPE) {
-                    type = NavType.EnumType(TransactionType::class.java)
-                },
-            )
-        ) {
+        composable(Screen.Transactions.route) {
             TransactionsScreen(
-                type = it.arguments?.getParcelable(ARGS_CATEGORY_ID, TransactionType::class.java),
                 onTransactionClick = { id, type ->
 //                    navController.navigate("${Screen.TransactionEdit.route}/$id/$type")
                 },
-                onBackClick = { navController.popBackStack() }
+                onAddTransactionClick = {},
+                onSearchClick = {},
+                onFiltersClick = {}
             )
         }
 //        composable(Screen.Main.route) {

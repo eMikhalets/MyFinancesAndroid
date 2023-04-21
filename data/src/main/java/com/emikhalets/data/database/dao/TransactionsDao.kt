@@ -54,6 +54,15 @@ interface TransactionsDao {
         walletId: Long,
     ): Flow<List<ComplexTransactionDb>>
 
+    @Transaction
+    @Query("SELECT * FROM transactions " +
+            "WHERE timestamp BETWEEN :start AND :end " +
+            "ORDER BY timestamp DESC")
+    fun getComplexTransactions(
+        start: Long,
+        end: Long,
+    ): Flow<List<ComplexTransactionDb>>
+
     @Query("DELETE FROM transactions WHERE id=:id")
     suspend fun deleteById(id: Long): Int
 }

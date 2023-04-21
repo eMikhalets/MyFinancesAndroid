@@ -85,7 +85,7 @@ fun CategoryEditScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        AppTopAppBar(title = stringResource(Screen.CategoryEdit.title), onBackClick = onBackClick)
+//        AppTopAppBar(title = stringResource(Screen.CategoryEdit.title), onBackClick = onBackClick)
         ScreenContent(
             id = id,
             name = name,

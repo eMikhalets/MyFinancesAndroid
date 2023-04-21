@@ -88,7 +88,7 @@ fun WalletEditScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        AppTopAppBar(title = stringResource(Screen.WalletEdit.title), onBackClick = onBackClick)
+//        AppTopAppBar(title = stringResource(Screen.WalletEdit.title), onBackClick = onBackClick)
         ScreenContent(
             id = id,
             name = name,

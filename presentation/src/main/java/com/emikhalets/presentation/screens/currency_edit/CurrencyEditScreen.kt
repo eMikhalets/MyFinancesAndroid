@@ -82,7 +82,7 @@ fun CurrencyEditScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        AppTopAppBar(title = stringResource(Screen.CurrencyEdit.title), onBackClick = onBackClick)
+//        AppTopAppBar(title = stringResource(Screen.CurrencyEdit.title), onBackClick = onBackClick)
         ScreenContent(
             id = id,
             name = name,

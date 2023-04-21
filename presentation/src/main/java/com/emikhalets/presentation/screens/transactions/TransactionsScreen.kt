@@ -1,17 +1,19 @@
 package com.emikhalets.presentation.screens.transactions
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,20 +27,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emikhalets.core.UiString
 import com.emikhalets.core.formatAmount
-import com.emikhalets.core.toDate
+import com.emikhalets.domain.entity.CategoryEntity
+import com.emikhalets.domain.entity.CurrencyEntity
 import com.emikhalets.domain.entity.TransactionEntity
 import com.emikhalets.domain.entity.TransactionType
+import com.emikhalets.domain.entity.WalletEntity
+import com.emikhalets.domain.entity.complex.ComplexTransactionEntity
+import com.emikhalets.domain.entity.utils.DayHeaderDateEntity
+import com.emikhalets.domain.entity.utils.TransactionsListEntity
 import com.emikhalets.presentation.R
-import com.emikhalets.presentation.core.AppTopAppBar
 import com.emikhalets.presentation.dialog.MessageDialog
-import com.emikhalets.presentation.navigation.Screen
 import com.emikhalets.presentation.theme.AppTheme
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun TransactionsScreen(
@@ -63,12 +71,14 @@ fun TransactionsScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        AppTopAppBar(title = stringResource(Screen.Transactions.title), onBackClick = onBackClick)
         ScreenContent(
-            expenses = uiState.expenseList,
-            incomes = uiState.incomeList,
-            type = type ?: TransactionType.Expense,
-            onTransactionClick = { id, type -> onTransactionClick(id, type) },
+            incomeValue = 0.0,
+            expensesValue = 0.0,
+            totalValue = 0.0,
+            transactionsList = emptyList(),
+            onTransactionClick = {
+//                    id, type -> onTransactionClick(id, type)
+            },
         )
     }
 
@@ -87,83 +97,44 @@ private fun ScreenContent(
     incomeValue: Double,
     expensesValue: Double,
     totalValue: Double,
-    expenses: List<TransactionEntity>,
-    incomes: List<TransactionEntity>,
-    type: TransactionType,
-    onTransactionClick: (Long, TransactionType) -> Unit,
+    transactionsList: List<TransactionsListEntity>,
+    onTransactionClick: () -> Unit,
 ) {
-    val list = when (type) {
-        TransactionType.Expense -> expenses
-        TransactionType.Income -> incomes
-    }
-    Column(modifier = Modifier.fillMaxWidth()) {
-        SummaryInfoRow(
+    Column(modifier = Modifier.fillMaxSize()) {
+        SummaryInfoBox(
             incomeValue = incomeValue,
             expensesValue = expensesValue,
             totalValue = totalValue
         )
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(list) { entity ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(4.dp)
-                        .clickable { onTransactionClick(entity.id, entity.type) }
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                text = "entity.name",
-                                fontSize = 18.sp
-                            )
-                            Spacer(Modifier.width(16.dp))
-                            Text(
-                                text = entity.timestamp.toDate(),
-                                fontSize = 14.sp
-                            )
-                        }
-                        Text(
-                            text = entity.note,
-                            fontSize = 14.sp)
-                    }
-                    Text(
-                        text = entity.value.toString(),
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-                Divider(color = Color.Gray)
-            }
-        }
+        TransactionsList(
+            list = transactionsList,
+            onClick = onTransactionClick
+        )
     }
 }
 
 @Composable
-private fun SummaryInfoRow(
+private fun SummaryInfoBox(
     incomeValue: Double,
     expensesValue: Double,
     totalValue: Double,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            SummaryInfoDetailsBox(
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            SummaryInfoItemBox(
                 title = stringResource(id = R.string.transactions_income),
                 value = incomeValue
             )
-            SummaryInfoDetailsBox(
+            SummaryInfoItemBox(
                 title = stringResource(id = R.string.transactions_expenses),
                 value = expensesValue
             )
-            SummaryInfoDetailsBox(
+            SummaryInfoItemBox(
                 title = stringResource(id = R.string.transactions_total),
                 value = totalValue
             )
@@ -173,7 +144,7 @@ private fun SummaryInfoRow(
 }
 
 @Composable
-private fun RowScope.SummaryInfoDetailsBox(
+private fun RowScope.SummaryInfoItemBox(
     title: String,
     value: Double,
     modifier: Modifier = Modifier,
@@ -195,25 +166,218 @@ private fun RowScope.SummaryInfoDetailsBox(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun TransactionsList(
+    list: List<TransactionsListEntity>,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(modifier = modifier.fillMaxWidth()) {
+        list.forEach { entity ->
+            stickyHeader {
+                TransactionsDayHeaderBox(
+                    timestamp = entity.timestamp,
+                    incomeSum = entity.incomeSum,
+                    expensesSum = entity.expensesSum,
+                    onClick = {}
+                )
+            }
+            items(entity.transactions) { transactionEntity ->
+                TransactionItemBox(
+                    entity = transactionEntity,
+                    onClick = onClick
+                )
+                Divider(color = Color.Gray)
+            }
+        }
+    }
+}
+
+@Composable
+private fun TransactionsDayHeaderBox(
+    timestamp: Long,
+    incomeSum: Double,
+    expensesSum: Double,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onClick() }
+                .padding(8.dp)
+        ) {
+            DayHeaderDateBox(
+                timestamp = timestamp,
+                modifier = Modifier.weight(2f)
+            )
+            Text(
+                text = incomeSum.formatAmount(),
+                textAlign = TextAlign.End,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = expensesSum.formatAmount(),
+                textAlign = TextAlign.End,
+                modifier = Modifier.weight(1f)
+            )
+        }
+        Divider()
+    }
+}
+
+@Composable
+private fun DayHeaderDateBox(timestamp: Long, modifier: Modifier = Modifier) {
+    val (day, dayName, date) = remember { timestamp.splitTransactionsDayHeaderDate() }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+    ) {
+        Text(
+            text = day.toString(),
+            fontSize = 22.sp,
+            fontWeight = FontWeight.SemiBold
+        )
+        Box(
+            modifier = Modifier
+                .padding(start = 2.dp, end = 6.dp)
+                .background(
+                    color = MaterialTheme.colors.primary,
+                    shape = MaterialTheme.shapes.small
+                )
+        ) {
+            Text(
+                text = dayName,
+                fontSize = 14.sp,
+                color = MaterialTheme.colors.onPrimary,
+                modifier = Modifier.padding(6.dp, 2.dp)
+            )
+        }
+        Text(
+            text = date,
+            fontSize = 14.sp,
+            modifier = Modifier
+                .align(Alignment.Bottom)
+                .padding(bottom = 2.dp)
+        )
+    }
+}
+
+@Composable
+private fun TransactionItemBox(
+    entity: ComplexTransactionEntity,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onClick() }
+        ) {
+            Text(
+                text = entity.category.name
+            )
+            Text(
+                text = entity.wallet.name
+            )
+            Text(
+                text = entity.transaction.value.formatAmount()
+            )
+        }
+        Divider(color = Color.Gray)
+    }
+}
+
+private fun Long.splitTransactionsDayHeaderDate(): DayHeaderDateEntity {
+    val date = Date(this)
+    val day = SimpleDateFormat("d", Locale.getDefault()).format(date)
+    val dayName = SimpleDateFormat("EEE", Locale.getDefault()).format(date)
+    val dateFormatted = SimpleDateFormat("dd.yyyy", Locale.getDefault()).format(date)
+    // TODO: dangerous number formatting
+    return DayHeaderDateEntity(
+        day = day.toInt(),
+        dayName = dayName,
+        date = dateFormatted
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
     AppTheme {
         ScreenContent(
-            expenses = listOf(
-                TransactionEntity(0, 0, 0, 0, 123.12, TransactionType.Expense, "123123"),
-                TransactionEntity(0, 0, 0, 0, 123.12, TransactionType.Expense, "123123"),
-                TransactionEntity(0, 0, 0, 0, 123.12, TransactionType.Expense, "123123"),
-                TransactionEntity(0, 0, 0, 0, 123.12, TransactionType.Expense, "123123"),
+            incomeValue = 123.12,
+            expensesValue = 123.12,
+            totalValue = 123.12,
+            transactionsList = listOf(
+                TransactionsListEntity(
+                    timestamp = Calendar.getInstance().timeInMillis,
+                    incomeSum = 123.12,
+                    expensesSum = 123.12,
+                    transactions = listOf(
+                        ComplexTransactionEntity(
+                            transaction = TransactionEntity(0,
+                                0,
+                                0,
+                                0,
+                                123.12,
+                                TransactionType.Expense,
+                                "123123"),
+                            category = CategoryEntity(0, "Category name", TransactionType.Expense),
+                            wallet = WalletEntity(0, "Wallet name", 0, 123.12),
+                            currency = CurrencyEntity(0, "asd", "a")
+                        ),
+                        ComplexTransactionEntity(
+                            transaction = TransactionEntity(0,
+                                0,
+                                0,
+                                0,
+                                123.12,
+                                TransactionType.Expense,
+                                "123123"),
+                            category = CategoryEntity(0, "Category name", TransactionType.Expense),
+                            wallet = WalletEntity(0, "Wallet name", 0, 123.12),
+                            currency = CurrencyEntity(0, "asd", "a")
+                        ),
+                    )
+                ),
+                TransactionsListEntity(
+                    timestamp = Calendar.getInstance().timeInMillis,
+                    incomeSum = 123.12,
+                    expensesSum = 123.12,
+                    transactions = listOf(
+                        ComplexTransactionEntity(
+                            transaction = TransactionEntity(0,
+                                0,
+                                0,
+                                0,
+                                123.12,
+                                TransactionType.Expense,
+                                "123123"),
+                            category = CategoryEntity(0, "Category name", TransactionType.Expense),
+                            wallet = WalletEntity(0, "Wallet name", 0, 123.12),
+                            currency = CurrencyEntity(0, "asd", "a")
+                        ),
+                        ComplexTransactionEntity(
+                            transaction = TransactionEntity(0,
+                                0,
+                                0,
+                                0,
+                                123.12,
+                                TransactionType.Expense,
+                                "123123"),
+                            category = CategoryEntity(0, "Category name", TransactionType.Expense),
+                            wallet = WalletEntity(0, "Wallet name", 0, 123.12),
+                            currency = CurrencyEntity(0, "asd", "a")
+                        ),
+                    )
+                ),
             ),
-            incomes = listOf(
-                TransactionEntity(0, 0, 0, 0, 123.12, TransactionType.Income, "123123"),
-                TransactionEntity(0, 0, 0, 0, 123.12, TransactionType.Income, "123123"),
-                TransactionEntity(0, 0, 0, 0, 123.12, TransactionType.Income, "123123"),
-                TransactionEntity(0, 0, 0, 0, 123.12, TransactionType.Income, "123123"),
-            ),
-            type = TransactionType.Expense,
-            onTransactionClick = { _, _ -> },
+            onTransactionClick = {}
         )
     }
 }

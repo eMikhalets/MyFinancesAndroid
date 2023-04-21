@@ -101,8 +101,8 @@ fun TransactionEditScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        AppTopAppBar(title = stringResource(Screen.TransactionEdit.title),
-            onBackClick = onBackClick)
+//        AppTopAppBar(title = stringResource(Screen.TransactionEdit.title),
+//            onBackClick = onBackClick)
         ScreenContent(
             id = id,
             value = value,

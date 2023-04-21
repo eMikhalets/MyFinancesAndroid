@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emikhalets.core.UiString
-import com.emikhalets.core.formatValue
+//import com.emikhalets.core.formatValue
 import com.emikhalets.domain.PreviewEntity
 import com.emikhalets.domain.entity.TransactionType
 import com.emikhalets.domain.entity.complex.ComplexTransactionEntity
@@ -244,13 +244,13 @@ private fun TransactionsSumBox(
             fontSize = 18.sp,
         )
         Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = value.formatValue(),
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            color = color,
-            modifier = Modifier.padding(top = 4.dp)
-        )
+//        Text(
+//            text = value.formatValue(),
+//            fontWeight = FontWeight.Bold,
+//            fontSize = 20.sp,
+//            color = color,
+//            modifier = Modifier.padding(top = 4.dp)
+//        )
     }
 }
 
@@ -341,13 +341,13 @@ private fun LastTransactionsBox(
                     .fillMaxWidth()
                     .weight(2f)
             ) {
-                Text(
-                    text = "$currencySymbol ${value.formatValue()}",
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 16.sp,
-                    textAlign = TextAlign.Center,
-                    color = valueColor
-                )
+//                Text(
+//                    text = "$currencySymbol ${value.formatValue()}",
+//                    fontWeight = FontWeight.Medium,
+//                    fontSize = 16.sp,
+//                    textAlign = TextAlign.Center,
+//                    color = valueColor
+//                )
             }
         }
         Divider()

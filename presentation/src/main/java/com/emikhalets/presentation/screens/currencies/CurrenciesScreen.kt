@@ -55,7 +55,7 @@ fun CurrenciesScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        AppTopAppBar(title = stringResource(Screen.Currencies.title), onBackClick = onBackClick)
+//        AppTopAppBar(title = stringResource(Screen.Currencies.title), onBackClick = onBackClick)
         ScreenContent(
             currencies = uiState.currencies,
             onCurrencyClick = { id -> onCurrencyClick(id) },
